@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import GlobalStyle from './style';
 import Home from './container';
 import Mypage from './container/mypage';
 import Login from './container/login';
@@ -9,16 +10,19 @@ import Signup from './container/signup';
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="mypage" element={<Mypage />} />
-        <Route path="owner" element={<Owner />} />
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="gym" element={<Gym />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <GlobalStyle />
+      <BrowserRouter>
+        <Routes>
+          <Route index element={<Home />} />
+          <Route path="mypage" element={<Mypage />} />
+          <Route path="owner" element={<Owner />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
+          <Route path="gym" element={<Gym />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
