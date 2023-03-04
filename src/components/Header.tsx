@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from '../assets/logo.png';
@@ -10,7 +10,7 @@ import { BiBell } from 'react-icons/bi';
 const Header = () => {
   const location = useLocation();
 
-  if (location.pathname !== '/login')
+  if (location.pathname !== '/login' && location.pathname !== '/signup')
     return (
       <Container>
         <ContentWrapper>

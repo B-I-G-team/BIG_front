@@ -12,10 +12,15 @@ interface Props {
     | 'primary_45'
     | 'primary_35'
     | 'primary_25';
+  onClick?: any;
 }
 
-const OutlinedButton = ({ children, color = 'primary_55' }: Props) => {
-  return <ButtonContainer color={color}>{children}</ButtonContainer>;
+const OutlinedButton = ({ children, color = 'primary_55', onClick }: Props) => {
+  return (
+    <ButtonContainer color={color} onClick={onClick}>
+      {children}
+    </ButtonContainer>
+  );
 };
 
 export default OutlinedButton;

@@ -1,12 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from '../../assets/logo.png';
 import FilledButton from '../../components/common/FilledButton';
 import OutlinedButton from '../../components/common/OutlinedButton';
 import { FlexAround } from '../../components/common/Wrapper';
 
-const index = () => {
+const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <Container>
       <Link to="/">
@@ -20,12 +22,14 @@ const index = () => {
         <Text to="/">비밀번호 찾기</Text>
       </Wrapper>
 
-      <OutlinedButton color="primary_25">간편 회원가입</OutlinedButton>
+      <OutlinedButton color="primary_25" onClick={() => navigate('/signup')}>
+        간편 회원가입
+      </OutlinedButton>
     </Container>
   );
 };
 
-export default index;
+export default Index;
 
 const Container = styled.div`
   display: flex;
