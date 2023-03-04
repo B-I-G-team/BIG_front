@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from '../assets/logo.png';
 import Search from './common/Search';
@@ -8,39 +8,44 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
 
 const Header = () => {
-  return (
-    <Container>
-      <ContentWrapper>
-        <LeftSection>
-          <Link to="/">
-            <Logo src={logoImage} />
-          </Link>
-          {/* 인풋 */}
-          <Search />
-        </LeftSection>
+  const location = useLocation();
 
-        <RightSecton>
-          {/* 태블릿까지 */}
-          <button type="button">
-            <SearchIcon size={30} />
-          </button>
-          <button type="button">
-            <HamburgerIcon size={30} />
-          </button>
+  if (location.pathname !== '/login')
+    return (
+      <Container>
+        <ContentWrapper>
+          <LeftSection>
+            <Link to="/">
+              <Logo src={logoImage} />
+            </Link>
+            {/* 인풋 */}
+            <Search />
+          </LeftSection>
 
-          {/* 랩탑부터 */}
-          <NavList>
-            <StyledLink to="/gym">체육관등록</StyledLink>
-            <StyledLink to="/login">로그인</StyledLink>
-
+          <RightSecton>
+            {/* 태블릿까지 */}
             <button type="button">
-              <BiBell size={30} />
+              <SearchIcon size={30} />
             </button>
-          </NavList>
-        </RightSecton>
-      </ContentWrapper>
-    </Container>
-  );
+            <button type="button">
+              <HamburgerIcon size={30} />
+            </button>
+
+            {/* 랩탑부터 */}
+            <NavList>
+              <StyledLink to="/gym">체육관등록</StyledLink>
+              <StyledLink to="/login">로그인</StyledLink>
+
+              <button type="button">
+                <BiBell size={30} />
+              </button>
+            </NavList>
+          </RightSecton>
+        </ContentWrapper>
+      </Container>
+    );
+
+  return <></>;
 };
 
 export default Header;
