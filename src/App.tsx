@@ -1,18 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import GlobalStyle from './style';
+
 import Home from './container';
 import Mypage from './container/mypage';
 import Login from './container/login';
 import Gym from './container/gym';
 import Owner from './container/owner';
 import Signup from './container/signup';
+import Header from './components/Header';
 
 function App() {
   return (
     <>
-      <GlobalStyle />
       <BrowserRouter>
+        <Header />
         <Routes>
           <Route index element={<Home />} />
           <Route path="mypage" element={<Mypage />} />
