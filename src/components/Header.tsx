@@ -6,9 +6,17 @@ import Search from './common/Search';
 import { CiSearch } from 'react-icons/ci';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
+import { useAtomValue } from 'jotai';
+import { userAtom } from '../atoms/common';
+import * as api from '../api/auth';
 
 const Header = () => {
   const location = useLocation();
+  const user = useAtomValue(userAtom);
+
+  const onClickLogout = () => {
+    api.signout();
+  };
 
   if (location.pathname !== '/login' && location.pathname !== '/signup')
     return (
@@ -34,8 +42,13 @@ const Header = () => {
             {/* 랩탑부터 */}
             <NavList>
               <StyledLink to="/gym">체육관등록</StyledLink>
-              <StyledLink to="/login">로그인</StyledLink>
-
+              {user?.email ? (
+                <StyledLink to="/" onClick={onClickLogout}>
+                  로그아웃
+                </StyledLink>
+              ) : (
+                <StyledLink to="/login">로그인</StyledLink>
+              )}
               <button type="button">
                 <BiBell size={30} />
               </button>
