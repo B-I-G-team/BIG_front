@@ -1,22 +1,64 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from '../../assets/logo.png';
 import FilledButton from '../../components/common/FilledButton';
 import OutlinedButton from '../../components/common/OutlinedButton';
 import { FlexAround } from '../../components/common/Wrapper';
+import * as api from '../../api/auth';
+import Swal from 'sweetalert2';
+interface InputChangeProps {
+  target: { value: string };
+}
 
 const Index = () => {
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const onChangeEmail = ({ target: { value } }: InputChangeProps) => {
+    setEmail(value);
+  };
+
+  const onChangePassword = ({ target: { value } }: InputChangeProps) => {
+    setPassword(value);
+  };
+
+  const onClickLogin = async () => {
+    const res = await api.login(email, password);
+    if (typeof res === 'string') {
+      Swal.fire({
+        icon: 'error',
+        title: '로그인 실패',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+    } else {
+      navigate('/');
+    }
+  };
 
   return (
     <Container>
       <Link to="/">
         <LogoImage src={logoImage} />
       </Link>
-      <EmailInput type="email" placeholder="이메일" />
-      <PasswardInput type="password" placeholder="비밀번호" />
-      <FilledButton color="primary_25">로그인</FilledButton>
+      <EmailInput
+        type="email"
+        placeholder="이메일"
+        value={email}
+        onChange={onChangeEmail}
+      />
+      <PasswardInput
+        type="password"
+        placeholder="비밀번호"
+        value={password}
+        onChange={onChangePassword}
+      />
+      <FilledButton color="primary_25" onClick={onClickLogin}>
+        로그인
+      </FilledButton>
       <Wrapper>
         <Text to="/">아이디 찾기</Text>
         <Text to="/">비밀번호 찾기</Text>
