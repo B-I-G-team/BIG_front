@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Home = () => {
-  return <div>Home</div>;
+  return <>{/* 슬라이드 */}</>;
 };
 
 export default Home;

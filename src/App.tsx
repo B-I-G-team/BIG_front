@@ -7,7 +7,7 @@ import Login from './container/login';
 import Gym from './container/gym';
 import Owner from './container/owner';
 import Signup from './container/signup';
-import Header from './components/Header';
+import Header from './components/common/Header';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useSetAtom } from 'jotai';
 import { userAtom } from './atoms/common';

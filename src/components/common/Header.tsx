@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import logoImage from '../assets/logo.png';
-import Search from './common/Search';
+import logoImage from 'assets/logo.png';
+import Search from 'components/common/Search';
 import { CiSearch } from 'react-icons/ci';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
 import { useAtomValue } from 'jotai';
-import { userAtom } from '../atoms/common';
-import * as api from '../api/auth';
+import { userAtom } from 'atoms/common';
+import * as api from 'api/auth';
 
 const Header = () => {
   const location = useLocation();
@@ -68,7 +68,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 0 15px;
-  background-color: ${({ theme }) => theme.color.primary_95};
+  /* background-color: ${({ theme }) => theme.color.primary_95}; */
   @media ${({ theme }) => theme.grid.tablet} {
     height: 80px;
   }

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import logoImage from '../../assets/logo.png';
-import FilledButton from '../../components/common/FilledButton';
-import OutlinedButton from '../../components/common/OutlinedButton';
-import { FlexAround } from '../../components/common/Wrapper';
-import * as api from '../../api/auth';
+import logoImage from 'assets/logo.png';
+import FilledButton from 'components/common/FilledButton';
+import OutlinedButton from 'components/common/OutlinedButton';
+import { FlexAround } from 'components/common/Wrapper';
+import * as api from 'api/auth';
 import Swal from 'sweetalert2';
 interface InputChangeProps {
   target: { value: string };
