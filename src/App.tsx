@@ -8,12 +8,14 @@ import Gym from './container/gym';
 import Owner from './container/owner';
 import Signup from './container/signup';
 import Header from './components/Header';
+import Slide from './components/Slide';
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Header />
+        <Slide />
         <Routes>
           <Route index element={<Home />} />
           <Route path="mypage" element={<Mypage />} />
