@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from './container';
@@ -7,10 +7,22 @@ import Login from './container/login';
 import Gym from './container/gym';
 import Owner from './container/owner';
 import Signup from './container/signup';
-import Header from './components/Header';
 import Slide from './components/Slide';
+import Header from './components/common/Header';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { useSetAtom } from 'jotai';
+import { userAtom } from './atoms/common';
 
 function App() {
+  const setUser = useSetAtom(userAtom);
+
+  useEffect(() => {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+  }, [setUser]);
+
   return (
     <>
       <BrowserRouter>
