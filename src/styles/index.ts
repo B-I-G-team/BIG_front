@@ -22,6 +22,9 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     color: black;
   }
+  a:hover{
+    opacity: 0.8;
+  }
 
   button{
     border: 0;
