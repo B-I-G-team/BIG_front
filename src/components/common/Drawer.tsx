@@ -110,7 +110,7 @@ const LinkItem = styled(Link)`
 
 const Overlay = styled.div<{ open: boolean }>`
   position: absolute;
-  left: 0;
+  left: -3px;
   top: 0;
   background-color: rgba(19, 18, 18, 0.7);
   z-index: 1;

@@ -47,8 +47,11 @@ export default App;
 export const Container = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   padding: 0 3px;
+  height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 `;
 
 const ContentWrrapper = styled.div`
