@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { CustomColor } from './FilledButton';
 
 interface Props {
   children: any;
@@ -27,8 +28,8 @@ export default OutlinedButton;
 
 const ButtonContainer = styled.button`
   cursor: pointer;
-  border: 1px solid ${({ theme, color }) => theme.color[color as string]};
-  color: ${({ theme, color }) => theme.color[color as string]};
+  border: 1px solid ${({ theme, color }) => theme.color[color as CustomColor]};
+  color: ${({ theme, color }) => theme.color[color as CustomColor]};
   background-color: white;
   font-size: ${({ theme }) => theme.font.size.body_1};
   font-weight: ${({ theme }) => theme.font.weight.medium};
