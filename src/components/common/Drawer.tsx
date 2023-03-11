@@ -36,14 +36,14 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           <LinkItem to="/">커뮤니티</LinkItem>
           {user?.email ? (
             <>
-              <LinkItem to="/">로그인</LinkItem>
-            </>
-          ) : (
-            <>
               <LinkItem to="/">내 정보</LinkItem>
               <LinkItem to="/" onClick={onClickLogout}>
                 로그아웃
               </LinkItem>
+            </>
+          ) : (
+            <>
+              <LinkItem to="/login">로그인</LinkItem>
             </>
           )}
         </Wrapper>
