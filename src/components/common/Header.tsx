@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
@@ -9,57 +9,71 @@ import { BiBell } from 'react-icons/bi';
 import { useAtomValue } from 'jotai';
 import { userAtom } from 'atoms/common';
 import * as api from 'api/auth';
+import Drawer from './Drawer';
 
 const Header = () => {
   const location = useLocation();
   const user = useAtomValue(userAtom);
+  const [open, setOpen] = useState(false);
 
   const onClickLogout = () => {
     api.signout();
   };
 
+  const openDrawer = () => {
+    setOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setOpen(false);
+  };
+
   if (location.pathname !== '/login' && location.pathname !== '/signup')
     return (
-      <Container>
-        <LeftSection>
-          <LogoLink to="/">
-            <Logo src={logoImage} />
-          </LogoLink>
-          <LeftItem to="/">픽업게임</LeftItem>
-          <LeftItem to="/">팀대관</LeftItem>
-          <LeftItem to="/">개인대관</LeftItem>
-          <LeftItem to="/">팀 순위</LeftItem>
-          <LeftItem to="/">커뮤니티</LeftItem>
-          <Search />
+      <>
+        <Container>
+          <LeftSection>
+            <LogoLink to="/">
+              <Logo src={logoImage} />
+            </LogoLink>
+            <LeftItem to="/">픽업게임</LeftItem>
+            <LeftItem to="/">팀대관</LeftItem>
+            <LeftItem to="/">개인대관</LeftItem>
+            <LeftItem to="/">팀 순위</LeftItem>
+            <LeftItem to="/">커뮤니티</LeftItem>
+            <Search />
 
-          {/* 인풋 */}
-        </LeftSection>
+            {/* 인풋 */}
+          </LeftSection>
 
-        <RightSecton>
-          {/* 태블릿까지 */}
-          <button type="button">
-            <SearchIcon size={30} />
-          </button>
-          <button type="button">
-            <HamburgerIcon size={30} />
-          </button>
-
-          {/* 랩탑부터 */}
-          <NavList>
-            <StyledLink to="/gym">내 정보</StyledLink>
-            {user?.email ? (
-              <StyledLink to="/" onClick={onClickLogout}>
-                로그아웃
-              </StyledLink>
-            ) : (
-              <StyledLink to="/login">로그인</StyledLink>
-            )}
+          <RightSecton>
+            {/* 태블릿까지 */}
             <button type="button">
-              <BiBell size={30} />
+              <SearchIcon size={30} />
             </button>
-          </NavList>
-        </RightSecton>
-      </Container>
+            <button type="button" onClick={openDrawer}>
+              <HamburgerIcon size={30} />
+            </button>
+
+            {/* 랩탑부터 */}
+            <NavList>
+              <StyledLink to="/gym">내 정보</StyledLink>
+              {user?.email ? (
+                <StyledLink to="/" onClick={onClickLogout}>
+                  로그아웃
+                </StyledLink>
+              ) : (
+                <StyledLink to="/login">로그인</StyledLink>
+              )}
+              <button type="button">
+                <BiBell size={30} />
+              </button>
+            </NavList>
+          </RightSecton>
+        </Container>
+
+        <Drawer open={open} closeDrawer={closeDrawer} />
+      </>
     );
 
   return <></>;
