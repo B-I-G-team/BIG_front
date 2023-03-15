@@ -1,43 +1,63 @@
-import React from 'react'
-import Carousel from 'react-material-ui-carousel'
-import { Paper , Button } from '@mui/material'
+import React from 'react';
+import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { Carousel } from 'react-responsive-carousel';
+import gym1Img from '../assets/gym1.jpg'
+import gym2Img from '../assets/gym2.jpg'
+import gym3Img from '../assets/gym3.jpg'
+import SlideImgs from './SlideImgs';
 
-const Example = (props:any) =>
-{
-    var items = [
-        {
-            name: "Random Name #1",
-            description: "Probably the most random thing you have ever seen!",
-            img : "https://img.shareit.kr:13443/prod/img/2021-07-06/be0a11cf-0d08-4cd9-8719-88937088cf4b.jpg"
-        },
-        {
-            name: "Random Name #2",
-            description: "Hello World!",
-            img : "https://img.shareit.kr:13443/prod/img/2021-09-02/44a48c68-e605-44ba-9a80-64ef5b7d7eed.jpg"
-        }
-    ]
 
-    return (
-        <Carousel>
-            {
-                items.map( (item, i) => <Item key={i} item={item} /> )
-            }
-        </Carousel>
-    )
+const tempDataArr = [
+    {
+      id: 1,
+      image: gym1Img,
+      name: '사하 인피니트 스포츠',
+    },
+    {
+      id: 2,
+      image: gym2Img,
+      name: '당리 인피니트 스포츠',
+    },
+    {
+      id: 3,
+      image: gym3Img,
+      name: '괴정 인피니트 스포츠',
+    },
+  ];
+
+const Slide = () => {
+  return (
+            <Carousel width={"100%"} showArrows ={false} dynamicHeight ={true}>
+                 {tempDataArr.map((item) => (
+            <SlideImgs key={item.id} data={item} />
+          ))}
+            </Carousel>
+           
+           /*
+            <Carousel showArrows={false} dynamicHeight={true}>
+            <div key="slide1">
+                <img src="http://placehold.it/350x150" />
+            </div>
+            <div key="slide2">
+                <img src="http://placehold.it/255x150" />
+            </div>
+            <div key="slide3">
+                <img src="http://placehold.it/295x150" />
+            </div>
+            <div key="slide4">
+                <img src="http://placehold.it/310x150" />
+            </div>
+            <div key="slide5">
+                <img src="http://placehold.it/575x250" />
+            </div>
+            <div key="slide6">
+                <img src="http://placehold.it/450x150" />
+            </div>
+            </Carousel>
+        */
+        
+  )
 }
 
-const Item = (props:any) =>
-{
-    return (
-        <Paper>
-            <h2>{props.item.name}</h2>
-            <p>{props.item.description}</p>
-            <img src ={props.item.img} alt =""></img>
-            <Button className="CheckButton">
-                Check it out!
-            </Button>
-        </Paper>
-    )
-}
+export default Slide
 
-export default Example;

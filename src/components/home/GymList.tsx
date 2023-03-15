@@ -49,6 +49,7 @@ const GymList = () => {
   );
 };
 
+
 export default GymList;
 
 const Container = styled.div`

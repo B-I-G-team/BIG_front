@@ -27,7 +27,7 @@ function App() {
     <>
       <BrowserRouter>
         <Header />
-        <Slide />
+        <Slide/>
         <Routes>
           <Route index element={<Home />} />
           <Route path="mypage" element={<Mypage />} />
