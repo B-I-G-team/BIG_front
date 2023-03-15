@@ -17,6 +17,7 @@ const Header = () => {
   const [open, setOpen] = useState(false);
 
   const onClickLogout = () => {
+    console.log();
     api.signout();
   };
 
