@@ -32,6 +32,15 @@ const tempDataArr = [
     perHour: 1,
     applicant: 7,
   },
+  {
+    id: 4,
+    image: placeImg,
+    name: '괴정 인피니트 스포츠',
+    location: '부산광역시 사하구 마하로48번길 26 4층',
+    price: 10000,
+    perHour: 1,
+    applicant: 7,
+  },
 ];
 
 const GymList = () => {
@@ -59,6 +68,15 @@ const Container = styled.div`
 const Title = styled.div`
   font-size: ${({ theme }) => theme.font.size.subtitle_1};
   font-weight: 600;
+  padding: 10px 0;
+  @media ${({ theme }) => theme.grid.tablet} {
+    font-size: ${({ theme }) => theme.font.size.heading_6};
+    font-weight: 700;
+  }
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    font-size: ${({ theme }) => theme.font.size.heading_5};
+  }
 `;
 
 const ListContainer = styled.div`
@@ -69,15 +87,26 @@ const ListContainer = styled.div`
   top: 0;
   left: 0;
 
-  height: 100%;
+  /* height: 100%; */
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    /* justify-content: space-between; */
+    width: 100%;
+    position: static;
+  }
 `;
 
 const Wrapper = styled.div`
   position: relative;
   height: 240px;
+
   overflow-x: scroll;
 
   &::-webkit-scrollbar {
     display: none;
+  }
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    height: auto;
   }
 `;

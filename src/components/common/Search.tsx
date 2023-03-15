@@ -15,14 +15,14 @@ export default Search;
 
 const Container = styled.div`
   display: none;
-  @media ${({ theme }) => theme.grid.tablet} {
+  @media ${({ theme }) => theme.grid.laptop} {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     background-color: #fff;
     border: 1px solid ${({ theme }) => theme.color.border};
     border-radius: 4px;
-    width: 350px;
+    width: 300px;
     height: 40px;
     margin-left: 20px;
   }

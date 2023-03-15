@@ -40,6 +40,7 @@ const GymItem = ({ data }: Props) => {
 export default GymItem;
 
 const Container = styled.div`
+  cursor: pointer;
   border: 1px solid ${({ theme }) => theme.color.border};
   border-radius: 8px;
   width: 177px;
@@ -48,19 +49,25 @@ const Container = styled.div`
 
   display: flex;
   flex-direction: column;
-  flex: 1;
 
   box-shadow: 3px 3px 3px 1px rgba(50, 50, 50, 0.15);
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    flex: 1;
+  }
 `;
 
 const Image = styled.img`
   width: 100%;
-  flex: 1;
 `;
 
 const ContentWrapper = styled.div`
   padding: 8px;
-  flex: 1;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -71,6 +78,11 @@ const TopWrapper = styled.div``;
 const Title = styled.div`
   font-size: ${({ theme }) => theme.font.size.subtitle_2};
   font-weight: 500;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    font-size: ${({ theme }) => theme.font.size.heading_6};
+    font-weight: 600;
+  }
 `;
 
 const Location = styled.div`
@@ -80,12 +92,22 @@ const Location = styled.div`
   text-overflow: ellipsis; // ... 처리
 `;
 const BottomWrapper = styled.div`
-  text-align: end;
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
 `;
 
 const Price = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
   font-size: ${({ theme }) => theme.font.size.subtitle_2};
   font-weight: 500;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    font-size: ${({ theme }) => theme.font.size.heading_6};
+    font-weight: 600;
+  }
 `;
 
 const CenterWrapper = styled.div`

@@ -12,6 +12,7 @@ import Header from './components/common/Header';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useSetAtom } from 'jotai';
 import { userAtom } from './atoms/common';
+import styled from 'styled-components';
 
 function App() {
   const setUser = useSetAtom(userAtom);
@@ -42,3 +43,19 @@ function App() {
 }
 
 export default App;
+
+export const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 3px;
+  height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+`;
+
+const ContentWrrapper = styled.div`
+  width: 100%;
+
+  max-width: 1180px;
+`;
