@@ -57,7 +57,7 @@ const Header = () => {
 
             {/* 랩탑부터 */}
             <NavList>
-              <StyledLink to="/gym">내 정보</StyledLink>
+              <StyledLink to="/mypage">내 정보</StyledLink>
               {user?.email ? (
                 <StyledLink to="/" onClick={onClickLogout}>
                   로그아웃

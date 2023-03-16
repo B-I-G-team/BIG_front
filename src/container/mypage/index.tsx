@@ -1,7 +1,7 @@
 import React from 'react';
-
+import Mypage from 'components/mypage/Mypage'
 const Index = () => {
-  return <div>마이페이지</div>;
+  return <Mypage/>
 };
 
 export default Index;
