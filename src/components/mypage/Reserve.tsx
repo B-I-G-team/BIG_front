@@ -14,7 +14,6 @@ const Reserve = ({Data,subData}:Props) => {
   return (
     
     <>
-    {console.log(subData)}
     <div>{Data.name} {subData.name}</div>
     <EmptyBox></EmptyBox>
     </>
