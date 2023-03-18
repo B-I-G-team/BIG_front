@@ -18,17 +18,17 @@ const SlideImgs = ({ data }: Props) => {
 
 export default SlideImgs;
 
-const ImageBox = styled.div``;
-const Image = styled.img``;
-const Label = styled.p`
-  position: absolute;
-  display: inline;
-  width: 80%;
-  left: 10%;
-  bottom: 10%;
-  padding: 5px;
-  border-radius: 5px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.2);
-  z-index: 10;
+const ImageBox = styled.div`
+  cursor: pointer;
+  padding-left: -10px;
+
+  max-height: 450px;
+  @media ${({ theme }) => theme.grid.laptop} {
+    border-radius: 20px;
+  }
+  overflow: hidden;
+`;
+const Image = styled.img`
+  width: 100%;
+  height: auto;
 `;
