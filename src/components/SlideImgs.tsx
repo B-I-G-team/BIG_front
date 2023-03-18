@@ -6,11 +6,12 @@ interface Props {
     id: number;
     image: string;
   };
+  height?: number;
 }
 
-const SlideImgs = ({ data }: Props) => {
+const SlideImgs = ({ data, height }: Props) => {
   return (
-    <ImageBox>
+    <ImageBox height={height as number}>
       <Image src={data.image} alt="image" />
     </ImageBox>
   );
@@ -18,10 +19,13 @@ const SlideImgs = ({ data }: Props) => {
 
 export default SlideImgs;
 
-const ImageBox = styled.div`
+const ImageBox = styled.div<{ height: number }>`
   cursor: pointer;
+  object-fit: scale-down;
+  height: ${({ height }) => height}px;
 
-  max-height: 450px;
+  max-height: ${({ height }) => !height && '450px'};
+
   @media ${({ theme }) => theme.grid.laptop} {
     border-radius: 20px;
   }

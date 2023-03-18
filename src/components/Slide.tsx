@@ -1,29 +1,26 @@
 import React from 'react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import temp1 from 'assets/temp1.png';
-import temp2 from 'assets/temp2.png';
 
 import SlideImgs from './SlideImgs';
 import styled from 'styled-components';
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
-const tempDataArr = [
-  {
-    id: 1,
-    image: temp1,
-  },
-  {
-    id: 2,
-    image: temp2,
-  },
-];
 
-const Slide = () => {
+interface Props {
+  data: {
+    id: number;
+    image: string;
+  }[];
+  height?: number;
+  autoPlay?: boolean;
+}
+
+const Slide = ({ data, height, autoPlay = true }: Props) => {
   return (
     <Wrapper>
       <Carousel
-        autoPlay
+        autoPlay={autoPlay}
         infiniteLoop
         showThumbs={false}
         showStatus={false}
@@ -40,8 +37,8 @@ const Slide = () => {
           </PrevIcon>
         )}
       >
-        {tempDataArr.map((item) => (
-          <SlideImgs key={item.id} data={item} />
+        {data.map((item) => (
+          <SlideImgs key={item.id} data={item} height={height} />
         ))}
       </Carousel>
     </Wrapper>
@@ -52,6 +49,10 @@ export default Slide;
 
 const Wrapper = styled.div`
   margin: 0 -10px;
+
+  .carousel .slider-wrapper.axis-horizontal .slider {
+    align-items: center;
+  }
 `;
 
 const Icon = styled.div`
