@@ -20,7 +20,6 @@ export default SlideImgs;
 
 const ImageBox = styled.div`
   cursor: pointer;
-  padding-left: -10px;
 
   max-height: 450px;
   @media ${({ theme }) => theme.grid.laptop} {
