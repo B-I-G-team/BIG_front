@@ -7,7 +7,6 @@ import temp2 from 'assets/temp2.png';
 import SlideImgs from './SlideImgs';
 import styled from 'styled-components';
 
-import { GrFormPrevious, GrFormNext } from 'react-icons/gr';
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 const tempDataArr = [
   {
