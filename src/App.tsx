@@ -7,7 +7,6 @@ import Login from './container/login';
 import Gym from './container/gym';
 import Owner from './container/owner';
 import Signup from './container/signup';
-import Slide from './components/Slide';
 import Header from './components/common/Header';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useSetAtom } from 'jotai';
@@ -25,20 +24,21 @@ function App() {
   }, [setUser]);
 
   return (
-    <>
-      <BrowserRouter>
-        <Header />
-        <Slide/>
-        <Routes>
-          <Route index element={<Home />} />
-          <Route path="mypage" element={<Mypage />} />
-          <Route path="owner" element={<Owner />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="gym" element={<Gym />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <Container>
+      <ContentWrrapper>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route index element={<Home />} />
+            <Route path="mypage" element={<Mypage />} />
+            <Route path="owner" element={<Owner />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+            <Route path="gym" element={<Gym />} />
+          </Routes>
+        </BrowserRouter>
+      </ContentWrrapper>
+    </Container>
   );
 }
 
