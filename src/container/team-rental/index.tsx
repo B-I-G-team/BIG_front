@@ -9,6 +9,8 @@ import styled from 'styled-components';
 import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+import { AiFillCaretDown } from 'react-icons/ai';
+import FilledButton from 'components/common/FilledButton';
 
 const tempData = {
   id: 1,
@@ -18,6 +20,25 @@ const tempData = {
     '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
   phone: '010-1234-5678',
   pricePerHour: 68000,
+};
+
+const transferDay = (index: number) => {
+  switch (index) {
+    case 0:
+      return '일';
+    case 1:
+      return '월';
+    case 2:
+      return '화';
+    case 3:
+      return '수';
+    case 4:
+      return '목';
+    case 5:
+      return '금';
+    case 6:
+      return '토';
+  }
 };
 
 const Index = () => {
@@ -48,10 +69,29 @@ const Index = () => {
           minDate={new Date()} // 선택할 수 있는 최소 날짜값 지정
           closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
           placeholderText="날짜 선택" // placeholder
-          // customInput={<Container>hi</Container>}
+          customInput={
+            <DateWrapper>
+              {startDate
+                ? `${startDate.getFullYear()}-${startDate
+                    .getMonth()
+                    .toString()
+                    .padStart(2, '0')}-${startDate
+                    .getDate()
+                    .toString()
+                    .padStart(2, '0')} (${transferDay(startDate.getDay())})`
+                : '날짜 선택'}
+
+              <AiFillCaretDown color="#B2B3B9" />
+            </DateWrapper>
+          }
           selected={startDate} // value
           onChange={(date) => setStartDate(date as Date)} // 날짜를 선택하였을 때 실행될 함수
         />
+
+        <Price>{`₩ ${pricePerHour.toLocaleString()}`}</Price>
+        <FilledButton color="blue" size="fit-content">
+          예약하기
+        </FilledButton>
       </ContentWrapper>
     </Container>
   );
@@ -67,10 +107,47 @@ const SlideWrapper = styled.div`
   }
 `;
 
-const ContentWrapper = styled.div``;
+const ContentWrapper = styled.div`
+  padding: 8px;
+`;
 
-const Title = styled.div``;
+const Title = styled.div`
+  font-size: ${({ theme }) => theme.font.size.heading_6};
+  font-weight: 700;
+  margin-bottom: 4px;
+`;
 
-const Address = styled.div``;
+const Address = styled.div`
+  font-size: ${({ theme }) => theme.font.size.subtitle_2};
+  font-weight: 400;
+  margin-bottom: 14px;
+`;
 
-const Phone = styled.div``;
+const Phone = styled.div`
+  font-size: ${({ theme }) => theme.font.size.subtitle_2};
+  font-weight: 400;
+  margin-bottom: 14px;
+`;
+
+const Price = styled.div`
+  font-size: ${({ theme }) => theme.font.size.heading_5};
+  font-weight: 700;
+
+  text-align: end;
+
+  margin-bottom: 14px;
+`;
+
+const DateWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  border-radius: 4px;
+
+  border: 1px solid ${({ theme }) => theme.color.border};
+  color: black;
+  padding: 10px 16px;
+
+  margin-bottom: 14px;
+`;
