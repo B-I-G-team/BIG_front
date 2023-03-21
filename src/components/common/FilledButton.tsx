@@ -21,7 +21,7 @@ interface Props {
   size?: CustomSize;
 }
 
-const customSize = (size: CustomSize) => {
+const customWidth = (size: CustomSize) => {
   switch (size) {
     case 'fit-content':
       return '100%';
@@ -35,6 +35,23 @@ const customSize = (size: CustomSize) => {
       return '240px';
     default:
       return '270px';
+  }
+};
+
+const customHeight = (size: CustomSize) => {
+  switch (size) {
+    case 'fit-content':
+      return '550px';
+    case 'xl':
+      return '550px';
+    case 'lg':
+      return '500px';
+    case 'md':
+      return '300px';
+    case 'sm':
+      return '250px';
+    default:
+      return '200px';
   }
 };
 
@@ -59,7 +76,9 @@ const ButtonContainer = styled.button<{ size: CustomSize }>`
   color: white;
   font-size: ${({ theme }) => theme.font.size.body_1};
   font-weight: ${({ theme }) => theme.font.weight.medium};
-  width: ${({ size }) => customSize(size)};
+  width: ${({ size }) => customWidth(size)};
+  height: ${({ size }) => customHeight(size)};
+
   height: 40px;
   border-radius: 4px;
 

@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import gymImage1 from 'assets/gym1.jpeg';
 import gymImage2 from 'assets/gym2.jpeg';
@@ -11,6 +11,7 @@ import { ko } from 'date-fns/esm/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import { AiFillCaretDown } from 'react-icons/ai';
 import FilledButton from 'components/common/FilledButton';
+import TimeSelect from 'components/common/TimeSelect';
 
 const tempData = {
   id: 1,
@@ -21,6 +22,59 @@ const tempData = {
   phone: '010-1234-5678',
   pricePerHour: 68000,
 };
+
+const timeItems = [
+  {
+    key: 'time01',
+    available: false,
+    label: '09:00',
+  },
+  {
+    key: 'time02',
+    available: true,
+    label: '10:00',
+  },
+  {
+    key: 'time03',
+    available: true,
+    label: '11:00',
+  },
+  {
+    key: 'time04',
+    available: false,
+    label: '12:00',
+  },
+  {
+    key: 'time05',
+    available: false,
+    label: '13:00',
+  },
+  {
+    key: 'time06',
+    available: false,
+    label: '14:00',
+  },
+  {
+    key: 'time07',
+    available: true,
+    label: '15:00',
+  },
+  {
+    key: 'time08',
+    available: true,
+    label: '16:00',
+  },
+  {
+    key: 'time09',
+    available: false,
+    label: '17:00',
+  },
+  {
+    key: 'time10',
+    available: true,
+    label: '18:00',
+  },
+];
 
 const transferDay = (index: number) => {
   switch (index) {
@@ -48,6 +102,11 @@ const Index = () => {
   // 아이디 값으로 api 호출
   const { name, address, phone, pricePerHour } = tempData;
   const [startDate, setStartDate] = useState<Date>();
+  const [price, setPrice] = useState(0);
+
+  const calcPrice = (length: number) => {
+    setPrice(length * pricePerHour);
+  };
 
   return (
     <Container>
@@ -88,7 +147,13 @@ const Index = () => {
           onChange={(date) => setStartDate(date as Date)} // 날짜를 선택하였을 때 실행될 함수
         />
 
-        <Price>{`₩ ${pricePerHour.toLocaleString()}`}</Price>
+        <TimeSelect
+          item={timeItems}
+          pricePerHour={pricePerHour}
+          calcPrice={calcPrice}
+        />
+
+        <Price>{`₩ ${price.toLocaleString()}`}</Price>
         <FilledButton color="blue" size="fit-content">
           예약하기
         </FilledButton>
@@ -135,6 +200,7 @@ const Price = styled.div`
 
   text-align: end;
 
+  margin-top: 14px;
   margin-bottom: 14px;
 `;
 
