@@ -3,6 +3,11 @@ import styled from 'styled-components';
 import profileImg1 from 'assets/logo.png'
 import profileImg2 from 'assets/place1.jpeg'
 import Reserve from './Reserve';
+const WAIT_CONFIRM = "wait_confirm"
+const WAIT_PAY = "wait_pay"
+const RESERVE = 'reserve'
+const TEAM = "team"
+const PICKUP = 'pickup'
 
 const data = [
     {
@@ -38,14 +43,14 @@ const Mypage = () => {
   const [UserIndex , setIndex] = useState(0);
   const user = data[UserIndex];
   const menuArr = [
-    { name: '픽업게임', content: 'PickUpGame' },
-    { name: '팀 대관', content: 'Team Reserve' }
+    { name: '픽업게임', content: PICKUP },
+    { name: '팀 대관', content: TEAM }
   ];
 
   const subMenuArr = [
-    { name: '승인 대기중', content : '승인 대기중'},
-    { name: '결제 대기중', content : '결제 대기중'},
-    { name: '예약 완료' , content : '예약 완료'}
+    { name: '승인 대기중', content : WAIT_CONFIRM},
+    { name: '결제 대기중', content : WAIT_PAY},
+    { name: '예약 완료' , content : RESERVE}
   ]
   const [currentTab, clickTab] = useState(0);
   const [currentSubTab,clickSubTab] = useState(0);
@@ -65,7 +70,7 @@ const Mypage = () => {
     }
   }
   return (
-    <>
+    <Container>
     <button onClick = {userButtonClick}>+ 유저 정보 바뀔시</button>
     <Title>내 정보</Title>
     <InformationBox>
@@ -92,12 +97,14 @@ const Mypage = () => {
     </SubTab>
     <Reserve Data = {menuArr[currentTab]} subData = {subMenuArr[currentSubTab]}/>
 
-    </>
+    </Container>
   )
 }
 
 export default Mypage
-
+const Container = styled.div`
+  height : 150vh;
+`
 const InformationBox = styled.div`
   display : flex;
   align-items : center;
@@ -133,12 +140,8 @@ const Information = styled.li`
 `;
 
 const Image = styled.img`
-  width : 35px;
-  height : 45px;
-  @media ${({ theme }) => theme.grid.tablet} {
-    width : 7vw;
-    height : 9vh;
-  }
+  width : 100px;
+  height : 120px;
 `;
 
 const TabMenu = styled.ul`
@@ -152,7 +155,6 @@ const TabMenu = styled.ul`
   margin-top: 10px;
 
   .submenu {
-  // 기본 Tabmenu 에 대한 CSS를 구현
     display: flex;
     width: 100px;
     padding: 10px;
@@ -161,7 +163,6 @@ const TabMenu = styled.ul`
   }
 
   .focused {
-   //선택된 Tabmenu 에만 적용되는 CSS를 구현
     background-color: rgb(255,255,255);
     color: rgb(21,20,20);
   }
@@ -174,13 +175,11 @@ const SubTab = styled.ul`
   flex-direction: column;
   align-items: flex-start;
   list-style: none;
-  margin-bottom: 7rem;
   @media ${({ theme }) => theme.grid.tablet} {
     flex-direction : row;
     
   }
   .submenu {
-  // 기본 Tabmenu 에 대한 CSS를 구현
     color : #CDCFFF;
     display: flex;
     transition: 0.5s;
@@ -196,7 +195,6 @@ const SubTab = styled.ul`
   }
 
   .focused {
-   //선택된 Tabmenu 에만 적용되는 CSS를 구현
     color: #5D5FEF;
   }
 `;
