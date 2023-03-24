@@ -8,17 +8,13 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
 import { useAtomValue } from 'jotai';
 import { userAtom } from 'atoms/common';
-import * as api from 'api/auth';
+
 import Drawer from './Drawer';
 
 const Header = () => {
   const location = useLocation();
   const user = useAtomValue(userAtom);
   const [open, setOpen] = useState(false);
-
-  const onClickLogout = () => {
-    api.signout();
-  };
 
   const openDrawer = () => {
     setOpen(true);
@@ -59,9 +55,7 @@ const Header = () => {
             <NavList>
               <StyledLink to="/gym">내 정보</StyledLink>
               {user?.email ? (
-                <StyledLink to="/" onClick={onClickLogout}>
-                  로그아웃
-                </StyledLink>
+                <StyledLink to="/">로그아웃</StyledLink>
               ) : (
                 <StyledLink to="/login">로그인</StyledLink>
               )}

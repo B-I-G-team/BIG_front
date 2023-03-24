@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 import { useAtomValue } from 'jotai';
 import { userAtom } from 'atoms/common';
-import * as api from 'api/auth';
 
 interface Props {
   open: boolean;
@@ -14,10 +13,6 @@ interface Props {
 
 const Drawer = ({ open, closeDrawer }: Props) => {
   const user = useAtomValue(userAtom);
-
-  const onClickLogout = () => {
-    api.signout();
-  };
 
   return (
     <>
@@ -37,9 +32,7 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           {user?.email ? (
             <>
               <LinkItem to="/">내 정보</LinkItem>
-              <LinkItem to="/" onClick={onClickLogout}>
-                로그아웃
-              </LinkItem>
+              <LinkItem to="/">로그아웃</LinkItem>
             </>
           ) : (
             <>
