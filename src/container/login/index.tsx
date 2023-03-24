@@ -1,72 +1,26 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
-import FilledButton from 'components/common/FilledButton';
-import OutlinedButton from 'components/common/OutlinedButton';
-import { FlexAround } from 'components/common/Wrapper';
-import * as api from 'api/auth';
-import Swal from 'sweetalert2';
-interface InputChangeProps {
-  target: { value: string };
-}
+
+import KaKaoIconImg from 'assets/kakao-icon.png';
 
 const Index = () => {
-  const navigate = useNavigate();
-
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const onChangeEmail = ({ target: { value } }: InputChangeProps) => {
-    setEmail(value);
-  };
-
-  const onChangePassword = ({ target: { value } }: InputChangeProps) => {
-    setPassword(value);
-  };
-
-  const onClickLogin = async () => {
-    const res = await api.login(email, password);
-    if (typeof res === 'string') {
-      Swal.fire({
-        icon: 'error',
-        title: '로그인 실패',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    } else {
-      navigate('/');
-    }
-  };
-
   return (
     <Container>
       <Link to="/">
         <LogoImage src={logoImage} />
       </Link>
-      <EmailInput
-        type="email"
-        placeholder="이메일"
-        value={email}
-        onChange={onChangeEmail}
-      />
-      <PasswardInput
-        type="password"
-        placeholder="비밀번호"
-        value={password}
-        onChange={onChangePassword}
-      />
-      <FilledButton color="primary_25" onClick={onClickLogin}>
-        로그인
-      </FilledButton>
-      <Wrapper>
-        <Text to="/">아이디 찾기</Text>
-        <Text to="/">비밀번호 찾기</Text>
-      </Wrapper>
 
-      <OutlinedButton color="primary_25" onClick={() => navigate('/signup')}>
-        간편 회원가입
-      </OutlinedButton>
+      <Text>
+        간편하게 로그인하고
+        <br /> 다양한 서비스를 이용해보세요.
+      </Text>
+
+      <KaKaoButton href="http://rasp.jaejun.me:8000/auth/kakao">
+        <KakaoIcon src={KaKaoIconImg} />
+        <KakaoLabel>카카오 로그인</KakaoLabel>
+      </KaKaoButton>
     </Container>
   );
 };
@@ -82,33 +36,40 @@ const Container = styled.div`
 
 const LogoImage = styled.img`
   width: 245px;
-  margin-bottom: 32px;
+  margin-bottom: 37px;
 `;
 
-const CommonInput = styled.input`
-  border: 1px solid ${({ theme }) => theme.color.border};
-  border-radius: 4px;
-  background-color: #fff;
-  width: 245px;
-  height: 40px;
-  padding: 0 16px;
+const Text = styled.div`
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 32px;
+
+  text-align: center;
+  margin-bottom: 37px;
 `;
 
-const EmailInput = styled(CommonInput)`
-  margin-bottom: 24px;
+const KaKaoButton = styled.a`
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${({ theme }) => theme.color.kakao_container};
+  color: ${({ theme }) => theme.color.kakao_label};
+  border-radius: 12px;
+
+  width: 300px;
+  height: 45px;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `;
 
-const PasswardInput = styled(CommonInput)`
-  margin-bottom: 24px;
+const KakaoIcon = styled.img`
+  padding: 4px;
 `;
-
-const Wrapper = styled(FlexAround)`
-  width: 245px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-`;
-
-const Text = styled(Link)`
-  font-size: ${({ theme }) => theme.font.size.body_2};
-  font-weight: 400;
+const KakaoLabel = styled.div`
+  font-size: 16px;
+  font-weight: 600;
 `;
