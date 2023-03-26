@@ -1,14 +1,15 @@
 //-----ReactQueryFile-----
-import { useQuery, useMutation } from '@tanstack/react-query';
-import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import type { QueryMetaContextValue } from 'react-query-swagger';
-import { QueryMetaContext } from 'react-query-swagger';
-import { useContext } from 'react';
-import axios from 'axios';
-import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
-type ClientFactoryFunction = <T>(type: (new (...params: any[]) => T)) => T;
-let _clientFactoryFunction: ClientFactoryFunction = <T>(type: (new (...params: any[]) => T)) => {
+import type { QueryMeta, MutationMeta } from '@tanstack/react-query';
+import type { QueryMetaContextValue } from 'react-query-swagger';
+
+import axios from 'axios';
+import type { AxiosInstance } from 'axios';
+
+type ClientFactoryFunction = <T>(type: new (...params: any[]) => T) => T;
+let _clientFactoryFunction: ClientFactoryFunction = <T>(
+  type: new (...params: any[]) => T,
+) => {
   const params = [_baseUrl, _axiosFactory()];
   return new type(...params);
 };
@@ -29,11 +30,14 @@ export function getClientFactory() {
 /*
   Function that will be called from `useQuery...` methods to get a client of certain type
 */
-export function createClient<T>(type: (new () => T)) {
+export function createClient<T>(type: new () => T) {
   return _clientFactoryFunction(type);
 }
 const _resultTypesByQueryKey: Record<string, (data: any) => any> = {};
-export function addResultTypeFactory(typeName: string, factory: (data: any) => any) {
+export function addResultTypeFactory(
+  typeName: string,
+  factory: (data: any) => any,
+) {
   _resultTypesByQueryKey[typeName] = factory;
 }
 export function getResultTypeFactory(typeName: string) {
@@ -41,20 +45,24 @@ export function getResultTypeFactory(typeName: string) {
 }
 
 export function trimArrayEnd<T>(arr: T[]): T[] {
-    let lastDefinedValueIndex = arr.length - 1;
-    while (lastDefinedValueIndex >= 0) {
-        if (arr[lastDefinedValueIndex] === undefined) {
-            lastDefinedValueIndex--;
-        } else {
-            break;
-        }
+  let lastDefinedValueIndex = arr.length - 1;
+  while (lastDefinedValueIndex >= 0) {
+    if (arr[lastDefinedValueIndex] === undefined) {
+      lastDefinedValueIndex--;
+    } else {
+      break;
     }
-    return lastDefinedValueIndex === arr.length - 1 ? arr : arr.slice(0, lastDefinedValueIndex + 1);
+  }
+  return lastDefinedValueIndex === arr.length - 1
+    ? arr
+    : arr.slice(0, lastDefinedValueIndex + 1);
 }
 
-export function addMetaToOptions<T extends {meta?: QueryMeta | MutationMeta | undefined}>(options: T | undefined, metaContext: QueryMetaContextValue): T | undefined {
+export function addMetaToOptions<
+  T extends { meta?: QueryMeta | MutationMeta | undefined },
+>(options: T | undefined, metaContext: QueryMetaContextValue): T | undefined {
   if (metaContext.metaFn) {
-    options = options ?? { } as any;
+    options = options ?? ({} as any);
     options!.meta = {
       ...metaContext.metaFn(),
       ...options!.meta,
@@ -68,12 +76,12 @@ export function addMetaToOptions<T extends {meta?: QueryMeta | MutationMeta | un
   Returns false if parameter is number/string/boolean/Date or Array
 */
 export function isParameterObject(param: unknown) {
-    if (param === null || param === undefined) return false;
-    if (param instanceof Array) return false;
-    const isObject = typeof param === 'object';
-    if (!isObject) return false;
-    if (param instanceof Date) return false;
-    return true;
+  if (param === null || param === undefined) return false;
+  if (param instanceof Array) return false;
+  const isObject = typeof param === 'object';
+  if (!isObject) return false;
+  if (param instanceof Date) return false;
+  return true;
 }
 
 let _baseUrl = '';

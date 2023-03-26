@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { initPersister } from 'api/axios-client';
+import { initPersister, setBaseUrl } from 'api/axios-client';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider } from 'styled-components';
@@ -10,6 +10,8 @@ import { theme } from './styles/theme';
 
 const queryClient = new QueryClient();
 initPersister();
+
+setBaseUrl('http://rasp.jaejun.me:8000');
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
