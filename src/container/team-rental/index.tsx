@@ -150,8 +150,7 @@ const Index = () => {
           customInput={
             <DateWrapper>
               {startDate
-                ? `${startDate.getFullYear()}-${startDate
-                    .getMonth()
+                ? `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
                     .toString()
                     .padStart(2, '0')}-${startDate
                     .getDate()
