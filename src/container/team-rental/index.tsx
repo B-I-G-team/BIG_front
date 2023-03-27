@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+// import { useSearchParams } from 'react-router-dom';
 import gymImage1 from 'assets/gym1.jpeg';
 import gymImage2 from 'assets/gym2.jpeg';
 import gymImage3 from 'assets/gym3.jpeg';
@@ -97,10 +97,10 @@ const transferDay = (index: number) => {
 };
 
 const Index = () => {
-  const [searchParams] = useSearchParams();
-  const query = searchParams.get('id');
-  console.log(query);
+  // const [searchParams] = useSearchParams();
+  // const query = searchParams.get('id');
   // 아이디 값으로 api 호출
+
   const { name, address, phone, pricePerHour } = tempData;
   const [startDate, setStartDate] = useState<Date>();
   const [price, setPrice] = useState(0);
