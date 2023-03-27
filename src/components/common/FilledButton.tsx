@@ -41,17 +41,17 @@ const customWidth = (size: CustomSize) => {
 const customHeight = (size: CustomSize) => {
   switch (size) {
     case 'fit-content':
-      return '550px';
+      return '55px';
     case 'xl':
-      return '550px';
+      return '55px';
     case 'lg':
-      return '500px';
+      return '40px';
     case 'md':
-      return '300px';
+      return '40px';
     case 'sm':
-      return '250px';
+      return '45px';
     default:
-      return '200px';
+      return '40px';
   }
 };
 
@@ -59,7 +59,7 @@ const FilledButton = ({
   children,
   color = 'primary_55',
   onClick,
-  size,
+  size = 'md',
 }: Props) => {
   return (
     <ButtonContainer color={color} onClick={onClick} size={size as CustomSize}>
@@ -79,7 +79,6 @@ const ButtonContainer = styled.button<{ size: CustomSize }>`
   width: ${({ size }) => customWidth(size)};
   height: ${({ size }) => customHeight(size)};
 
-  height: 40px;
   border-radius: 4px;
 
   :hover {

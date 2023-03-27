@@ -12,7 +12,7 @@ interface Props {
     id: number;
     image: string;
   }[];
-  height?: number;
+  height?: string;
   autoPlay?: boolean;
 }
 

@@ -10,9 +10,10 @@ interface Props {
   }[];
   pricePerHour: number;
   calcPrice: (length: number) => void;
+  className?: string;
 }
 
-const TimeSelect = ({ item, pricePerHour, calcPrice }: Props) => {
+const TimeSelect = ({ item, pricePerHour, calcPrice, className }: Props) => {
   const [selected, setSelected] = useState<string[]>([]);
 
   const onClickTime = (key: string) => {
@@ -27,7 +28,7 @@ const TimeSelect = ({ item, pricePerHour, calcPrice }: Props) => {
   }, [calcPrice, selected]);
 
   return (
-    <TimeList>
+    <TimeList className={className}>
       {item.map((item) => (
         <TimeItem key={item.key}>
           <SelectBox>

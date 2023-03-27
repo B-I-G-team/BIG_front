@@ -12,6 +12,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { AiFillCaretDown } from 'react-icons/ai';
 import FilledButton from 'components/common/FilledButton';
 import TimeSelect from 'components/common/TimeSelect';
+import Input from 'components/common/Input';
 
 const tempData = {
   id: 1,
@@ -103,9 +104,14 @@ const Index = () => {
   const { name, address, phone, pricePerHour } = tempData;
   const [startDate, setStartDate] = useState<Date>();
   const [price, setPrice] = useState(0);
+  const [selectPhoto, setSelectPhoto] = useState(tempData.images[0]);
 
   const calcPrice = (length: number) => {
     setPrice(length * pricePerHour);
+  };
+
+  const onSelectPhoto = (image: string) => {
+    setSelectPhoto(image);
   };
 
   return (
@@ -116,6 +122,19 @@ const Index = () => {
           autoPlay={false}
         />
       </SlideWrapper>
+
+      <PhotoWrapper>
+        <SelectPhoto src={selectPhoto} />
+        <PhotoList>
+          {tempData.images.map((image, idx) => (
+            <PhotoItem
+              key={idx}
+              src={image}
+              onClick={() => onSelectPhoto(image)}
+            />
+          ))}
+        </PhotoList>
+      </PhotoWrapper>
 
       <ContentWrapper>
         <Title>{name}</Title>
@@ -147,13 +166,14 @@ const Index = () => {
           onChange={(date) => setStartDate(date as Date)} // 날짜를 선택하였을 때 실행될 함수
         />
 
-        <TimeSelect
+        <StyledTimeSelect
           item={timeItems}
           pricePerHour={pricePerHour}
           calcPrice={calcPrice}
         />
 
         <Price>{`₩ ${price.toLocaleString()}`}</Price>
+        <StyledInput placeholder="체육관 사장님께 요청드릴 메시지" />
         <FilledButton color="blue" size="fit-content">
           예약하기
         </FilledButton>
@@ -164,34 +184,60 @@ const Index = () => {
 
 export default Index;
 
-const Container = styled.div``;
+const Container = styled.div`
+  width: 100%;
+  @media ${({ theme }) => theme.grid.laptop} {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
 
 const SlideWrapper = styled.div`
-  @media ${({ theme }) => theme.grid.tablet} {
+  @media ${({ theme }) => theme.grid.laptop} {
     display: none;
   }
 `;
 
 const ContentWrapper = styled.div`
   padding: 8px;
+  @media ${({ theme }) => theme.grid.laptop} {
+    width: 47%;
+  }
 `;
 
 const Title = styled.div`
   font-size: ${({ theme }) => theme.font.size.heading_6};
   font-weight: 700;
   margin-bottom: 4px;
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    font-size: ${({ theme }) => theme.font.size.heading_4};
+    margin-bottom: 32px;
+  }
 `;
 
 const Address = styled.div`
   font-size: ${({ theme }) => theme.font.size.subtitle_2};
   font-weight: 400;
   margin-bottom: 14px;
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    font-size: ${({ theme }) => theme.font.size.subtitle_1};
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
 `;
 
 const Phone = styled.div`
   font-size: ${({ theme }) => theme.font.size.subtitle_2};
   font-weight: 400;
   margin-bottom: 14px;
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    font-size: ${({ theme }) => theme.font.size.subtitle_1};
+    font-weight: 600;
+    margin-bottom: 42px;
+  }
 `;
 
 const Price = styled.div`
@@ -202,6 +248,10 @@ const Price = styled.div`
 
   margin-top: 14px;
   margin-bottom: 14px;
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    text-align: start;
+  }
 `;
 
 const DateWrapper = styled.div`
@@ -214,6 +264,49 @@ const DateWrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.color.border};
   color: black;
   padding: 10px 16px;
+`;
 
-  margin-bottom: 14px;
+const PhotoWrapper = styled.div`
+  display: none;
+  @media ${({ theme }) => theme.grid.laptop} {
+    display: block;
+    width: 47%;
+  }
+`;
+
+const PhotoItem = styled.img`
+  width: 130px;
+  height: 104px;
+
+  cursor: pointer;
+  object-fit: contain;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+const PhotoList = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const SelectPhoto = styled.img`
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+`;
+
+const StyledInput = styled(Input)`
+  margin-bottom: 17px;
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    margin-bottom: 30px;
+  }
+`;
+
+const StyledTimeSelect = styled(TimeSelect)`
+  margin-top: 14px;
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    margin-top: 30px;
+  }
 `;
