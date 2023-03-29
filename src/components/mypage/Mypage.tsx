@@ -74,13 +74,28 @@ const Mypage = () => {
       <button onClick={userButtonClick}>+ 유저 정보 바뀔시</button>
       <Title>내 정보</Title>
       <InformationBox>
-        <Image src={user.img} alt="" />
         <Informations>
-          <Information>이름 : {user.name}</Information>
-          <Information>소속팀: {user.team}</Information>
-          <Information>포지션: {user.Roll}</Information>
           <Information>
-            키 / 몸무게: {user.height} / {user.weight}
+            <InformationTitle>이름</InformationTitle>
+            <Separator>:</Separator>
+            <InformationData>{user.name}</InformationData>
+          </Information>
+          <Information>
+            <InformationTitle>소속팀</InformationTitle>
+            <Separator>:</Separator>
+            <InformationData>{user.team}</InformationData>
+          </Information>
+          <Information>
+            <InformationTitle>포지션</InformationTitle>
+            <Separator>:</Separator>
+            <InformationData>{user.Roll}</InformationData>
+          </Information>
+          <Information>
+            <InformationTitle>이름</InformationTitle>
+            <Separator>:</Separator>
+            <InformationData>
+              {user.height}/{user.weight}
+            </InformationData>
           </Information>
         </Informations>
       </InformationBox>
@@ -96,6 +111,7 @@ const Mypage = () => {
             {el.name}
           </li>
         ))}
+        <EmptyBox></EmptyBox>
       </TabMenu>
       <SubTab>
         {subMenuArr.map((el, index) => (
@@ -119,47 +135,44 @@ const Container = styled.div`
 `;
 const InformationBox = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
   @media ${({ theme }) => theme.grid.tablet} {
     justify-content: flex-start;
   }
 `;
 
 const Title = styled.p`
-  font-size: ${({ theme }) => theme.font.size.subtitle_1};
-  font-weight: 600;
+  font-size: ${({ theme }) => theme.font.size.heading_4};
+  font-weight: 700;
   padding: 10px 0;
-  @media ${({ theme }) => theme.grid.tablet} {
-    font-size: ${({ theme }) => theme.font.size.heading_6};
-    font-weight: 700;
-  }
-
-  @media ${({ theme }) => theme.grid.laptop} {
-    font-size: ${({ theme }) => theme.font.size.heading_5};
-  }
 `;
 
 const Informations = styled.ul`
   list-style: none;
   display: flex;
+  padding: 0px;
   flex-direction: column;
   align-items: flex-start;
 `;
 
 const Information = styled.li`
   padding: 10px;
+  display: flex;
+  font-size: ${({ theme }) => theme.font.size.heading_6};
+  font-weight: 700;
 `;
-
-const Image = styled.img`
-  width: 100px;
-  height: 120px;
+const InformationTitle = styled.div`
+  width: 92px;
 `;
-
+const Separator = styled.div`
+  width: 94px;
+`;
+const InformationData = styled.div``;
+const EmptyBox = styled.li`
+  width: 100%;
+  border-bottom: 1px solid black;
+`;
 const TabMenu = styled.ul`
-  background-color: #dcdcdc;
   padding: 0px;
-  color: rgb(150, 150, 150);
   font-weight: bold;
   display: flex;
   flex-direction: row;
@@ -168,15 +181,19 @@ const TabMenu = styled.ul`
 
   .submenu {
     display: flex;
+    background-color: #e0e2e7;
     width: 100px;
     padding: 10px;
-    font-size: 15px;
+    font-size: ${({ theme }) => theme.font.size.subtitle_2};
     transition: 0.5s;
+    border-bottom: 1px solid black;
   }
 
   .focused {
     background-color: rgb(255, 255, 255);
     color: rgb(21, 20, 20);
+    border: 1px solid black;
+    border-bottom: 0px;
   }
 `;
 
@@ -194,14 +211,13 @@ const SubTab = styled.ul`
     color: #cdcfff;
     display: flex;
     transition: 0.5s;
+    font-size: ${({ theme }) => theme.font.size.subtitle_2};
     @media ${({ theme }) => theme.grid.tablet} {
       width: 100px;
       padding: 10px;
-      font-size: 15px;
     }
     width: 30vw;
     padding: 10px;
-    font-size: 15px;
   }
 
   .focused {

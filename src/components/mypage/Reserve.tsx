@@ -16,13 +16,19 @@ interface Props {
     content: string;
   };
 }
-interface StateProps {
+
+interface DataProps {
   Data: {
+    id: number;
     state: string;
+    image: string;
+    type: string;
+    gymName: string;
+    location: string;
+    time: string;
     pay: number;
   };
 }
-
 const tempDataArr = [
   {
     id: 1,
@@ -95,24 +101,33 @@ const tempDataArr = [
     pay: 13300,
   },
 ];
-const ReserveState = ({ state }: any) => {
-  if (state === WAIT_CONFIRM) {
+const ReserveState = ({ Data }: DataProps) => {
+  const pay = Math.floor(Data.pay / 1000);
+  const Paystring = pay.toString() + ',000';
+  if (Data.state === WAIT_CONFIRM) {
     return (
       <>
-        <Notification>승인 대기중입니다.</Notification>
+        <Pay>결제할 금액 : {Paystring} </Pay>
+        <Notification>😊사장님의 승인 요청을 기다리고있습니다.</Notification>
         <Button>취소하기</Button>
       </>
     );
-  } else if (state === WAIT_PAY) {
+  } else if (Data.state === WAIT_PAY) {
     return (
       <>
-        <Notification>결제가 완료되면 예약이 완료됩니다.</Notification>
+        <Pay>결제할 금액 : {Paystring} </Pay>
+        <Notification>😊결제가 완료되면 예약이 완료됩니다.</Notification>
         <Button>결제하기</Button>
         <Button>취소하기</Button>
       </>
     );
-  } else if (state === RESERVE) {
-    return <Notification>😊예약이 완료되었습니다.</Notification>;
+  } else if (Data.state === RESERVE) {
+    return (
+      <>
+        <Pay>결제 금액 : {Paystring} </Pay>
+        <Notification>😊예약이 완료되었습니다.</Notification>
+      </>
+    );
   }
   return null;
 };
@@ -131,10 +146,12 @@ const Reserve = ({ Data, subData }: Props) => {
         >
           <Image src={el.image} alt="" />
           <ReserveInfoList>
-            <Title>{el.gymName}</Title>
-            <Location>위치 : {el.location}</Location>
+            <li>
+              <Title>{el.gymName}</Title>
+              <Location>위치 : {el.location}</Location>
+            </li>
             <Time>{el.time}</Time>
-            <ReserveState state={el.state} />
+            <ReserveState Data={el} />
           </ReserveInfoList>
         </ReserveInfoBox>
       ))}
@@ -171,43 +188,53 @@ const ReserveInfoBox = styled.div`
 const ReserveInfoList = styled.ul`
   margin: 0px;
   padding: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   @media ${({ theme }) => theme.grid.tablet} {
-    flex-direction: row;
-    padding: 15px;
+    margin-left: 55px;
   }
   list-style: none;
 `;
 
 const Title = styled.li`
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-size: ${({ theme }) => theme.font.size.heading_4};
+  font-weight: 700;
+  margin-bottom: 2px;
 `;
 const Location = styled.li`
-  font-size: 14px;
+  font-size: ${({ theme }) => theme.font.size.subtitle_1};
+  font-weight: 500;
+  margin-bottom: 5px;
 `;
 
 const Time = styled.li`
-  margin: 20px 0px;
-`;
-const Pay = styled.li`
-  font-size: 24px;
-  font-weight: bold;
+  font-size: ${({ theme }) => theme.font.size.subtitle_1};
+  font-weight: 500;
+  margin-bottom: 40px;
 `;
 
 const Notification = styled.li`
-  margin: 10px 0px;
+  font-size: ${({ theme }) => theme.font.size.subtitle_2};
+  font-weight: 500;
+  margin: 4px 0px;
 `;
-
+const Pay = styled.li`
+  font-size: ${({ theme }) => theme.font.size.heading_4};
+  font-weight: 700;
+`;
 const Button = styled.div`
   padding: 10px 20px;
-  color: blue;
-  border: 1px solid blue;
+  color: #3da5f5;
+  border: 1px solid #3da5f5;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 4px;
   text-align: center;
   margin-bottom: 10px;
 
   &:hover {
-    background-color: blue;
-    color: white;
+    background-color: #ecf6fe;
+    color: #3da5f5;
   }
 `;
