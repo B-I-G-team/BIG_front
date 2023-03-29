@@ -9,8 +9,24 @@
 // ReSharper disable InconsistentNaming
 import * as Types from '../axios-client';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient, QueryKey, MutationKey, UseMutationOptions, UseMutationResult, QueryMeta, MutationMeta } from '@tanstack/react-query';
-import { trimArrayEnd, isParameterObject, getBaseUrl, addMetaToOptions  } from './helpers';
+import type {
+  UseQueryResult,
+  QueryFunctionContext,
+  UseQueryOptions,
+  QueryClient,
+  QueryKey,
+  MutationKey,
+  UseMutationOptions,
+  UseMutationResult,
+  QueryMeta,
+  MutationMeta,
+} from '@tanstack/react-query';
+import {
+  trimArrayEnd,
+  isParameterObject,
+  getBaseUrl,
+  addMetaToOptions,
+} from './helpers';
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
@@ -24,43 +40,49 @@ export type CallbackQueryParameters = {
   code: string;
 };
 
-    
 export function anonymousUrl(): string {
-  let url_ = getBaseUrl() + "/";
-  url_ = url_.replace(/[?&]$/, "");
+  let url_ = getBaseUrl() + '/';
+  url_ = url_.replace(/[?&]$/, '');
   return url_;
 }
 
 let anonymousDefaultOptions: UseQueryOptions<void, unknown, void> = {
   queryFn: __anonymous,
 };
-export function getAnonymousDefaultOptions(): UseQueryOptions<void, unknown, void> {
+export function getAnonymousDefaultOptions(): UseQueryOptions<
+  void,
+  unknown,
+  void
+> {
   return anonymousDefaultOptions;
-};
-export function setAnonymousDefaultOptions(options: UseQueryOptions<void, unknown, void>) {
+}
+export function setAnonymousDefaultOptions(
+  options: UseQueryOptions<void, unknown, void>,
+) {
   anonymousDefaultOptions = options;
 }
 
 export function anonymousQueryKey(): QueryKey;
 export function anonymousQueryKey(...params: any[]): QueryKey {
-  return trimArrayEnd([
-      'Client',
-      'anonymous',
-    ]);
+  return trimArrayEnd(['Client', 'anonymous']);
 }
 function __anonymous() {
-  return Client().anonymous(
-    );
+  return Client().anonymous();
 }
 
 /**
  * @return Default Response
  */
-export function useAnonymousQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
-export function useAnonymousQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
-  let axiosConfig: AxiosRequestConfig |undefined;
-  
+export function useAnonymousQuery<TSelectData = void, TError = unknown>(
+  options?: UseQueryOptions<void, TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
+export function useAnonymousQuery<TSelectData = void, TError = unknown>(
+  ...params: any[]
+): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<void, TError, TSelectData> | undefined =
+    undefined;
+  let axiosConfig: AxiosRequestConfig | undefined;
 
   options = params[0] as any;
   axiosConfig = params[1] as any;
@@ -68,37 +90,45 @@ export function useAnonymousQuery<TSelectData = void, TError = unknown>(...param
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   if (axiosConfig) {
-    options = options ?? { } as any;
+    options = options ?? ({} as any);
     options!.meta = { ...options!.meta, axiosConfig };
   }
 
   return useQuery<void, TError, TSelectData>({
     queryFn: __anonymous,
     queryKey: anonymousQueryKey(),
-    ...anonymousDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+    ...(anonymousDefaultOptions as unknown as UseQueryOptions<
+      void,
+      TError,
+      TSelectData
+    >),
     ...options,
   });
 }
 /**
  * @return Default Response
  */
-export function setAnonymousData(queryClient: QueryClient, updater: (data: void | undefined) => void, ) {
-  queryClient.setQueryData(anonymousQueryKey(),
-    updater
-  );
+export function setAnonymousData(
+  queryClient: QueryClient,
+  updater: (data: void | undefined) => void,
+) {
+  queryClient.setQueryData(anonymousQueryKey(), updater);
 }
 
 /**
  * @return Default Response
  */
-export function setAnonymousDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+export function setAnonymousDataByQueryId(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  updater: (data: void | undefined) => void,
+) {
   queryClient.setQueryData(queryKey, updater);
 }
-    
-    
+
 export function meUrl(): string {
-  let url_ = getBaseUrl() + "/auth/me";
-  url_ = url_.replace(/[?&]$/, "");
+  let url_ = getBaseUrl() + '/auth/me';
+  url_ = url_.replace(/[?&]$/, '');
   return url_;
 }
 
@@ -107,31 +137,35 @@ let meDefaultOptions: UseQueryOptions<void, unknown, void> = {
 };
 export function getMeDefaultOptions(): UseQueryOptions<void, unknown, void> {
   return meDefaultOptions;
-};
-export function setMeDefaultOptions(options: UseQueryOptions<void, unknown, void>) {
+}
+export function setMeDefaultOptions(
+  options: UseQueryOptions<void, unknown, void>,
+) {
   meDefaultOptions = options;
 }
 
 export function meQueryKey(): QueryKey;
 export function meQueryKey(...params: any[]): QueryKey {
-  return trimArrayEnd([
-      'Client',
-      'me',
-    ]);
+  const access_token = localStorage.getItem('access_token');
+  return trimArrayEnd(['Client', 'me', access_token]);
 }
 function __me() {
-  return Client().me(
-    );
+  return Client().me();
 }
 
 /**
  * @return Default Response
  */
-export function useMeQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
-export function useMeQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
-  let axiosConfig: AxiosRequestConfig |undefined;
-  
+export function useMeQuery<TSelectData = void, TError = unknown>(
+  options?: UseQueryOptions<void, TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
+export function useMeQuery<TSelectData = void, TError = unknown>(
+  ...params: any[]
+): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<void, TError, TSelectData> | undefined =
+    undefined;
+  let axiosConfig: AxiosRequestConfig | undefined;
 
   options = params[0] as any;
   axiosConfig = params[1] as any;
@@ -139,37 +173,48 @@ export function useMeQuery<TSelectData = void, TError = unknown>(...params: any 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   if (axiosConfig) {
-    options = options ?? { } as any;
+    options = options ?? ({} as any);
     options!.meta = { ...options!.meta, axiosConfig };
   }
 
   return useQuery<void, TError, TSelectData>({
     queryFn: __me,
     queryKey: meQueryKey(),
-    ...meDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+    staleTime: Infinity,
+    retry: false,
+
+    ...(meDefaultOptions as unknown as UseQueryOptions<
+      void,
+      TError,
+      TSelectData
+    >),
     ...options,
   });
 }
 /**
  * @return Default Response
  */
-export function setMeData(queryClient: QueryClient, updater: (data: void | undefined) => void, ) {
-  queryClient.setQueryData(meQueryKey(),
-    updater
-  );
+export function setMeData(
+  queryClient: QueryClient,
+  updater: (data: void | undefined) => void,
+) {
+  queryClient.setQueryData(meQueryKey(), updater);
 }
 
 /**
  * @return Default Response
  */
-export function setMeDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+export function setMeDataByQueryId(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  updater: (data: void | undefined) => void,
+) {
   queryClient.setQueryData(queryKey, updater);
 }
-    
-    
+
 export function kakaoUrl(): string {
-  let url_ = getBaseUrl() + "/auth/kakao";
-  url_ = url_.replace(/[?&]$/, "");
+  let url_ = getBaseUrl() + '/auth/kakao';
+  url_ = url_.replace(/[?&]$/, '');
   return url_;
 }
 
@@ -178,31 +223,34 @@ let kakaoDefaultOptions: UseQueryOptions<void, unknown, void> = {
 };
 export function getKakaoDefaultOptions(): UseQueryOptions<void, unknown, void> {
   return kakaoDefaultOptions;
-};
-export function setKakaoDefaultOptions(options: UseQueryOptions<void, unknown, void>) {
+}
+export function setKakaoDefaultOptions(
+  options: UseQueryOptions<void, unknown, void>,
+) {
   kakaoDefaultOptions = options;
 }
 
 export function kakaoQueryKey(): QueryKey;
 export function kakaoQueryKey(...params: any[]): QueryKey {
-  return trimArrayEnd([
-      'Client',
-      'kakao',
-    ]);
+  return trimArrayEnd(['Client', 'kakao']);
 }
 function __kakao() {
-  return Client().kakao(
-    );
+  return Client().kakao();
 }
 
 /**
  * @return Default Response
  */
-export function useKakaoQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
-export function useKakaoQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
-  let axiosConfig: AxiosRequestConfig |undefined;
-  
+export function useKakaoQuery<TSelectData = void, TError = unknown>(
+  options?: UseQueryOptions<void, TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
+export function useKakaoQuery<TSelectData = void, TError = unknown>(
+  ...params: any[]
+): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<void, TError, TSelectData> | undefined =
+    undefined;
+  let axiosConfig: AxiosRequestConfig | undefined;
 
   options = params[0] as any;
   axiosConfig = params[1] as any;
@@ -210,91 +258,106 @@ export function useKakaoQuery<TSelectData = void, TError = unknown>(...params: a
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   if (axiosConfig) {
-    options = options ?? { } as any;
+    options = options ?? ({} as any);
     options!.meta = { ...options!.meta, axiosConfig };
   }
 
   return useQuery<void, TError, TSelectData>({
     queryFn: __kakao,
     queryKey: kakaoQueryKey(),
-    ...kakaoDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+    ...(kakaoDefaultOptions as unknown as UseQueryOptions<
+      void,
+      TError,
+      TSelectData
+    >),
     ...options,
   });
 }
 /**
  * @return Default Response
  */
-export function setKakaoData(queryClient: QueryClient, updater: (data: void | undefined) => void, ) {
-  queryClient.setQueryData(kakaoQueryKey(),
-    updater
-  );
+export function setKakaoData(
+  queryClient: QueryClient,
+  updater: (data: void | undefined) => void,
+) {
+  queryClient.setQueryData(kakaoQueryKey(), updater);
 }
 
 /**
  * @return Default Response
  */
-export function setKakaoDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+export function setKakaoDataByQueryId(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  updater: (data: void | undefined) => void,
+) {
   queryClient.setQueryData(queryKey, updater);
 }
-    
-    
+
 export function callbackUrl(code: string): string {
-  let url_ = getBaseUrl() + "/auth/kakao/callback?";
+  let url_ = getBaseUrl() + '/auth/kakao/callback?';
   if (code === undefined || code === null)
     throw new Error("The parameter 'code' must be defined and cannot be null.");
-  else
-    url_ += "code=" + encodeURIComponent("" + code) + "&";
-  url_ = url_.replace(/[?&]$/, "");
+  else url_ += 'code=' + encodeURIComponent('' + code) + '&';
+  url_ = url_.replace(/[?&]$/, '');
   return url_;
 }
 
 let callbackDefaultOptions: UseQueryOptions<void, unknown, void> = {
   queryFn: __callback,
 };
-export function getCallbackDefaultOptions(): UseQueryOptions<void, unknown, void> {
+export function getCallbackDefaultOptions(): UseQueryOptions<
+  void,
+  unknown,
+  void
+> {
   return callbackDefaultOptions;
-};
-export function setCallbackDefaultOptions(options: UseQueryOptions<void, unknown, void>) {
+}
+export function setCallbackDefaultOptions(
+  options: UseQueryOptions<void, unknown, void>,
+) {
   callbackDefaultOptions = options;
 }
 
 export function callbackQueryKey(code: string): QueryKey;
 export function callbackQueryKey(...params: any[]): QueryKey {
   if (params.length === 1 && isParameterObject(params[0])) {
-    const { code,  } = params[0] as CallbackQueryParameters;
+    const { code } = params[0] as CallbackQueryParameters;
 
-    return trimArrayEnd([
-        'Client',
-        'callback',
-        code as any,
-      ]);
+    return trimArrayEnd(['Client', 'callback', code as any]);
   } else {
-    return trimArrayEnd([
-        'Client',
-        'callback',
-        ...params
-      ]);
+    return trimArrayEnd(['Client', 'callback', ...params]);
   }
 }
 function __callback(context: QueryFunctionContext) {
-  return Client().callback(
-      context.queryKey[2] as string    );
+  return Client().callback(context.queryKey[2] as string);
 }
 
-export function useCallbackQuery<TSelectData = void, TError = unknown>(dto: CallbackQueryParameters, options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useCallbackQuery<TSelectData = void, TError = unknown>(
+  dto: CallbackQueryParameters,
+  options?: UseQueryOptions<void, TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
 /**
  * @return Default Response
  * @deprecated
  */
-export function useCallbackQuery<TSelectData = void, TError = unknown>(code: string, options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
-export function useCallbackQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
-  let axiosConfig: AxiosRequestConfig |undefined;
+export function useCallbackQuery<TSelectData = void, TError = unknown>(
+  code: string,
+  options?: UseQueryOptions<void, TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
+export function useCallbackQuery<TSelectData = void, TError = unknown>(
+  ...params: any[]
+): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<void, TError, TSelectData> | undefined =
+    undefined;
+  let axiosConfig: AxiosRequestConfig | undefined;
   let code: any = undefined;
-  
+
   if (params.length > 0) {
     if (isParameterObject(params[0])) {
-      ({ code,  } = params[0] as CallbackQueryParameters);
+      ({ code } = params[0] as CallbackQueryParameters);
       options = params[1];
       axiosConfig = params[2];
     } else {
@@ -305,14 +368,18 @@ export function useCallbackQuery<TSelectData = void, TError = unknown>(...params
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   if (axiosConfig) {
-    options = options ?? { } as any;
+    options = options ?? ({} as any);
     options!.meta = { ...options!.meta, axiosConfig };
   }
 
   return useQuery<void, TError, TSelectData>({
     queryFn: __callback,
     queryKey: callbackQueryKey(code),
-    ...callbackDefaultOptions as unknown as UseQueryOptions<void, TError, TSelectData>,
+    ...(callbackDefaultOptions as unknown as UseQueryOptions<
+      void,
+      TError,
+      TSelectData
+    >),
     ...options,
   });
 }
@@ -320,16 +387,22 @@ export function useCallbackQuery<TSelectData = void, TError = unknown>(...params
  * @return Default Response
  * @deprecated
  */
-export function setCallbackData(queryClient: QueryClient, updater: (data: void | undefined) => void, code: string) {
-  queryClient.setQueryData(callbackQueryKey(code),
-    updater
-  );
+export function setCallbackData(
+  queryClient: QueryClient,
+  updater: (data: void | undefined) => void,
+  code: string,
+) {
+  queryClient.setQueryData(callbackQueryKey(code), updater);
 }
 
 /**
  * @return Default Response
  * @deprecated
  */
-export function setCallbackDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: void | undefined) => void) {
+export function setCallbackDataByQueryId(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  updater: (data: void | undefined) => void,
+) {
   queryClient.setQueryData(queryKey, updater);
 }

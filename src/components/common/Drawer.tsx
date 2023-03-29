@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
 import { Link } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useAtomValue } from 'jotai';
-import { userAtom } from 'atoms/common';
+
+import { useMeQuery } from 'api/axios-client/Query';
 
 interface Props {
   open: boolean;
@@ -12,7 +12,11 @@ interface Props {
 }
 
 const Drawer = ({ open, closeDrawer }: Props) => {
-  const user = useAtomValue(userAtom);
+  const { data: user } = useMeQuery();
+
+  const logout = () => {
+    localStorage.removeItem('access_token');
+  };
 
   return (
     <>
@@ -29,10 +33,12 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           <LinkItem to="/">개인 대관</LinkItem>
           <LinkItem to="/">팀 순위</LinkItem>
           <LinkItem to="/">커뮤니티</LinkItem>
-          {user?.email ? (
+          {user ? (
             <>
               <LinkItem to="/">내 정보</LinkItem>
-              <LinkItem to="/">로그아웃</LinkItem>
+              <LinkItem to="/" onClick={() => logout()}>
+                로그아웃
+              </LinkItem>
             </>
           ) : (
             <>

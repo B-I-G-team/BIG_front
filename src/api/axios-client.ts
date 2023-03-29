@@ -9,7 +9,12 @@
 // ReSharper disable InconsistentNaming
 
 import axios, { AxiosError } from 'axios';
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  CancelToken,
+} from 'axios';
 
 //-----ClientClass--Client---
 //----------------------
@@ -22,257 +27,307 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } fr
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-
 export class Client {
-    private instance: AxiosInstance;
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+  private instance: AxiosInstance;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
+    undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+  constructor(baseUrl?: string, instance?: AxiosInstance) {
+    this.instance = instance ? instance : axios.create();
 
-        this.instance = instance ? instance : axios.create();
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
 
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+    axios.interceptors.request.use((req) => {
+      const access_token = localStorage.getItem('access_token');
+      req.headers.Authorization = access_token ? `Bearer ${access_token}` : '';
 
-    }
+      return req;
+    });
+  }
 
-    /**
-     * @return Default Response
-     */
-    anonymous(  cancelToken?: CancelToken | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/";
-          url_ = url_.replace(/[?&]$/, "");
+  /**
+   * @return Default Response
+   */
+  anonymous(cancelToken?: CancelToken | undefined): Promise<void> {
+    let url_ = this.baseUrl + '/';
+    url_ = url_.replace(/[?&]$/, '');
+    const access_token = localStorage.getItem('access_token');
 
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
+    let options_: AxiosRequestConfig = {
+      method: 'GET',
+      url: url_,
+      headers: {
+        Authorization: access_token ? `Bearer ${access_token}` : '',
+      },
+      cancelToken,
+    };
 
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processAnonymous(_response);
-        });
-    }
-
-    protected processAnonymous(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
         }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processAnonymous(_response);
+      });
+  }
 
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+  protected processAnonymous(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
         }
-        return Promise.resolve<void>(null as any);
+      }
     }
-
-    /**
-     * @return Default Response
-     */
-    me(  cancelToken?: CancelToken | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/auth/me";
-          url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processMe(_response);
-        });
+    if (status === 200) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(null as any);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers,
+      );
     }
+    return Promise.resolve<void>(null as any);
+  }
 
-    protected processMe(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
+  /**
+   * @return Default Response
+   */
+  me(cancelToken?: CancelToken | undefined): Promise<void> {
+    let url_ = this.baseUrl + '/auth/me';
+    url_ = url_.replace(/[?&]$/, '');
+    const access_token = localStorage.getItem('access_token');
+
+    let options_: AxiosRequestConfig = {
+      method: 'GET',
+      url: url_,
+      headers: {
+        Authorization: access_token ? `Bearer ${access_token}` : '',
+      },
+      cancelToken,
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
         }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processMe(_response);
+      });
+  }
 
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+  protected processMe(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
         }
-        return Promise.resolve<void>(null as any);
+      }
     }
-
-    /**
-     * @return Default Response
-     */
-    kakao(  cancelToken?: CancelToken | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/auth/kakao";
-          url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processKakao(_response);
-        });
+    if (status === 200) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(_responseText as any);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers,
+      );
     }
+    return Promise.resolve<void>(null as any);
+  }
 
-    protected processKakao(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
+  /**
+   * @return Default Response
+   */
+  kakao(cancelToken?: CancelToken | undefined): Promise<void> {
+    let url_ = this.baseUrl + '/auth/kakao';
+    url_ = url_.replace(/[?&]$/, '');
+    const access_token = localStorage.getItem('access_token');
+
+    let options_: AxiosRequestConfig = {
+      method: 'GET',
+      url: url_,
+      headers: {
+        Authorization: access_token ? `Bearer ${access_token}` : '',
+      },
+      cancelToken,
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
         }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processKakao(_response);
+      });
+  }
 
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+  protected processKakao(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
         }
-        return Promise.resolve<void>(null as any);
+      }
     }
-
-    /**
-     * @return Default Response
-     * @deprecated
-     */
-    callback(code: string , cancelToken?: CancelToken | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/auth/kakao/callback?";
-          if (code === undefined || code === null)
-            throw new Error("The parameter 'code' must be defined and cannot be null.");
-          else
-            url_ += "code=" + encodeURIComponent("" + code) + "&";
-          url_ = url_.replace(/[?&]$/, "");
-
-        let options_: AxiosRequestConfig = {
-            method: "GET",
-            url: url_,
-            headers: {
-            },
-            cancelToken
-        };
-
-        return this.instance.request(options_).catch((_error: any) => {
-            if (isAxiosError(_error) && _error.response) {
-                return _error.response;
-            } else {
-                throw _error;
-            }
-        }).then((_response: AxiosResponse) => {
-            return this.processCallback(_response);
-        });
+    if (status === 200) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(null as any);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers,
+      );
     }
+    return Promise.resolve<void>(null as any);
+  }
 
-    protected processCallback(response: AxiosResponse): Promise<void> {
-        const status = response.status;
-        let _headers: any = {};
-        if (response.headers && typeof response.headers === "object") {
-            for (let k in response.headers) {
-                if (response.headers.hasOwnProperty(k)) {
-                    _headers[k] = response.headers[k];
-                }
-            }
+  /**
+   * @return Default Response
+   * @deprecated
+   */
+  callback(code: string, cancelToken?: CancelToken | undefined): Promise<void> {
+    let url_ = this.baseUrl + '/auth/kakao/callback?';
+    if (code === undefined || code === null)
+      throw new Error(
+        "The parameter 'code' must be defined and cannot be null.",
+      );
+    else url_ += 'code=' + encodeURIComponent('' + code) + '&';
+    url_ = url_.replace(/[?&]$/, '');
+    const access_token = localStorage.getItem('access_token');
+
+    let options_: AxiosRequestConfig = {
+      method: 'GET',
+      url: url_,
+      headers: {
+        Authorization: access_token ? `Bearer ${access_token}` : '',
+      },
+      cancelToken,
+    };
+
+    return this.instance
+      .request(options_)
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
         }
-        if (status === 200) {
-            const _responseText = response.data;
-            return Promise.resolve<void>(null as any);
+      })
+      .then((_response: AxiosResponse) => {
+        return this.processCallback(_response);
+      });
+  }
 
-        } else if (status !== 200 && status !== 204) {
-            const _responseText = response.data;
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+  protected processCallback(response: AxiosResponse): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
         }
-        return Promise.resolve<void>(null as any);
+      }
     }
+    if (status === 200) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(null as any);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers,
+      );
+    }
+    return Promise.resolve<void>(null as any);
+  }
 }
 
 //-----/ClientClass----
 
 export * as Query from './axios-client/Query';
 
-
-
 //-----Types.File-----
 
 //-----/CustomTypes.File-----
 
 export class ApiException extends Error {
-    message: string;
-    status: number;
-    response: string;
-    headers: { [key: string]: any; };
-    result: any;
+  message: string;
+  status: number;
+  response: string;
+  headers: { [key: string]: any };
+  result: any;
 
-    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
-        super();
+  constructor(
+    message: string,
+    status: number,
+    response: string,
+    headers: { [key: string]: any },
+    result: any,
+  ) {
+    super();
 
-        this.message = message;
-        this.status = status;
-        this.response = response;
-        this.headers = headers;
-        this.result = result;
-    }
+    this.message = message;
+    this.status = status;
+    this.response = response;
+    this.headers = headers;
+    this.result = result;
+  }
 
-    protected isApiException = true;
+  protected isApiException = true;
 
-    static isApiException(obj: any): obj is ApiException {
-        return obj.isApiException === true;
-    }
+  static isApiException(obj: any): obj is ApiException {
+    return obj.isApiException === true;
+  }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
-    if (result !== null && result !== undefined)
-        throw result;
-    else
-        throw new ApiException(message, status, response, headers, null);
+function throwException(
+  message: string,
+  status: number,
+  response: string,
+  headers: { [key: string]: any },
+  result?: any,
+): any {
+  if (result !== null && result !== undefined) throw result;
+  else throw new ApiException(message, status, response, headers, null);
 }
 
 function isAxiosError(obj: any | undefined): obj is AxiosError {
-    return obj && obj.isAxiosError === true;
+  return obj && obj.isAxiosError === true;
 }
 
 //-----/Types.File-----
@@ -281,10 +336,9 @@ import { addResultTypeFactory } from './axios-client/helpers';
 export { setBaseUrl, getBaseUrl } from './axios-client/helpers';
 export { setAxiosFactory, getAxios } from './axios-client/helpers';
 
-
 //-----PersistorHydrator.File-----
 import type { PersistedClient } from '@tanstack/react-query-persist-client';
-import type { DehydratedState, QueryKey } from '@tanstack/react-query'
+import type { DehydratedState, QueryKey } from '@tanstack/react-query';
 import { getResultTypeFactory } from './axios-client/helpers';
 
 /*
@@ -294,21 +348,23 @@ import { getResultTypeFactory } from './axios-client/helpers';
 export function deserializeDate(str: unknown) {
   if (!str || typeof str !== 'string') return str;
   if (!/^\d\d\d\d\-\d\d\-\d\d/.test(str)) return str;
-  
+
   const date = new Date(str);
   const isDate = date instanceof Date && !isNaN(date as any);
-  
+
   return isDate ? date : str;
 }
 
 export function deserializeDatesInQueryKeys(queryKey: QueryKey) {
-  return queryKey
-    // We need to replace `null` with `undefined` in query key, because
-    // `undefined` is serialized as `null`.
-    // And most probably if we have `null` in QueryKey it actually means `undefined`.
-    // We can't keep nulls, because they have a different meaning, and e.g. boolean parameters are not allowed to be null.
-    .map(x => (x === null ? undefined : x))
-    .map(x => deserializeDate(x));
+  return (
+    queryKey
+      // We need to replace `null` with `undefined` in query key, because
+      // `undefined` is serialized as `null`.
+      // And most probably if we have `null` in QueryKey it actually means `undefined`.
+      // We can't keep nulls, because they have a different meaning, and e.g. boolean parameters are not allowed to be null.
+      .map((x) => (x === null ? undefined : x))
+      .map((x) => deserializeDate(x))
+  );
 }
 
 export function deserializeClassesInQueryData(queryKey: QueryKey, data: any) {
@@ -316,11 +372,18 @@ export function deserializeClassesInQueryData(queryKey: QueryKey, data: any) {
     return data;
   } else if (typeof data !== 'object') {
     return data;
-  } else if ('pages' in data && 'pageParams' in data && Array.isArray(data.pages) && Array.isArray(data.pageParams)) {
+  } else if (
+    'pages' in data &&
+    'pageParams' in data &&
+    Array.isArray(data.pages) &&
+    Array.isArray(data.pageParams)
+  ) {
     // infinite query
-    data.pages = data.pages.map((page:any) => deserializeClassesInQueryData(queryKey, page));
+    data.pages = data.pages.map((page: any) =>
+      deserializeClassesInQueryData(queryKey, page),
+    );
   } else if (Array.isArray(data)) {
-    return data.map(elem => constructDtoClass(queryKey, elem));
+    return data.map((elem) => constructDtoClass(queryKey, elem));
   } else {
     return constructDtoClass(queryKey, data);
   }
@@ -333,7 +396,10 @@ export function deserializeClassesInQueryData(queryKey: QueryKey, data: any) {
 export function persisterDeserialize(cache: string): PersistedClient {
   const client: PersistedClient = JSON.parse(cache);
   client.clientState.queries.forEach((query) => {
-    query.state.data = deserializeClassesInQueryData(query.queryKey, query.state.data);
+    query.state.data = deserializeClassesInQueryData(
+      query.queryKey,
+      query.state.data,
+    );
     query.queryKey = deserializeDatesInQueryKeys(query.queryKey);
   });
 
@@ -344,8 +410,7 @@ export function constructDtoClass(queryKey: QueryKey, data: any): unknown {
   const resultTypeKey = getResultTypeClassKey(queryKey);
   const constructorFunction = getResultTypeFactory(resultTypeKey);
 
-  if (!data || !constructorFunction)
-    return data;
+  if (!data || !constructorFunction) return data;
 
   return constructorFunction(data);
 }
@@ -364,9 +429,5 @@ export function getResultTypeClassKey(queryKey: QueryKey): string {
   return queryKey.join('___');
 }
 
-export function initPersister() {
-  
-
-
-}
+export function initPersister() {}
 //-----/PersistorHydrator.File----

@@ -1,11 +1,23 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
 
 import KaKaoIconImg from 'assets/kakao-icon.png';
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
+  const access_token = searchParams.get('access_token');
+  const navigate = useNavigate();
+  console.log(access_token);
+
+  useEffect(() => {
+    if (access_token) {
+      localStorage.setItem('access_token', access_token);
+      navigate('/');
+    }
+  }, [access_token, navigate]);
+
   return (
     <Container>
       <Link to="/">
