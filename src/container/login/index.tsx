@@ -9,7 +9,6 @@ const Index = () => {
   const [searchParams] = useSearchParams();
   const access_token = searchParams.get('access_token');
   const navigate = useNavigate();
-  console.log(access_token);
 
   useEffect(() => {
     if (access_token) {
