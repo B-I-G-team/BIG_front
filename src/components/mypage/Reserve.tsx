@@ -174,12 +174,13 @@ const Image = styled.img`
     width: 35%;
     display: block;
   }
-  width: 70%;
+  width: 100%;
 `;
 const ReserveInfoBox = styled.div`
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+  align-items: center;
   @media ${({ theme }) => theme.grid.tablet} {
     flex-direction: row;
   }
@@ -190,7 +191,6 @@ const ReserveInfoList = styled.ul`
   padding: 0px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   @media ${({ theme }) => theme.grid.tablet} {
     margin-left: 55px;
   }

@@ -63,15 +63,8 @@ const Mypage = () => {
   const selectSubMenuHandler = (index: number) => {
     clickSubTab(index);
   };
-  const userButtonClick = () => {
-    setIndex(UserIndex + 1);
-    if (UserIndex === 2) {
-      setIndex(0);
-    }
-  };
   return (
     <Container>
-      <button onClick={userButtonClick}>+ 유저 정보 바뀔시</button>
       <Title>내 정보</Title>
       <InformationBox>
         <Informations>
@@ -138,18 +131,22 @@ const InformationBox = styled.div`
   @media ${({ theme }) => theme.grid.tablet} {
     justify-content: flex-start;
   }
+  margin-bottom: 34px;
 `;
 
-const Title = styled.p`
+const Title = styled.div`
   font-size: ${({ theme }) => theme.font.size.heading_4};
   font-weight: 700;
-  padding: 10px 0;
+  padding: 0px;
+  margin-bottom: 20px;
+  margin-top: 34px;
 `;
 
 const Informations = styled.ul`
   list-style: none;
   display: flex;
   padding: 0px;
+  margin: 0px;
   flex-direction: column;
   align-items: flex-start;
 `;
@@ -182,7 +179,10 @@ const TabMenu = styled.ul`
   .submenu {
     display: flex;
     background-color: #e0e2e7;
-    width: 100px;
+    @media ${({ theme }) => theme.grid.tablet} {
+      width: 100px;
+    }
+    width: 50%;
     padding: 10px;
     font-size: ${({ theme }) => theme.font.size.subtitle_2};
     transition: 0.5s;
