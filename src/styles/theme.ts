@@ -9,6 +9,7 @@ const color = {
   primary_45: '#D24E13',
   primary_35: '#A33D0F',
   primary_25: '#752B0B',
+  blue: '#3DA5F5',
   border: '#E0E2E7',
 };
 

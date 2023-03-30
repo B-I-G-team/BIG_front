@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface Props {
@@ -14,8 +15,10 @@ interface Props {
 }
 
 const GymItem = ({ data }: Props) => {
+  const navigate = useNavigate();
+
   return (
-    <Container>
+    <Container onClick={() => navigate(`/team-rental?id=${data.id}`)}>
       <Image src={data.image} />
       <ContentWrapper>
         <TopWrapper>

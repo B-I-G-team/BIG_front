@@ -46,7 +46,7 @@ const tempDataArr = [
 const GymList = () => {
   return (
     <Container>
-      <Title>인기 개인대관 체육관</Title>
+      <Title>인기 팀대관 체육관</Title>
       <Wrapper>
         <ListContainer>
           {tempDataArr.map((item) => (
