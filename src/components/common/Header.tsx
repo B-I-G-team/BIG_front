@@ -37,7 +37,7 @@ const Header = () => {
               <Logo src={logoImage} />
             </LogoLink>
             <LeftItem to="/">픽업게임</LeftItem>
-            <LeftItem to="/">팀대관</LeftItem>
+            <LeftItem to="/team-rental">팀대관</LeftItem>
             <LeftItem to="/">개인대관</LeftItem>
             <LeftItem to="/">팀 순위</LeftItem>
             <LeftItem to="/">커뮤니티</LeftItem>
