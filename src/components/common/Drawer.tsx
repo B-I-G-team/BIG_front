@@ -1,7 +1,8 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 
 import { useMeQuery } from 'api/axios-client/Query';
@@ -18,6 +19,12 @@ const Drawer = ({ open, closeDrawer }: Props) => {
     localStorage.removeItem('access_token');
   };
 
+  const location = useLocation();
+
+  useEffect(() => {
+    closeDrawer();
+  }, [location]);
+
   return (
     <>
       <Container open={open}>
@@ -29,7 +36,7 @@ const Drawer = ({ open, closeDrawer }: Props) => {
             <Logo src={logoImage} />
           </LogoLink>
           <LinkItem to="/">픽업 게임</LinkItem>
-          <LinkItem to="/">팀 대관</LinkItem>
+          <LinkItem to="/team-rental">팀 대관</LinkItem>
           <LinkItem to="/">개인 대관</LinkItem>
           <LinkItem to="/">팀 순위</LinkItem>
           <LinkItem to="/">커뮤니티</LinkItem>
