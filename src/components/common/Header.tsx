@@ -6,19 +6,15 @@ import Search from 'components/common/Search';
 import { CiSearch } from 'react-icons/ci';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
-import { useAtomValue } from 'jotai';
-import { userAtom } from 'atoms/common';
-import * as api from 'api/auth';
+
 import Drawer from './Drawer';
+import { useMeQuery } from 'api/axios-client/Query';
 
 const Header = () => {
   const location = useLocation();
-  const user = useAtomValue(userAtom);
-  const [open, setOpen] = useState(false);
+  const { data: user } = useMeQuery();
 
-  const onClickLogout = () => {
-    api.signout();
-  };
+  const [open, setOpen] = useState(false);
 
   const openDrawer = () => {
     setOpen(true);
@@ -26,6 +22,10 @@ const Header = () => {
 
   const closeDrawer = () => {
     setOpen(false);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('access_token');
   };
 
   if (location.pathname !== '/login' && location.pathname !== '/signup')
@@ -58,8 +58,8 @@ const Header = () => {
             {/* 랩탑부터 */}
             <NavList>
               <StyledLink to="/gym">내 정보</StyledLink>
-              {user?.email ? (
-                <StyledLink to="/" onClick={onClickLogout}>
+              {user ? (
+                <StyledLink to="/" onClick={() => logout()}>
                   로그아웃
                 </StyledLink>
               ) : (
