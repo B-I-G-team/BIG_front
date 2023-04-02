@@ -45,14 +45,13 @@ const Header = () => {
 
             {/* 인풋 */}
           </LeftSection>
-
           <RightSecton>
             {/* 태블릿까지 */}
             <button type="button">
-              <SearchIcon size={30} />
+              <SearchIcon size={24} />
             </button>
             <button type="button" onClick={openDrawer}>
-              <HamburgerIcon size={30} />
+              <HamburgerIcon size={24} />
             </button>
 
             {/* 랩탑부터 */}
@@ -86,21 +85,25 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 45px;
   @media ${({ theme }) => theme.grid.tablet} {
-    height: 80px;
+    height: 60px;
   }
 `;
 
 const LogoLink = styled(Link)`
   margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Logo = styled.img`
-  width: 90px;
+  width: 70px;
   height: auto;
 
   @media ${({ theme }) => theme.grid.tablet} {
-    width: 150px;
+    width: 95px;
   }
 `;
 
