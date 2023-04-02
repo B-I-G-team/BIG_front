@@ -37,9 +37,7 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           </LogoLink>
           <LinkItem to="/">픽업 게임</LinkItem>
           <LinkItem to="/team-rental">팀 대관</LinkItem>
-          <LinkItem to="/">개인 대관</LinkItem>
           <LinkItem to="/">팀 순위</LinkItem>
-          <LinkItem to="/">커뮤니티</LinkItem>
           {user ? (
             <>
               <LinkItem to="/mypage">내 정보</LinkItem>
