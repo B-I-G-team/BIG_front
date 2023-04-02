@@ -42,7 +42,7 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           <LinkItem to="/">커뮤니티</LinkItem>
           {user ? (
             <>
-              <LinkItem to="/">내 정보</LinkItem>
+              <LinkItem to="/mypage">내 정보</LinkItem>
               <LinkItem to="/" onClick={() => logout()}>
                 로그아웃
               </LinkItem>

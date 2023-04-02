@@ -31,6 +31,11 @@ const GlobalStyle = createGlobalStyle`
   button{
     border: 0;
     background-color: transparent;
+    cursor:pointer;
+  }
+
+  button:hover{
+    opacity: 0.8;
   }
 
   input{
