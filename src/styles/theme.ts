@@ -11,6 +11,9 @@ const color = {
   primary_25: '#752B0B',
   blue: '#3DA5F5',
   border: '#E0E2E7',
+  kakao_container: '#FEE500',
+  kakao_symbol: '#000000',
+  kakao_label: 'rgba(0,0,0,0.8)',
 };
 
 const size = {
