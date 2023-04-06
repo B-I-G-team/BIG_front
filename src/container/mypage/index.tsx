@@ -13,6 +13,13 @@ const TEAM = 'team-rental';
 const PICKUP = 'pickup';
 const INDIVIDUAL = 'individual-rental';
 
+const Notification = ({ Data }: any) => {
+  if (Data === WAIT_CONFIRM) {
+    return <Notify>😊 사장님의 승인요청을 기다리고 있습니다.</Notify>;
+  } else if (Data === WAIT_PAY) {
+    return <Notify>😊 결제가 완료되면 예약이 완료됩니다.</Notify>;
+  } else return <Notify></Notify>;
+};
 const Index = () => {
   const { data: user } = useMeQuery() as {
     data: User;
@@ -30,7 +37,6 @@ const Index = () => {
   const tempUser = {
     ...addInfoUser,
   };
-  console.log(tempUser);
   const [state, setState] = useState(WAIT_CONFIRM);
   const onChange = (e: RadioChangeEvent) => {
     setState(e.target.value);
@@ -175,15 +181,20 @@ const Index = () => {
             key: id,
             children: (
               <>
-                <Radio.Group
-                  value={state}
-                  onChange={onChange}
-                  style={{ marginBottom: 16 }}
-                >
-                  <Radio.Button value={WAIT_CONFIRM}>승인 대기중</Radio.Button>
-                  <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
-                  <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
-                </Radio.Group>
+                <SubTab>
+                  <Radio.Group
+                    value={state}
+                    onChange={onChange}
+                    style={{ marginBottom: 16 }}
+                  >
+                    <Radio.Button value={WAIT_CONFIRM}>
+                      승인 대기중
+                    </Radio.Button>
+                    <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
+                    <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
+                  </Radio.Group>
+                  <Notification Data={state} />
+                </SubTab>
                 <Reserve Data={tab.content} subData={state}></Reserve>
               </>
             ),
@@ -255,6 +266,19 @@ const Separator = styled.div`
   width: 90px;
 `;
 const InformationData = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Notify = styled.p`
+  @media ${({ theme }) => theme.grid.tablet} {
+    margin-left: 48px;
+    font-size: ${({ theme }) => theme.font.size.subtitle_2};
+    font-weight: 500;
+  }
+  display: none;
+`;
+const SubTab = styled.div`
   display: flex;
   align-items: center;
 `;
