@@ -40,8 +40,7 @@ const data = [
 ];
 
 const Mypage = () => {
-  const [UserIndex, setIndex] = useState(0);
-  const user = data[UserIndex];
+  const user = data[0];
   const menuArr = [
     { name: '픽업게임', content: PICKUP },
     { name: '팀 대관', content: TEAM },
@@ -52,16 +51,16 @@ const Mypage = () => {
     { name: '결제 대기중', content: WAIT_PAY },
     { name: '예약 완료', content: RESERVE },
   ];
-  const [currentTab, clickTab] = useState(0);
-  const [currentSubTab, clickSubTab] = useState(0);
+  const [tab, setTab] = useState(0);
+  const [subTab, setSubTab] = useState(0);
 
   const selectMenuHandler = (index: number) => {
-    clickTab(index);
-    clickSubTab(0);
+    setTab(index);
+    setSubTab(0);
   };
 
   const selectSubMenuHandler = (index: number) => {
-    clickSubTab(index);
+    setSubTab(index);
   };
   return (
     <Container>
@@ -96,25 +95,25 @@ const Mypage = () => {
       <Title>진행중인 예약정보</Title>
       <TabMenu>
         {menuArr.map((el, index) => (
-          <li
+          <TabList
             key={index}
-            className={index === currentTab ? 'submenu focused' : 'submenu'}
+            focused=""
             onClick={() => selectMenuHandler(index)}
           >
             {el.name}
-          </li>
+          </TabList>
         ))}
         <EmptyBox></EmptyBox>
       </TabMenu>
       <SubTab>
         {subMenuArr.map((el, index) => (
-          <li
+          <TabList
             key={index}
             className={index === currentSubTab ? 'submenu focused' : 'submenu'}
             onClick={() => selectSubMenuHandler(index)}
           >
             {el.name}
-          </li>
+          </TabList>
         ))}
       </SubTab>
       <Reserve Data={menuArr[currentTab]} subData={subMenuArr[currentSubTab]} />
@@ -208,7 +207,7 @@ const SubTab = styled.ul`
     flex-direction: row;
   }
   .submenu {
-    color: #cdcfff;
+    color: ${(focused) => '#cdcfff' || '#5d5fef'};
     display: flex;
     transition: 0.5s;
     font-size: ${({ theme }) => theme.font.size.subtitle_2};
@@ -224,3 +223,5 @@ const SubTab = styled.ul`
     color: #5d5fef;
   }
 `;
+
+const TabList = styled.li``;
