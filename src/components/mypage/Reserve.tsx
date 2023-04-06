@@ -4,17 +4,12 @@ import placeImg from 'assets/place1.jpeg';
 const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
-const TEAM = 'team';
+const TEAM = 'team-rental';
 const PICKUP = 'pickup';
+const INDIVIDUAL = 'individual-rental';
 interface Props {
-  Data: {
-    name: string;
-    content: string;
-  };
-  subData: {
-    name: string;
-    content: string;
-  };
+  Data: string;
+  subData: string;
 }
 
 interface DataProps {
@@ -100,6 +95,16 @@ const tempDataArr = [
     time: '2023.03.15(수) 15:00 ~ 16:30',
     pay: 13300,
   },
+  {
+    id: 8,
+    state: WAIT_PAY,
+    image: placeImg,
+    type: INDIVIDUAL,
+    gymName: '사하 인피니트 스포츠',
+    location: '부산광역시 사하구 마하로48번길',
+    time: '2023.03.15(수) 15:00 ~ 16:30',
+    pay: 13300,
+  },
 ];
 const ReserveState = ({ Data }: DataProps) => {
   const pay = Math.floor(Data.pay / 1000);
@@ -139,9 +144,7 @@ const Reserve = ({ Data, subData }: Props) => {
         <ReserveInfoBox
           key={index}
           className={
-            Data.content === el.type && subData.content === el.state
-              ? 'active'
-              : 'unactive'
+            Data === el.type && subData === el.state ? 'active' : 'unactive'
           }
         >
           <Image src={el.image} alt="" />
