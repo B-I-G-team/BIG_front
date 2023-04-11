@@ -11,16 +11,12 @@ import { BiBell } from 'react-icons/bi';
 import Drawer from './Drawer';
 import { useMeGETQuery } from 'api/axios-client/Query';
 import { Button, Input, Popover } from 'antd';
-import { User } from 'types/common';
+
 const { Search } = Input;
 
 const Header = () => {
   const location = useLocation();
-  const { data: user } = useMeGETQuery({
-    staleTime: Infinity,
-  }) as {
-    data: User;
-  };
+  const { data: user } = useMeGETQuery();
 
   const [open, setOpen] = useState(false);
   const [popOverOpen, setPopOverOpen] = useState(false);
