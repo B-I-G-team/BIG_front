@@ -545,7 +545,8 @@ export function setMeGETDefaultOptions(
 
 export function meGETQueryKey(): QueryKey;
 export function meGETQueryKey(...params: any[]): QueryKey {
-  return trimArrayEnd(['Client', 'meGET']);
+  const access_token = localStorage.getItem('access_token');
+  return trimArrayEnd(['Client', 'meGET', access_token]);
 }
 function __meGET() {
   return Client().meGET();
