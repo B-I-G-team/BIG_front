@@ -2,7 +2,6 @@
 
 import type { QueryMeta, MutationMeta } from '@tanstack/react-query';
 import type { QueryMetaContextValue } from 'react-query-swagger';
-
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
 

@@ -5,7 +5,7 @@ import logoImage from 'assets/logo.png';
 import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 
-import { useMeQuery } from 'api/axios-client/Query';
+import { useMeGETQuery } from 'api/axios-client/Query';
 
 interface Props {
   open: boolean;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 const Drawer = ({ open, closeDrawer }: Props) => {
-  const { data: user } = useMeQuery();
+  const { data: user } = useMeGETQuery();
 
   const logout = () => {
     localStorage.removeItem('access_token');
