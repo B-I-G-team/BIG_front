@@ -9,17 +9,19 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
 
 import Drawer from './Drawer';
-import { useMeQuery } from 'api/axios-client/Query';
+import { useMeGETQuery } from 'api/axios-client/Query';
 import { Button, Input, Popover } from 'antd';
 import { User } from 'types/common';
 const { Search } = Input;
 
 const Header = () => {
   const location = useLocation();
-  const { data: user } = useMeQuery() as {
+  const { data: user } = useMeGETQuery({
+    staleTime: Infinity,
+  }) as {
     data: User;
   };
-  console.log(blue);
+
   const [open, setOpen] = useState(false);
   const [popOverOpen, setPopOverOpen] = useState(false);
 
