@@ -1,4 +1,4 @@
-import { Button, Input, message, Modal, Select, Upload } from 'antd';
+import { Button, Input, Modal, Select, Upload } from 'antd';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
@@ -8,6 +8,9 @@ import {
   UploadFile,
   UploadProps,
 } from 'antd/es/upload';
+import { useTeamsMutation } from 'api/axios-client/Query';
+import Swal from 'sweetalert2';
+import { Body } from 'api/axios-client';
 
 const { TextArea } = Input;
 
@@ -15,18 +18,6 @@ const getBase64 = (img: RcFile, callback: (url: string) => void) => {
   const reader = new FileReader();
   reader.addEventListener('load', () => callback(reader.result as string));
   reader.readAsDataURL(img);
-};
-
-const beforeUpload = (file: RcFile) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!');
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!');
-  }
-  return isJpgOrPng && isLt2M;
 };
 
 interface Props {
@@ -41,8 +32,24 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
   const [logoLoading, setLogoloading] = useState(false);
   const [logoImg, setLogoImg] = useState('');
 
+  const { mutate } = useTeamsMutation();
+
   const onClickCreate = () => {
-    console.log(teamName, teamLocal, teamIntroduce);
+    if (teamName && teamLocal && teamIntroduce && logoImg) {
+      mutate(
+        new Body({
+          name: teamName,
+          local: teamLocal,
+          image: '', // 임시로 '' 처리 하겠습니다.
+          introduction: teamIntroduce,
+        }),
+      );
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '팀 생성 실패',
+      });
+    }
   };
 
   const uploadButton = (
@@ -55,17 +62,14 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>,
   ) => {
-    if (info.file.status === 'uploading') {
-      setLogoloading(true);
-      return;
-    }
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
-        setLogoloading(false);
-        setLogoImg(url);
-      });
-    }
+    console.log(info.file.originFileObj);
+    // 추후 s3 업로드 후 이미지 링크 생성 후 logoImg 에 set할 예정입니다.
+
+    // Get this url from response in real world.
+    getBase64(info.file.originFileObj as RcFile, (url) => {
+      setLogoloading(false);
+      setLogoImg(url);
+    });
   };
 
   return (
@@ -97,9 +101,13 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
             listType="picture-circle"
             showUploadList={false}
             onChange={handleChange}
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            customRequest={() => {}}
           >
-            {uploadButton}
+            {logoImg ? (
+              <img src={logoImg} alt="avatar" style={{ width: '100%' }} />
+            ) : (
+              uploadButton
+            )}
           </StyledUpload>
         </Logo>
 
