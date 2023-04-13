@@ -40,6 +40,12 @@ export type CallbackQueryParameters = {
   code: string;
 };
 
+export type TeamsAllQueryParameters = {
+  offset: string | null | undefined;
+  limit: string | null | undefined;
+  search: string | null | undefined;
+};
+
 export function anonymousUrl(): string {
   let url_ = getBaseUrl() + '/';
   url_ = url_.replace(/[?&]$/, '');
@@ -119,92 +125,6 @@ export function setAnonymousData(
  * @return Default Response
  */
 export function setAnonymousDataByQueryId(
-  queryClient: QueryClient,
-  queryKey: QueryKey,
-  updater: (data: void | undefined) => void,
-) {
-  queryClient.setQueryData(queryKey, updater);
-}
-
-export function meUrl(): string {
-  let url_ = getBaseUrl() + '/auth/me';
-  url_ = url_.replace(/[?&]$/, '');
-  return url_;
-}
-
-let meDefaultOptions: UseQueryOptions<void, unknown, void> = {
-  queryFn: __me,
-};
-export function getMeDefaultOptions(): UseQueryOptions<void, unknown, void> {
-  return meDefaultOptions;
-}
-export function setMeDefaultOptions(
-  options: UseQueryOptions<void, unknown, void>,
-) {
-  meDefaultOptions = options;
-}
-
-export function meQueryKey(): QueryKey;
-export function meQueryKey(...params: any[]): QueryKey {
-  const access_token = localStorage.getItem('access_token');
-  return trimArrayEnd(['Client', 'me', access_token]);
-}
-function __me() {
-  return Client().me();
-}
-
-/**
- * @return Default Response
- */
-export function useMeQuery<TSelectData = void, TError = unknown>(
-  options?: UseQueryOptions<void, TError, TSelectData>,
-  axiosConfig?: Partial<AxiosRequestConfig>,
-): UseQueryResult<TSelectData, TError>;
-export function useMeQuery<TSelectData = void, TError = unknown>(
-  ...params: any[]
-): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<void, TError, TSelectData> | undefined =
-    undefined;
-  let axiosConfig: AxiosRequestConfig | undefined;
-
-  options = params[0] as any;
-  axiosConfig = params[1] as any;
-
-  const metaContext = useContext(QueryMetaContext);
-  options = addMetaToOptions(options, metaContext);
-  if (axiosConfig) {
-    options = options ?? ({} as any);
-    options!.meta = { ...options!.meta, axiosConfig };
-  }
-
-  return useQuery<void, TError, TSelectData>({
-    queryFn: __me,
-    queryKey: meQueryKey(),
-    staleTime: Infinity,
-    retry: false,
-
-    ...(meDefaultOptions as unknown as UseQueryOptions<
-      void,
-      TError,
-      TSelectData
-    >),
-    ...options,
-  });
-}
-/**
- * @return Default Response
- */
-export function setMeData(
-  queryClient: QueryClient,
-  updater: (data: void | undefined) => void,
-) {
-  queryClient.setQueryData(meQueryKey(), updater);
-}
-
-/**
- * @return Default Response
- */
-export function setMeDataByQueryId(
   queryClient: QueryClient,
   queryKey: QueryKey,
   updater: (data: void | undefined) => void,
@@ -405,4 +325,317 @@ export function setCallbackDataByQueryId(
   updater: (data: void | undefined) => void,
 ) {
   queryClient.setQueryData(queryKey, updater);
+}
+
+export function teamsAllUrl(
+  offset: string | null | undefined,
+  limit: string | null | undefined,
+  search: string | null | undefined,
+): string {
+  let url_ = getBaseUrl() + '/teams?';
+  if (offset !== undefined && offset !== null)
+    url_ += 'offset=' + encodeURIComponent('' + offset) + '&';
+  if (limit !== undefined && limit !== null)
+    url_ += 'limit=' + encodeURIComponent('' + limit) + '&';
+  if (search !== undefined && search !== null)
+    url_ += 'search=' + encodeURIComponent('' + search) + '&';
+  url_ = url_.replace(/[?&]$/, '');
+  return url_;
+}
+
+let teamsAllDefaultOptions: UseQueryOptions<
+  Types.Anonymous[],
+  unknown,
+  Types.Anonymous[]
+> = {
+  queryFn: __teamsAll,
+};
+export function getTeamsAllDefaultOptions(): UseQueryOptions<
+  Types.Anonymous[],
+  unknown,
+  Types.Anonymous[]
+> {
+  return teamsAllDefaultOptions;
+}
+export function setTeamsAllDefaultOptions(
+  options: UseQueryOptions<Types.Anonymous[], unknown, Types.Anonymous[]>,
+) {
+  teamsAllDefaultOptions = options;
+}
+
+export function teamsAllQueryKey(dto: TeamsAllQueryParameters): QueryKey;
+export function teamsAllQueryKey(
+  offset: string | null | undefined,
+  limit: string | null | undefined,
+  search: string | null | undefined,
+): QueryKey;
+export function teamsAllQueryKey(...params: any[]): QueryKey {
+  if (params.length === 1 && isParameterObject(params[0])) {
+    const { offset, limit, search } = params[0] as TeamsAllQueryParameters;
+
+    return trimArrayEnd([
+      'Client',
+      'teamsAll',
+      offset as any,
+      limit as any,
+      search as any,
+    ]);
+  } else {
+    return trimArrayEnd(['Client', 'teamsAll', ...params]);
+  }
+}
+function __teamsAll(context: QueryFunctionContext) {
+  return Client().teamsAll(
+    context.queryKey[2] as string | null | undefined,
+    context.queryKey[3] as string | null | undefined,
+    context.queryKey[4] as string | null | undefined,
+  );
+}
+
+export function useTeamsAllQuery<
+  TSelectData = Types.Anonymous[],
+  TError = unknown,
+>(
+  dto: TeamsAllQueryParameters,
+  options?: UseQueryOptions<Types.Anonymous[], TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
+/**
+ * @param offset (optional) number
+ * @param limit (optional) number
+ * @param search (optional) 검색어
+ * @return Default Response
+ */
+export function useTeamsAllQuery<
+  TSelectData = Types.Anonymous[],
+  TError = unknown,
+>(
+  offset: string | null | undefined,
+  limit: string | null | undefined,
+  search: string | null | undefined,
+  options?: UseQueryOptions<Types.Anonymous[], TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
+export function useTeamsAllQuery<
+  TSelectData = Types.Anonymous[],
+  TError = unknown,
+>(...params: any[]): UseQueryResult<TSelectData, TError> {
+  let options:
+    | UseQueryOptions<Types.Anonymous[], TError, TSelectData>
+    | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig | undefined;
+  let offset: any = undefined;
+  let limit: any = undefined;
+  let search: any = undefined;
+
+  if (params.length > 0) {
+    if (isParameterObject(params[0])) {
+      ({ offset, limit, search } = params[0] as TeamsAllQueryParameters);
+      options = params[1];
+      axiosConfig = params[2];
+    } else {
+      [offset, limit, search, options, axiosConfig] = params;
+    }
+  }
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? ({} as any);
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
+
+  return useQuery<Types.Anonymous[], TError, TSelectData>({
+    queryFn: __teamsAll,
+    queryKey: teamsAllQueryKey(offset, limit, search),
+    ...(teamsAllDefaultOptions as unknown as UseQueryOptions<
+      Types.Anonymous[],
+      TError,
+      TSelectData
+    >),
+    ...options,
+  });
+}
+/**
+ * @param offset (optional) number
+ * @param limit (optional) number
+ * @param search (optional) 검색어
+ * @return Default Response
+ */
+export function setTeamsAllData(
+  queryClient: QueryClient,
+  updater: (data: Types.Anonymous[] | undefined) => Types.Anonymous[],
+  offset: string | null | undefined,
+  limit: string | null | undefined,
+  search: string | null | undefined,
+) {
+  queryClient.setQueryData(teamsAllQueryKey(offset, limit, search), updater);
+}
+
+/**
+ * @param offset (optional) number
+ * @param limit (optional) number
+ * @param search (optional) 검색어
+ * @return Default Response
+ */
+export function setTeamsAllDataByQueryId(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  updater: (data: Types.Anonymous[] | undefined) => Types.Anonymous[],
+) {
+  queryClient.setQueryData(queryKey, updater);
+}
+
+export function teamsUrl(): string {
+  let url_ = getBaseUrl() + '/teams';
+  url_ = url_.replace(/[?&]$/, '');
+  return url_;
+}
+
+export function teamsMutationKey(): MutationKey {
+  return trimArrayEnd(['Client', 'teams']);
+}
+
+/**
+ * @param body (optional)
+ * @return Default Response
+ */
+export function useTeamsMutation<TContext>(
+  options?: Omit<
+    UseMutationOptions<Types.Anonymous2, unknown, Types.Body, TContext>,
+    'mutationKey' | 'mutationFn'
+  >,
+): UseMutationResult<Types.Anonymous2, unknown, Types.Body, TContext> {
+  const key = teamsMutationKey();
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+
+  return useMutation((body: Types.Body) => Client().teams(body), {
+    ...options,
+    mutationKey: key,
+  });
+}
+
+export function meGETUrl(): string {
+  let url_ = getBaseUrl() + '/users/me';
+  url_ = url_.replace(/[?&]$/, '');
+  return url_;
+}
+
+let meGETDefaultOptions: UseQueryOptions<
+  Types.Anonymous3,
+  unknown,
+  Types.Anonymous3
+> = {
+  queryFn: __meGET,
+};
+export function getMeGETDefaultOptions(): UseQueryOptions<
+  Types.Anonymous3,
+  unknown,
+  Types.Anonymous3
+> {
+  return meGETDefaultOptions;
+}
+export function setMeGETDefaultOptions(
+  options: UseQueryOptions<Types.Anonymous3, unknown, Types.Anonymous3>,
+) {
+  meGETDefaultOptions = options;
+}
+
+export function meGETQueryKey(): QueryKey;
+export function meGETQueryKey(...params: any[]): QueryKey {
+  const access_token = localStorage.getItem('access_token');
+  return trimArrayEnd(['Client', 'meGET', access_token]);
+}
+function __meGET() {
+  return Client().meGET();
+}
+
+/**
+ * @return Default Response
+ */
+export function useMeGETQuery<TSelectData = Types.Anonymous3, TError = unknown>(
+  options?: UseQueryOptions<Types.Anonymous3, TError, TSelectData>,
+  axiosConfig?: Partial<AxiosRequestConfig>,
+): UseQueryResult<TSelectData, TError>;
+export function useMeGETQuery<TSelectData = Types.Anonymous3, TError = unknown>(
+  ...params: any[]
+): UseQueryResult<TSelectData, TError> {
+  let options:
+    | UseQueryOptions<Types.Anonymous3, TError, TSelectData>
+    | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig | undefined;
+
+  options = params[0] as any;
+  axiosConfig = params[1] as any;
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? ({} as any);
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
+
+  return useQuery<Types.Anonymous3, TError, TSelectData>({
+    queryFn: __meGET,
+    queryKey: meGETQueryKey(),
+    ...(meGETDefaultOptions as unknown as UseQueryOptions<
+      Types.Anonymous3,
+      TError,
+      TSelectData
+    >),
+    ...options,
+  });
+}
+/**
+ * @return Default Response
+ */
+export function setMeGETData(
+  queryClient: QueryClient,
+  updater: (data: Types.Anonymous3 | undefined) => Types.Anonymous3,
+) {
+  queryClient.setQueryData(meGETQueryKey(), updater);
+}
+
+/**
+ * @return Default Response
+ */
+export function setMeGETDataByQueryId(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  updater: (data: Types.Anonymous3 | undefined) => Types.Anonymous3,
+) {
+  queryClient.setQueryData(queryKey, updater);
+}
+
+export function mePUTUrl(): string {
+  let url_ = getBaseUrl() + '/users/me';
+  url_ = url_.replace(/[?&]$/, '');
+  return url_;
+}
+
+export function mePUTMutationKey(): MutationKey {
+  return trimArrayEnd(['Client', 'mePUT']);
+}
+
+/**
+ * @param body (optional)
+ * @return Default Response
+ */
+export function useMePUTMutation<TContext>(
+  options?: Omit<
+    UseMutationOptions<Types.Anonymous4, unknown, Types.Body2, TContext>,
+    'mutationKey' | 'mutationFn'
+  >,
+): UseMutationResult<Types.Anonymous4, unknown, Types.Body2, TContext> {
+  const key = mePUTMutationKey();
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+
+  return useMutation((body: Types.Body2) => Client().mePUT(body), {
+    ...options,
+    mutationKey: key,
+  });
 }
