@@ -245,7 +245,10 @@ const InformationTitle = styled.div`
   width: 92px;
 `;
 const Separator = styled.div`
-  width: 90px;
+  width: 30px;
+  @media ${({ theme }) => theme.grid.tablet} {
+    width: 90px;
+  }
 `;
 const InformationData = styled.div`
   display: flex;
