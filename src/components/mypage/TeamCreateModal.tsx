@@ -22,7 +22,7 @@ const getBase64 = (img: RcFile, callback: (url: string) => void) => {
 
 interface Props {
   open: boolean;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const TeamCreateModal = ({ open, setOpen }: Props) => {
@@ -75,6 +75,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
   return (
     <StyledModal
       open={open}
+      onCancel={() => setOpen(false)}
       title={<Title>팀생성</Title>}
       footer={
         <FooterContainer>
