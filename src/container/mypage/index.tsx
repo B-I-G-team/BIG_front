@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import styled from 'styled-components';
 import { User } from 'types/common';
 import Reserve from 'components/mypage/Reserve';
 import type { RadioChangeEvent } from 'antd';
-import { useMeQuery } from 'api/axios-client/Query';
+import { useMeGETQuery } from 'api/axios-client/Query';
 import { Tabs, Radio, Select, Input, Button } from 'antd';
+import ReserveStateNotify from 'components/mypage/ReserveStateNotify';
 const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
@@ -13,16 +14,8 @@ const TEAM = 'team-rental';
 const PICKUP = 'pickup';
 const INDIVIDUAL = 'individual-rental';
 
-const Notification = ({ Data }: any) => {
-  if (Data === WAIT_CONFIRM) {
-    return <Notify>😊 사장님의 승인요청을 기다리고 있습니다.</Notify>;
-  } else if (Data === WAIT_PAY) {
-    return <Notify>😊 결제가 완료되면 예약이 완료됩니다.</Notify>;
-  } else return <Notify></Notify>;
-};
-
 const Index = () => {
-  const { data: user } = useMeQuery() as {
+  const { data: user } = useMeGETQuery() as {
     data: User;
   };
 
@@ -152,7 +145,7 @@ const Index = () => {
                 </>
               ) : (
                 <>
-                  {addInfoUser.height || '미등록'} /
+                  {addInfoUser.height || '미등록'} {' / '}
                   {addInfoUser.weight || '미등록'}
                 </>
               )}
@@ -182,7 +175,7 @@ const Index = () => {
                     <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
                     <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
                   </Radio.Group>
-                  <Notification Data={reserveState} />
+                  <ReserveStateNotify data={reserveState} />
                 </SubTab>
                 <Reserve Data={tab.content} subData={reserveState}></Reserve>
               </>
@@ -257,15 +250,6 @@ const Separator = styled.div`
 const InformationData = styled.div`
   display: flex;
   align-items: center;
-`;
-
-const Notify = styled.p`
-  @media ${({ theme }) => theme.grid.tablet} {
-    margin-left: 48px;
-    font-size: ${({ theme }) => theme.font.size.subtitle_2};
-    font-weight: 500;
-  }
-  display: none;
 `;
 const SubTab = styled.div`
   display: flex;
