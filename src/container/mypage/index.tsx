@@ -20,6 +20,7 @@ const Notification = ({ Data }: any) => {
     return <Notify>😊 결제가 완료되면 예약이 완료됩니다.</Notify>;
   } else return <Notify></Notify>;
 };
+
 const Index = () => {
   const { data: user } = useMeQuery() as {
     data: User;
@@ -37,18 +38,9 @@ const Index = () => {
   const tempUser = {
     ...addInfoUser,
   };
-  const [state, setState] = useState(WAIT_CONFIRM);
+  const [reserveState, setReserveState] = useState(WAIT_CONFIRM);
   const onChange = (e: RadioChangeEvent) => {
-    setState(e.target.value);
-  };
-  const handleChangePosition = (value: string) => {
-    addInfoUser.position = value;
-  };
-  const handleChangeHeight = (e: any) => {
-    addInfoUser.height = e.target.value;
-  };
-  const handleChangeWeight = (e: any) => {
-    addInfoUser.weight = e.target.value;
+    setReserveState(e.target.value);
   };
 
   const handleSaveButton = () => {
@@ -126,7 +118,6 @@ const Index = () => {
                   <Select
                     defaultValue={addInfoUser.position || 'None'}
                     style={{ width: 210 }}
-                    onChange={handleChangePosition}
                     options={[
                       { value: '포인트가드', label: '포인트가드' },
                       { value: '슈팅가드', label: '슈팅가드' },
@@ -150,20 +141,18 @@ const Index = () => {
               {modify ? (
                 <>
                   <Input
-                    onChange={handleChangeHeight}
                     placeholder="키"
                     style={{ width: 92, marginRight: 8 }}
-                  />{' '}
-                  /{' '}
+                  />
+                  /
                   <Input
-                    onChange={handleChangeWeight}
                     placeholder="몸무게"
                     style={{ width: 92, marginLeft: 8 }}
                   />
                 </>
               ) : (
                 <>
-                  {addInfoUser.height || '미등록'} /{' '}
+                  {addInfoUser.height || '미등록'} /
                   {addInfoUser.weight || '미등록'}
                 </>
               )}
@@ -183,7 +172,7 @@ const Index = () => {
               <>
                 <SubTab>
                   <Radio.Group
-                    value={state}
+                    value={reserveState}
                     onChange={onChange}
                     style={{ marginBottom: 16 }}
                   >
@@ -193,9 +182,9 @@ const Index = () => {
                     <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
                     <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
                   </Radio.Group>
-                  <Notification Data={state} />
+                  <Notification Data={reserveState} />
                 </SubTab>
-                <Reserve Data={tab.content} subData={state}></Reserve>
+                <Reserve Data={tab.content} subData={reserveState}></Reserve>
               </>
             ),
           };
