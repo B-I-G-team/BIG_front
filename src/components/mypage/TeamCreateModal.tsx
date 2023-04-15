@@ -1,5 +1,5 @@
 import { Button, Input, Modal, Select, Upload } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
 import {
@@ -8,11 +8,27 @@ import {
   UploadFile,
   UploadProps,
 } from 'antd/es/upload';
-import { useTeamsMutation } from 'api/axios-client/Query';
+import { usePresignedQuery, useTeamsMutation } from 'api/axios-client/Query';
 import Swal from 'sweetalert2';
 import { Body } from 'api/axios-client';
 
 const { TextArea } = Input;
+
+const uploadFile = (file: File, presigned: string) => {
+  return new Promise<any>((resolve) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('PUT', presigned, true);
+    xhr.setRequestHeader('Content-Type', file.type);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    };
+    xhr.send(file);
+  });
+};
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
   const reader = new FileReader();
@@ -30,20 +46,17 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
   const [teamLocal, setTeamLocal] = useState('부산');
   const [teamIntroduce, setTeamIntroduce] = useState('');
   const [logoLoading, setLogoloading] = useState(false);
-  const [logoImg, setLogoImg] = useState('');
+  const [logoImgFile, setLogoImgFile] = useState<File>();
+  const [previewImg, setPreviewImg] = useState('');
 
-  const { mutate } = useTeamsMutation();
+  const { data: presigendData, refetch: presignedQueryRefetch } =
+    usePresignedQuery('png');
 
-  const onClickCreate = () => {
-    if (teamName && teamLocal && teamIntroduce && logoImg) {
-      mutate(
-        new Body({
-          name: teamName,
-          local: teamLocal,
-          image: '', // 임시로 '' 처리 하겠습니다.
-          introduction: teamIntroduce,
-        }),
-      );
+  const { mutate: teamCreateMutate } = useTeamsMutation();
+
+  const onClickCreate = async () => {
+    if (teamName && teamLocal && teamIntroduce && logoImgFile) {
+      presignedQueryRefetch();
     } else {
       Swal.fire({
         icon: 'error',
@@ -62,15 +75,33 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
   const handleChange: UploadProps['onChange'] = (
     info: UploadChangeParam<UploadFile>,
   ) => {
-    console.log(info.file.originFileObj);
-    // 추후 s3 업로드 후 이미지 링크 생성 후 logoImg 에 set할 예정입니다.
+    setLogoImgFile(info.file.originFileObj);
 
-    // Get this url from response in real world.
     getBase64(info.file.originFileObj as RcFile, (url) => {
       setLogoloading(false);
-      setLogoImg(url);
+      setPreviewImg(url);
     });
   };
+
+  useEffect(() => {
+    const createTeam = async () => {
+      if (presigendData && logoImgFile) {
+        const { presigned, url } = presigendData;
+        const success = await uploadFile(logoImgFile as File, presigned);
+        if (success) {
+          teamCreateMutate(
+            new Body({
+              name: teamName,
+              local: teamLocal,
+              image: url,
+              introduction: teamIntroduce,
+            }),
+          );
+        }
+      }
+    };
+    createTeam();
+  }, [presigendData, logoImgFile]);
 
   return (
     <StyledModal
@@ -104,8 +135,8 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
             onChange={handleChange}
             customRequest={() => {}}
           >
-            {logoImg ? (
-              <img src={logoImg} alt="avatar" style={{ width: '100%' }} />
+            {previewImg ? (
+              <img src={previewImg} alt="avatar" style={{ width: '100%' }} />
             ) : (
               uploadButton
             )}
