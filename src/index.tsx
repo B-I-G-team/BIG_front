@@ -1,6 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { initPersister, setAxiosFactory } from 'api/axios-client';
-import { setMeGETDefaultOptions } from 'api/axios-client/Query';
+import {
+  setMeGETDefaultOptions,
+  setPresignedDefaultOptions,
+} from 'api/axios-client/Query';
 import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -32,6 +35,14 @@ setMeGETDefaultOptions({
   retry: false,
   refetchOnMount: false,
   refetchOnWindowFocus: false,
+});
+
+setPresignedDefaultOptions({
+  staleTime: Infinity,
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
+  enabled: false,
 });
 
 const root = ReactDOM.createRoot(

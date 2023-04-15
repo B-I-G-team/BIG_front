@@ -1,9 +1,28 @@
 //-----ReactQueryFile-----
-
-import type { QueryMeta, MutationMeta } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import type {
+  UseQueryResult,
+  QueryFunctionContext,
+  UseQueryOptions,
+  QueryClient,
+  QueryKey,
+  MutationKey,
+  UseMutationOptions,
+  UseMutationResult,
+  QueryMeta,
+  MutationMeta,
+} from '@tanstack/react-query';
 import type { QueryMetaContextValue } from 'react-query-swagger';
+import { QueryMetaContext } from 'react-query-swagger';
+import { useContext } from 'react';
 import axios from 'axios';
-import type { AxiosInstance } from 'axios';
+import type {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  CancelToken,
+} from 'axios';
 
 type ClientFactoryFunction = <T>(type: new (...params: any[]) => T) => T;
 let _clientFactoryFunction: ClientFactoryFunction = <T>(

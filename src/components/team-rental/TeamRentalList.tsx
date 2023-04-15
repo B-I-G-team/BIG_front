@@ -229,7 +229,7 @@ const TeamRentalList = () => {
       <Title>팀대관</Title>
       <GymList>
         {tempGymList.map(({ id, thumbnail, name, address, pricePerHour }) => (
-          <GymItem to={`/team-rental?id=${id}`}>
+          <GymItem key={id} to={`/team-rental?id=${id}`}>
             <Image src={thumbnail} />
             <Content>
               <GymName>{name}</GymName>

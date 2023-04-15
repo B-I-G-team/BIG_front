@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
@@ -6,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
 
 import { useMeGETQuery } from 'api/axios-client/Query';
+import { useMeGETQueryKey } from 'api/queryKeyHooks';
 
 interface Props {
   open: boolean;
@@ -13,7 +13,10 @@ interface Props {
 }
 
 const Drawer = ({ open, closeDrawer }: Props) => {
-  const { data: user } = useMeGETQuery();
+  const { meQueryKey } = useMeGETQueryKey();
+  const { data: user } = useMeGETQuery({
+    queryKey: meQueryKey,
+  });
 
   const logout = () => {
     localStorage.removeItem('access_token');
