@@ -47,7 +47,7 @@ const Header = () => {
             </LogoLink>
             <LeftItem to="/">픽업게임</LeftItem>
             <LeftItem to="/team-rental">팀대관</LeftItem>
-            <LeftItem to="/">팀 순위</LeftItem>
+            <LeftItem to="/team-rank">팀 순위</LeftItem>
           </LeftSection>
           <RightSecton>
             {/* 태블릿까지 */}
