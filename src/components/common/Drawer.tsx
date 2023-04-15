@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
