@@ -63,6 +63,12 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
         title: '팀 생성 성공',
       });
     },
+    onError: () => {
+      Swal.fire({
+        icon: 'error',
+        title: '팀 생성 실패',
+      });
+    },
   });
 
   const onClickCreate = async () => {
