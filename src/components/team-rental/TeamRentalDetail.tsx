@@ -95,6 +95,7 @@ const transferDay = (index: number) => {
   }
 };
 
+// eslint-disable-next-line
 const TeamRentalDetail = ({ id }: { id: string }) => {
   const { name, address, phone, pricePerHour } = tempData;
   const [startDate, setStartDate] = useState<Date>();

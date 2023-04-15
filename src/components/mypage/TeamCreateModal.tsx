@@ -22,8 +22,6 @@ const uploadFile = (file: File, presigned: string) => {
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4 && xhr.status === 200) {
         resolve(true);
-      } else {
-        resolve(false);
       }
     };
     xhr.send(file);
@@ -45,14 +43,27 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
   const [teamName, setTeamName] = useState('');
   const [teamLocal, setTeamLocal] = useState('부산');
   const [teamIntroduce, setTeamIntroduce] = useState('');
-  const [logoLoading, setLogoloading] = useState(false);
   const [logoImgFile, setLogoImgFile] = useState<File>();
   const [previewImg, setPreviewImg] = useState('');
 
   const { data: presigendData, refetch: presignedQueryRefetch } =
     usePresignedQuery('png');
 
-  const { mutate: teamCreateMutate } = useTeamsMutation();
+  const { mutate: teamCreateMutate } = useTeamsMutation({
+    onSuccess: () => {
+      setTeamName('');
+      setTeamLocal('');
+      setTeamIntroduce('');
+      setLogoImgFile(undefined);
+      setPreviewImg('');
+
+      setOpen(false);
+      Swal.fire({
+        icon: 'success',
+        title: '팀 생성 성공',
+      });
+    },
+  });
 
   const onClickCreate = async () => {
     if (teamName && teamLocal && teamIntroduce && logoImgFile) {
@@ -67,7 +78,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
 
   const uploadButton = (
     <div>
-      {logoLoading ? <LoadingOutlined /> : <PlusOutlined />}
+      <PlusOutlined />
       <div style={{ marginTop: 8 }}>Upload</div>
     </div>
   );
@@ -78,7 +89,6 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
     setLogoImgFile(info.file.originFileObj);
 
     getBase64(info.file.originFileObj as RcFile, (url) => {
-      setLogoloading(false);
       setPreviewImg(url);
     });
   };
@@ -88,6 +98,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
       if (presigendData && logoImgFile) {
         const { presigned, url } = presigendData;
         const success = await uploadFile(logoImgFile as File, presigned);
+
         if (success) {
           teamCreateMutate(
             new Body({
