@@ -8,7 +8,10 @@ import {
   UploadFile,
   UploadProps,
 } from 'antd/es/upload';
-import { usePresignedQuery, useTeamsMutation } from 'api/axios-client/Query';
+import {
+  usePresignedQuery,
+  useTeamsPOSTMutation,
+} from 'api/axios-client/Query';
 import Swal from 'sweetalert2';
 import { Body } from 'api/axios-client';
 
@@ -49,7 +52,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
   const { data: presigendData, refetch: presignedQueryRefetch } =
     usePresignedQuery('png');
 
-  const { mutate: teamCreateMutate } = useTeamsMutation({
+  const { mutate: teamCreateMutate } = useTeamsPOSTMutation({
     onSuccess: () => {
       setTeamName('');
       setTeamLocal('');

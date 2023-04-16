@@ -3,7 +3,7 @@ import { initPersister, setAxiosFactory } from 'api/axios-client';
 import {
   setMeGETDefaultOptions,
   setPresignedDefaultOptions,
-  setTeamsAllDefaultOptions,
+  setTeamsGETDefaultOptions,
 } from 'api/axios-client/Query';
 import axios from 'axios';
 import React from 'react';
@@ -46,7 +46,7 @@ setPresignedDefaultOptions({
   enabled: false,
 });
 
-setTeamsAllDefaultOptions({
+setTeamsGETDefaultOptions({
   staleTime: Infinity,
   retry: false,
   refetchOnMount: false,

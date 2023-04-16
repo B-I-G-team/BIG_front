@@ -9,12 +9,7 @@
 // ReSharper disable InconsistentNaming
 
 import axios, { AxiosError } from 'axios';
-import type {
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  CancelToken,
-} from 'axios';
+import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
 //-----ClientClass--Client---
 //----------------------
@@ -27,1102 +22,1050 @@ import type {
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+
 export class Client {
-  private instance: AxiosInstance;
-  private baseUrl: string;
-  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
-    undefined;
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-  constructor(baseUrl?: string, instance?: AxiosInstance) {
-    this.instance = instance ? instance : axios.create();
+    constructor(baseUrl?: string, instance?: AxiosInstance) {
 
-    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
-  }
+        this.instance = instance ? instance : axios.create();
 
-  /**
-   * @return Default Response
-   */
-  anonymous(cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/';
-    url_ = url_.replace(/[?&]$/, '');
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
 
-    let options_: AxiosRequestConfig = {
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
-        }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processAnonymous(_response);
-      });
-  }
-
-  protected processAnonymous(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
-        }
-      }
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @return Default Response
+     */
+    anonymous(  cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processAnonymous(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  /**
-   * @return Default Response
-   */
-  kakao(cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/auth/kakao';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: AxiosRequestConfig = {
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processAnonymous(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processKakao(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
 
-  protected processKakao(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @return Default Response
+     */
+    kakao(  cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/auth/kakao";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processKakao(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  /**
-   * @return Default Response
-   * @deprecated
-   */
-  callback(code: string, cancelToken?: CancelToken | undefined): Promise<void> {
-    let url_ = this.baseUrl + '/auth/kakao/callback?';
-    if (code === undefined || code === null)
-      throw new Error(
-        "The parameter 'code' must be defined and cannot be null.",
-      );
-    else url_ += 'code=' + encodeURIComponent('' + code) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: AxiosRequestConfig = {
-      method: 'GET',
-      url: url_,
-      headers: {},
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processKakao(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processCallback(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
 
-  protected processCallback(response: AxiosResponse): Promise<void> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      return Promise.resolve<void>(null as any);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @return Default Response
+     * @deprecated
+     */
+    callback(code: string , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/auth/kakao/callback?";
+          if (code === undefined || code === null)
+            throw new Error("The parameter 'code' must be defined and cannot be null.");
+          else
+            url_ += "code=" + encodeURIComponent("" + code) + "&";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCallback(_response);
+        });
     }
-    return Promise.resolve<void>(null as any);
-  }
 
-  /**
-   * @param offset (optional) number
-   * @param limit (optional) number
-   * @param search (optional) 검색어
-   * @return Default Response
-   */
-  teamsAll(
-    offset: string | null | undefined,
-    limit: string | null | undefined,
-    search: string | null | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<Anonymous[]> {
-    let url_ = this.baseUrl + '/teams?';
-    if (offset !== undefined && offset !== null)
-      url_ += 'offset=' + encodeURIComponent('' + offset) + '&';
-    if (limit !== undefined && limit !== null)
-      url_ += 'limit=' + encodeURIComponent('' + limit) + '&';
-    if (search !== undefined && search !== null)
-      url_ += 'search=' + encodeURIComponent('' + search) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: AxiosRequestConfig = {
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processCallback(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processTeamsAll(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
 
-  protected processTeamsAll(response: AxiosResponse): Promise<Anonymous[]> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<void>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      if (Array.isArray(resultData200)) {
-        result200 = [] as any;
-        for (let item of resultData200) result200!.push(Anonymous.fromJS(item));
-      } else {
-        result200 = <any>null;
-      }
-      return Promise.resolve<Anonymous[]>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @param offset (optional) number
+     * @param limit (optional) number
+     * @param search (optional) 검색어
+     * @return Default Response
+     */
+    teamsGET(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined , cancelToken?: CancelToken | undefined): Promise<Anonymous> {
+        let url_ = this.baseUrl + "/teams?";
+        if (offset !== undefined && offset !== null)
+            url_ += "offset=" + encodeURIComponent("" + offset) + "&";
+        if (limit !== undefined && limit !== null)
+            url_ += "limit=" + encodeURIComponent("" + limit) + "&";
+        if (search !== undefined && search !== null)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processTeamsGET(_response);
+        });
     }
-    return Promise.resolve<Anonymous[]>(null as any);
-  }
 
-  /**
-   * @param body (optional)
-   * @return Default Response
-   */
-  teams(
-    body: Body | null | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<Anonymous2> {
-    let url_ = this.baseUrl + '/teams';
-    url_ = url_.replace(/[?&]$/, '');
-
-    const content_ = JSON.stringify(body);
-
-    let options_: AxiosRequestConfig = {
-      data: content_,
-      method: 'POST',
-      url: url_,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processTeamsGET(response: AxiosResponse): Promise<Anonymous> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processTeams(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = Anonymous.fromJS(resultData200);
+            return Promise.resolve<Anonymous>(result200);
 
-  protected processTeams(response: AxiosResponse): Promise<Anonymous2> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<Anonymous>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = Anonymous2.fromJS(resultData200);
-      return Promise.resolve<Anonymous2>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @param body (optional) 
+     * @return Default Response
+     */
+    teamsPOST(body: Body | null | undefined , cancelToken?: CancelToken | undefined): Promise<Anonymous2> {
+        let url_ = this.baseUrl + "/teams";
+          url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processTeamsPOST(_response);
+        });
     }
-    return Promise.resolve<Anonymous2>(null as any);
-  }
 
-  /**
-   * @param extension (optional) 파일의 확장자 (ex. png, jpeg, ...)
-   * @return Default Response
-   */
-  presigned(
-    extension: string | null | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<Anonymous3> {
-    let url_ = this.baseUrl + '/upload/presigned?';
-    if (extension !== undefined && extension !== null)
-      url_ += 'extension=' + encodeURIComponent('' + extension) + '&';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: AxiosRequestConfig = {
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processTeamsPOST(response: AxiosResponse): Promise<Anonymous2> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processPresigned(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = Anonymous2.fromJS(resultData200);
+            return Promise.resolve<Anonymous2>(result200);
 
-  protected processPresigned(response: AxiosResponse): Promise<Anonymous3> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<Anonymous2>(null as any);
     }
-    if (status === 201) {
-      const _responseText = response.data;
-      let result201: any = null;
-      let resultData201 = _responseText;
-      result201 = Anonymous3.fromJS(resultData201);
-      return Promise.resolve<Anonymous3>(result201);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @param extension (optional) 파일의 확장자 (ex. png, jpeg, ...)
+     * @return Default Response
+     */
+    presigned(extension: string | null | undefined , cancelToken?: CancelToken | undefined): Promise<Anonymous3> {
+        let url_ = this.baseUrl + "/upload/presigned?";
+        if (extension !== undefined && extension !== null)
+            url_ += "extension=" + encodeURIComponent("" + extension) + "&";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processPresigned(_response);
+        });
     }
-    return Promise.resolve<Anonymous3>(null as any);
-  }
 
-  /**
-   * @return Default Response
-   */
-  meGET(cancelToken?: CancelToken | undefined): Promise<Anonymous4> {
-    let url_ = this.baseUrl + '/users/me';
-    url_ = url_.replace(/[?&]$/, '');
-
-    let options_: AxiosRequestConfig = {
-      method: 'GET',
-      url: url_,
-      headers: {
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processPresigned(response: AxiosResponse): Promise<Anonymous3> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processMeGET(_response);
-      });
-  }
+        if (status === 201) {
+            const _responseText = response.data;
+            let result201: any = null;
+            let resultData201  = _responseText;
+            result201 = Anonymous3.fromJS(resultData201);
+            return Promise.resolve<Anonymous3>(result201);
 
-  protected processMeGET(response: AxiosResponse): Promise<Anonymous4> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<Anonymous3>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = Anonymous4.fromJS(resultData200);
-      return Promise.resolve<Anonymous4>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @return Default Response
+     */
+    meGET(  cancelToken?: CancelToken | undefined): Promise<Anonymous4> {
+        let url_ = this.baseUrl + "/users/me";
+          url_ = url_.replace(/[?&]$/, "");
+
+        let options_: AxiosRequestConfig = {
+            method: "GET",
+            url: url_,
+            headers: {
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processMeGET(_response);
+        });
     }
-    return Promise.resolve<Anonymous4>(null as any);
-  }
 
-  /**
-   * @param body (optional)
-   * @return Default Response
-   */
-  mePUT(
-    body: Body2 | null | undefined,
-    cancelToken?: CancelToken | undefined,
-  ): Promise<Anonymous5> {
-    let url_ = this.baseUrl + '/users/me';
-    url_ = url_.replace(/[?&]$/, '');
-
-    const content_ = JSON.stringify(body);
-
-    let options_: AxiosRequestConfig = {
-      data: content_,
-      method: 'PUT',
-      url: url_,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      cancelToken,
-    };
-
-    return this.instance
-      .request(options_)
-      .catch((_error: any) => {
-        if (isAxiosError(_error) && _error.response) {
-          return _error.response;
-        } else {
-          throw _error;
+    protected processMeGET(response: AxiosResponse): Promise<Anonymous4> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
         }
-      })
-      .then((_response: AxiosResponse) => {
-        return this.processMePUT(_response);
-      });
-  }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = Anonymous4.fromJS(resultData200);
+            return Promise.resolve<Anonymous4>(result200);
 
-  protected processMePUT(response: AxiosResponse): Promise<Anonymous5> {
-    const status = response.status;
-    let _headers: any = {};
-    if (response.headers && typeof response.headers === 'object') {
-      for (let k in response.headers) {
-        if (response.headers.hasOwnProperty(k)) {
-          _headers[k] = response.headers[k];
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
         }
-      }
+        return Promise.resolve<Anonymous4>(null as any);
     }
-    if (status === 200) {
-      const _responseText = response.data;
-      let result200: any = null;
-      let resultData200 = _responseText;
-      result200 = Anonymous5.fromJS(resultData200);
-      return Promise.resolve<Anonymous5>(result200);
-    } else if (status !== 200 && status !== 204) {
-      const _responseText = response.data;
-      return throwException(
-        'An unexpected server error occurred.',
-        status,
-        _responseText,
-        _headers,
-      );
+
+    /**
+     * @param body (optional) 
+     * @return Default Response
+     */
+    mePUT(body: Body2 | null | undefined , cancelToken?: CancelToken | undefined): Promise<Anonymous5> {
+        let url_ = this.baseUrl + "/users/me";
+          url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "PUT",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            cancelToken
+        };
+
+        return this.instance.request(options_).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processMePUT(_response);
+        });
     }
-    return Promise.resolve<Anonymous5>(null as any);
-  }
+
+    protected processMePUT(response: AxiosResponse): Promise<Anonymous5> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 200) {
+            const _responseText = response.data;
+            let result200: any = null;
+            let resultData200  = _responseText;
+            result200 = Anonymous5.fromJS(resultData200);
+            return Promise.resolve<Anonymous5>(result200);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<Anonymous5>(null as any);
+    }
 }
 
 //-----/ClientClass----
 
 export * as Query from './axios-client/Query';
 
+
+
 //-----Types.File-----
 export class Body implements IBody {
-  name!: string;
-  image?: string | undefined;
-  introduction?: string | undefined;
-  local?: string | undefined;
+    name!: string;
+    image?: string | undefined;
+    introduction?: string | undefined;
+    local?: string | undefined;
 
-  constructor(data?: IBody) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IBody) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.name = _data['name'];
-      this.image = _data['image'];
-      this.introduction = _data['introduction'];
-      this.local = _data['local'];
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.image = _data["image"];
+            this.introduction = _data["introduction"];
+            this.local = _data["local"];
+        }
     }
-  }
 
-  static fromJS(data: any): Body {
-    data = typeof data === 'object' ? data : {};
-    let result = new Body();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): Body {
+        data = typeof data === 'object' ? data : {};
+        let result = new Body();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['name'] = this.name;
-    data['image'] = this.image;
-    data['introduction'] = this.introduction;
-    data['local'] = this.local;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["image"] = this.image;
+        data["introduction"] = this.introduction;
+        data["local"] = this.local;
+        return data;
+    }
 }
 
 export interface IBody {
-  name: string;
-  image?: string | undefined;
-  introduction?: string | undefined;
-  local?: string | undefined;
+    name: string;
+    image?: string | undefined;
+    introduction?: string | undefined;
+    local?: string | undefined;
 }
 
 export class Body2 implements IBody2 {
-  position?: string | undefined;
-  height?: number | undefined;
-  weight?: number | undefined;
+    position?: string | undefined;
+    height?: number | undefined;
+    weight?: number | undefined;
 
-  constructor(data?: IBody2) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IBody2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.position = _data['position'];
-      this.height = _data['height'];
-      this.weight = _data['weight'];
+    init(_data?: any) {
+        if (_data) {
+            this.position = _data["position"];
+            this.height = _data["height"];
+            this.weight = _data["weight"];
+        }
     }
-  }
 
-  static fromJS(data: any): Body2 {
-    data = typeof data === 'object' ? data : {};
-    let result = new Body2();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): Body2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Body2();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['position'] = this.position;
-    data['height'] = this.height;
-    data['weight'] = this.weight;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["position"] = this.position;
+        data["height"] = this.height;
+        data["weight"] = this.weight;
+        return data;
+    }
 }
 
 export interface IBody2 {
-  position?: string | undefined;
-  height?: number | undefined;
-  weight?: number | undefined;
+    position?: string | undefined;
+    height?: number | undefined;
+    weight?: number | undefined;
 }
 
 export class Anonymous implements IAnonymous {
-  id!: string;
-  teamName!: string;
-  teamImage!: string;
-  leaderName!: string;
-  leaderImage!: string;
-  local!: string;
-  introduction!: string;
-  peopleCount!: number;
+    data!: Data[];
+    totalCount!: number;
 
-  constructor(data?: IAnonymous) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IAnonymous) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.data = [];
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.teamName = _data['teamName'];
-      this.teamImage = _data['teamImage'];
-      this.leaderName = _data['leaderName'];
-      this.leaderImage = _data['leaderImage'];
-      this.local = _data['local'];
-      this.introduction = _data['introduction'];
-      this.peopleCount = _data['peopleCount'];
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(Data.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
     }
-  }
 
-  static fromJS(data: any): Anonymous {
-    data = typeof data === 'object' ? data : {};
-    let result = new Anonymous();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): Anonymous {
+        data = typeof data === 'object' ? data : {};
+        let result = new Anonymous();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['teamName'] = this.teamName;
-    data['teamImage'] = this.teamImage;
-    data['leaderName'] = this.leaderName;
-    data['leaderImage'] = this.leaderImage;
-    data['local'] = this.local;
-    data['introduction'] = this.introduction;
-    data['peopleCount'] = this.peopleCount;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data;
+    }
 }
 
 export interface IAnonymous {
-  id: string;
-  teamName: string;
-  teamImage: string;
-  leaderName: string;
-  leaderImage: string;
-  local: string;
-  introduction: string;
-  peopleCount: number;
+    data: Data[];
+    totalCount: number;
 }
 
 export class Anonymous2 implements IAnonymous2 {
-  id!: string;
-  teamName!: string;
-  teamImage!: string;
-  leaderName!: string;
-  leaderImage!: string;
-  local!: string;
-  introduction!: string;
-  peopleCount!: number;
+    id!: string;
+    teamName!: string;
+    teamImage!: string;
+    leaderName!: string;
+    leaderImage!: string;
+    local!: string;
+    introduction!: string;
+    peopleCount!: number;
 
-  constructor(data?: IAnonymous2) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IAnonymous2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.teamName = _data['teamName'];
-      this.teamImage = _data['teamImage'];
-      this.leaderName = _data['leaderName'];
-      this.leaderImage = _data['leaderImage'];
-      this.local = _data['local'];
-      this.introduction = _data['introduction'];
-      this.peopleCount = _data['peopleCount'];
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.teamName = _data["teamName"];
+            this.teamImage = _data["teamImage"];
+            this.leaderName = _data["leaderName"];
+            this.leaderImage = _data["leaderImage"];
+            this.local = _data["local"];
+            this.introduction = _data["introduction"];
+            this.peopleCount = _data["peopleCount"];
+        }
     }
-  }
 
-  static fromJS(data: any): Anonymous2 {
-    data = typeof data === 'object' ? data : {};
-    let result = new Anonymous2();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): Anonymous2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Anonymous2();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['teamName'] = this.teamName;
-    data['teamImage'] = this.teamImage;
-    data['leaderName'] = this.leaderName;
-    data['leaderImage'] = this.leaderImage;
-    data['local'] = this.local;
-    data['introduction'] = this.introduction;
-    data['peopleCount'] = this.peopleCount;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["teamName"] = this.teamName;
+        data["teamImage"] = this.teamImage;
+        data["leaderName"] = this.leaderName;
+        data["leaderImage"] = this.leaderImage;
+        data["local"] = this.local;
+        data["introduction"] = this.introduction;
+        data["peopleCount"] = this.peopleCount;
+        return data;
+    }
 }
 
 export interface IAnonymous2 {
-  id: string;
-  teamName: string;
-  teamImage: string;
-  leaderName: string;
-  leaderImage: string;
-  local: string;
-  introduction: string;
-  peopleCount: number;
+    id: string;
+    teamName: string;
+    teamImage: string;
+    leaderName: string;
+    leaderImage: string;
+    local: string;
+    introduction: string;
+    peopleCount: number;
 }
 
 export class Anonymous3 implements IAnonymous3 {
-  presigned!: string;
-  url!: string;
+    presigned!: string;
+    url!: string;
 
-  constructor(data?: IAnonymous3) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IAnonymous3) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.presigned = _data['presigned'];
-      this.url = _data['url'];
+    init(_data?: any) {
+        if (_data) {
+            this.presigned = _data["presigned"];
+            this.url = _data["url"];
+        }
     }
-  }
 
-  static fromJS(data: any): Anonymous3 {
-    data = typeof data === 'object' ? data : {};
-    let result = new Anonymous3();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): Anonymous3 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Anonymous3();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['presigned'] = this.presigned;
-    data['url'] = this.url;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["presigned"] = this.presigned;
+        data["url"] = this.url;
+        return data;
+    }
 }
 
 export interface IAnonymous3 {
-  presigned: string;
-  url: string;
+    presigned: string;
+    url: string;
 }
 
 export class Anonymous4 implements IAnonymous4 {
-  id!: string;
-  name!: string;
-  email!: string;
-  emailVerified!: Date;
-  image!: string;
-  introduction!: string;
-  position!: string;
-  height!: number;
-  weight!: number;
-  team!: Team;
-  createdAt!: Date;
-  updatedAt!: Date;
+    id!: string;
+    name!: string;
+    email!: string;
+    emailVerified!: Date;
+    image!: string;
+    introduction!: string;
+    position!: string;
+    height!: number;
+    weight!: number;
+    team!: Team;
+    createdAt!: Date;
+    updatedAt!: Date;
 
-  constructor(data?: IAnonymous4) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IAnonymous4) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.team = new Team();
+        }
     }
-    if (!data) {
-      this.team = new Team();
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.email = _data["email"];
+            this.emailVerified = _data["emailVerified"] ? new Date(_data["emailVerified"].toString()) : <any>undefined;
+            this.image = _data["image"];
+            this.introduction = _data["introduction"];
+            this.position = _data["position"];
+            this.height = _data["height"];
+            this.weight = _data["weight"];
+            this.team = _data["team"] ? Team.fromJS(_data["team"]) : new Team();
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : <any>undefined;
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.name = _data['name'];
-      this.email = _data['email'];
-      this.emailVerified = _data['emailVerified']
-        ? new Date(_data['emailVerified'].toString())
-        : <any>undefined;
-      this.image = _data['image'];
-      this.introduction = _data['introduction'];
-      this.position = _data['position'];
-      this.height = _data['height'];
-      this.weight = _data['weight'];
-      this.team = _data['team'] ? Team.fromJS(_data['team']) : new Team();
-      this.createdAt = _data['createdAt']
-        ? new Date(_data['createdAt'].toString())
-        : <any>undefined;
-      this.updatedAt = _data['updatedAt']
-        ? new Date(_data['updatedAt'].toString())
-        : <any>undefined;
+    static fromJS(data: any): Anonymous4 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Anonymous4();
+        result.init(data);
+        return result;
     }
-  }
 
-  static fromJS(data: any): Anonymous4 {
-    data = typeof data === 'object' ? data : {};
-    let result = new Anonymous4();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['emailVerified'] = this.emailVerified
-      ? this.emailVerified.toISOString()
-      : <any>undefined;
-    data['image'] = this.image;
-    data['introduction'] = this.introduction;
-    data['position'] = this.position;
-    data['height'] = this.height;
-    data['weight'] = this.weight;
-    data['team'] = this.team ? this.team.toJSON() : <any>undefined;
-    data['createdAt'] = this.createdAt
-      ? this.createdAt.toISOString()
-      : <any>undefined;
-    data['updatedAt'] = this.updatedAt
-      ? this.updatedAt.toISOString()
-      : <any>undefined;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["email"] = this.email;
+        data["emailVerified"] = this.emailVerified ? this.emailVerified.toISOString() : <any>undefined;
+        data["image"] = this.image;
+        data["introduction"] = this.introduction;
+        data["position"] = this.position;
+        data["height"] = this.height;
+        data["weight"] = this.weight;
+        data["team"] = this.team ? this.team.toJSON() : <any>undefined;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+        return data;
+    }
 }
 
 export interface IAnonymous4 {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: Date;
-  image: string;
-  introduction: string;
-  position: string;
-  height: number;
-  weight: number;
-  team: Team;
-  createdAt: Date;
-  updatedAt: Date;
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: Date;
+    image: string;
+    introduction: string;
+    position: string;
+    height: number;
+    weight: number;
+    team: Team;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export class Anonymous5 implements IAnonymous5 {
-  id!: string;
-  name!: string;
-  email!: string;
-  emailVerified!: Date;
-  image!: string;
-  introduction!: string;
-  position!: string;
-  height!: number;
-  weight!: number;
-  team!: Team2;
-  createdAt!: Date;
-  updatedAt!: Date;
+    id!: string;
+    name!: string;
+    email!: string;
+    emailVerified!: Date;
+    image!: string;
+    introduction!: string;
+    position!: string;
+    height!: number;
+    weight!: number;
+    team!: Team2;
+    createdAt!: Date;
+    updatedAt!: Date;
 
-  constructor(data?: IAnonymous5) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: IAnonymous5) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+        if (!data) {
+            this.team = new Team2();
+        }
     }
-    if (!data) {
-      this.team = new Team2();
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.email = _data["email"];
+            this.emailVerified = _data["emailVerified"] ? new Date(_data["emailVerified"].toString()) : <any>undefined;
+            this.image = _data["image"];
+            this.introduction = _data["introduction"];
+            this.position = _data["position"];
+            this.height = _data["height"];
+            this.weight = _data["weight"];
+            this.team = _data["team"] ? Team2.fromJS(_data["team"]) : new Team2();
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : <any>undefined;
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.name = _data['name'];
-      this.email = _data['email'];
-      this.emailVerified = _data['emailVerified']
-        ? new Date(_data['emailVerified'].toString())
-        : <any>undefined;
-      this.image = _data['image'];
-      this.introduction = _data['introduction'];
-      this.position = _data['position'];
-      this.height = _data['height'];
-      this.weight = _data['weight'];
-      this.team = _data['team'] ? Team2.fromJS(_data['team']) : new Team2();
-      this.createdAt = _data['createdAt']
-        ? new Date(_data['createdAt'].toString())
-        : <any>undefined;
-      this.updatedAt = _data['updatedAt']
-        ? new Date(_data['updatedAt'].toString())
-        : <any>undefined;
+    static fromJS(data: any): Anonymous5 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Anonymous5();
+        result.init(data);
+        return result;
     }
-  }
 
-  static fromJS(data: any): Anonymous5 {
-    data = typeof data === 'object' ? data : {};
-    let result = new Anonymous5();
-    result.init(data);
-    return result;
-  }
-
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['emailVerified'] = this.emailVerified
-      ? this.emailVerified.toISOString()
-      : <any>undefined;
-    data['image'] = this.image;
-    data['introduction'] = this.introduction;
-    data['position'] = this.position;
-    data['height'] = this.height;
-    data['weight'] = this.weight;
-    data['team'] = this.team ? this.team.toJSON() : <any>undefined;
-    data['createdAt'] = this.createdAt
-      ? this.createdAt.toISOString()
-      : <any>undefined;
-    data['updatedAt'] = this.updatedAt
-      ? this.updatedAt.toISOString()
-      : <any>undefined;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["email"] = this.email;
+        data["emailVerified"] = this.emailVerified ? this.emailVerified.toISOString() : <any>undefined;
+        data["image"] = this.image;
+        data["introduction"] = this.introduction;
+        data["position"] = this.position;
+        data["height"] = this.height;
+        data["weight"] = this.weight;
+        data["team"] = this.team ? this.team.toJSON() : <any>undefined;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : <any>undefined;
+        return data;
+    }
 }
 
 export interface IAnonymous5 {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: Date;
-  image: string;
-  introduction: string;
-  position: string;
-  height: number;
-  weight: number;
-  team: Team2;
-  createdAt: Date;
-  updatedAt: Date;
+    id: string;
+    name: string;
+    email: string;
+    emailVerified: Date;
+    image: string;
+    introduction: string;
+    position: string;
+    height: number;
+    weight: number;
+    team: Team2;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export class Data implements IData {
+    id!: string;
+    teamName!: string;
+    teamImage!: string;
+    leaderName!: string;
+    leaderImage!: string;
+    local!: string;
+    introduction!: string;
+    peopleCount!: number;
+
+    constructor(data?: IData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.teamName = _data["teamName"];
+            this.teamImage = _data["teamImage"];
+            this.leaderName = _data["leaderName"];
+            this.leaderImage = _data["leaderImage"];
+            this.local = _data["local"];
+            this.introduction = _data["introduction"];
+            this.peopleCount = _data["peopleCount"];
+        }
+    }
+
+    static fromJS(data: any): Data {
+        data = typeof data === 'object' ? data : {};
+        let result = new Data();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["teamName"] = this.teamName;
+        data["teamImage"] = this.teamImage;
+        data["leaderName"] = this.leaderName;
+        data["leaderImage"] = this.leaderImage;
+        data["local"] = this.local;
+        data["introduction"] = this.introduction;
+        data["peopleCount"] = this.peopleCount;
+        return data;
+    }
+}
+
+export interface IData {
+    id: string;
+    teamName: string;
+    teamImage: string;
+    leaderName: string;
+    leaderImage: string;
+    local: string;
+    introduction: string;
+    peopleCount: number;
 }
 
 export class Team implements ITeam {
-  id!: string;
-  name!: string;
-  image!: string;
+    id!: string;
+    name!: string;
+    image!: string;
 
-  constructor(data?: ITeam) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: ITeam) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.name = _data['name'];
-      this.image = _data['image'];
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.image = _data["image"];
+        }
     }
-  }
 
-  static fromJS(data: any): Team {
-    data = typeof data === 'object' ? data : {};
-    let result = new Team();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): Team {
+        data = typeof data === 'object' ? data : {};
+        let result = new Team();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['image'] = this.image;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["image"] = this.image;
+        return data;
+    }
 }
 
 export interface ITeam {
-  id: string;
-  name: string;
-  image: string;
+    id: string;
+    name: string;
+    image: string;
 }
 
 export class Team2 implements ITeam2 {
-  id!: string;
-  name!: string;
-  image!: string;
+    id!: string;
+    name!: string;
+    image!: string;
 
-  constructor(data?: ITeam2) {
-    if (data) {
-      for (var property in data) {
-        if (data.hasOwnProperty(property))
-          (<any>this)[property] = (<any>data)[property];
-      }
+    constructor(data?: ITeam2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
     }
-  }
 
-  init(_data?: any) {
-    if (_data) {
-      this.id = _data['id'];
-      this.name = _data['name'];
-      this.image = _data['image'];
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.image = _data["image"];
+        }
     }
-  }
 
-  static fromJS(data: any): Team2 {
-    data = typeof data === 'object' ? data : {};
-    let result = new Team2();
-    result.init(data);
-    return result;
-  }
+    static fromJS(data: any): Team2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new Team2();
+        result.init(data);
+        return result;
+    }
 
-  toJSON(data?: any) {
-    data = typeof data === 'object' ? data : {};
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['image'] = this.image;
-    return data;
-  }
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["image"] = this.image;
+        return data;
+    }
 }
 
 export interface ITeam2 {
-  id: string;
-  name: string;
-  image: string;
+    id: string;
+    name: string;
+    image: string;
 }
 //-----/CustomTypes.File-----
 
 export class ApiException extends Error {
-  message: string;
-  status: number;
-  response: string;
-  headers: { [key: string]: any };
-  result: any;
+    message: string;
+    status: number;
+    response: string;
+    headers: { [key: string]: any; };
+    result: any;
 
-  constructor(
-    message: string,
-    status: number,
-    response: string,
-    headers: { [key: string]: any },
-    result: any,
-  ) {
-    super();
+    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
+        super();
 
-    this.message = message;
-    this.status = status;
-    this.response = response;
-    this.headers = headers;
-    this.result = result;
-  }
+        this.message = message;
+        this.status = status;
+        this.response = response;
+        this.headers = headers;
+        this.result = result;
+    }
 
-  protected isApiException = true;
+    protected isApiException = true;
 
-  static isApiException(obj: any): obj is ApiException {
-    return obj.isApiException === true;
-  }
+    static isApiException(obj: any): obj is ApiException {
+        return obj.isApiException === true;
+    }
 }
 
-function throwException(
-  message: string,
-  status: number,
-  response: string,
-  headers: { [key: string]: any },
-  result?: any,
-): any {
-  if (result !== null && result !== undefined) throw result;
-  else throw new ApiException(message, status, response, headers, null);
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+    if (result !== null && result !== undefined)
+        throw result;
+    else
+        throw new ApiException(message, status, response, headers, null);
 }
 
 function isAxiosError(obj: any | undefined): obj is AxiosError {
-  return obj && obj.isAxiosError === true;
+    return obj && obj.isAxiosError === true;
 }
 
 //-----/Types.File-----
@@ -1131,9 +1074,10 @@ import { addResultTypeFactory } from './axios-client/helpers';
 export { setBaseUrl, getBaseUrl } from './axios-client/helpers';
 export { setAxiosFactory, getAxios } from './axios-client/helpers';
 
+
 //-----PersistorHydrator.File-----
 import type { PersistedClient } from '@tanstack/react-query-persist-client';
-import type { DehydratedState, QueryKey } from '@tanstack/react-query';
+import type { DehydratedState, QueryKey } from '@tanstack/react-query'
 import { getResultTypeFactory } from './axios-client/helpers';
 
 /*
@@ -1143,23 +1087,21 @@ import { getResultTypeFactory } from './axios-client/helpers';
 export function deserializeDate(str: unknown) {
   if (!str || typeof str !== 'string') return str;
   if (!/^\d\d\d\d\-\d\d\-\d\d/.test(str)) return str;
-
+  
   const date = new Date(str);
   const isDate = date instanceof Date && !isNaN(date as any);
-
+  
   return isDate ? date : str;
 }
 
 export function deserializeDatesInQueryKeys(queryKey: QueryKey) {
-  return (
-    queryKey
-      // We need to replace `null` with `undefined` in query key, because
-      // `undefined` is serialized as `null`.
-      // And most probably if we have `null` in QueryKey it actually means `undefined`.
-      // We can't keep nulls, because they have a different meaning, and e.g. boolean parameters are not allowed to be null.
-      .map((x) => (x === null ? undefined : x))
-      .map((x) => deserializeDate(x))
-  );
+  return queryKey
+    // We need to replace `null` with `undefined` in query key, because
+    // `undefined` is serialized as `null`.
+    // And most probably if we have `null` in QueryKey it actually means `undefined`.
+    // We can't keep nulls, because they have a different meaning, and e.g. boolean parameters are not allowed to be null.
+    .map(x => (x === null ? undefined : x))
+    .map(x => deserializeDate(x));
 }
 
 export function deserializeClassesInQueryData(queryKey: QueryKey, data: any) {
@@ -1167,18 +1109,11 @@ export function deserializeClassesInQueryData(queryKey: QueryKey, data: any) {
     return data;
   } else if (typeof data !== 'object') {
     return data;
-  } else if (
-    'pages' in data &&
-    'pageParams' in data &&
-    Array.isArray(data.pages) &&
-    Array.isArray(data.pageParams)
-  ) {
+  } else if ('pages' in data && 'pageParams' in data && Array.isArray(data.pages) && Array.isArray(data.pageParams)) {
     // infinite query
-    data.pages = data.pages.map((page: any) =>
-      deserializeClassesInQueryData(queryKey, page),
-    );
+    data.pages = data.pages.map((page:any) => deserializeClassesInQueryData(queryKey, page));
   } else if (Array.isArray(data)) {
-    return data.map((elem) => constructDtoClass(queryKey, elem));
+    return data.map(elem => constructDtoClass(queryKey, elem));
   } else {
     return constructDtoClass(queryKey, data);
   }
@@ -1191,10 +1126,7 @@ export function deserializeClassesInQueryData(queryKey: QueryKey, data: any) {
 export function persisterDeserialize(cache: string): PersistedClient {
   const client: PersistedClient = JSON.parse(cache);
   client.clientState.queries.forEach((query) => {
-    query.state.data = deserializeClassesInQueryData(
-      query.queryKey,
-      query.state.data,
-    );
+    query.state.data = deserializeClassesInQueryData(query.queryKey, query.state.data);
     query.queryKey = deserializeDatesInQueryKeys(query.queryKey);
   });
 
@@ -1205,7 +1137,8 @@ export function constructDtoClass(queryKey: QueryKey, data: any): unknown {
   const resultTypeKey = getResultTypeClassKey(queryKey);
   const constructorFunction = getResultTypeFactory(resultTypeKey);
 
-  if (!data || !constructorFunction) return data;
+  if (!data || !constructorFunction)
+    return data;
 
   return constructorFunction(data);
 }
@@ -1225,20 +1158,11 @@ export function getResultTypeClassKey(queryKey: QueryKey): string {
 }
 
 export function initPersister() {
-  addResultTypeFactory('Client___teamsAll', (data: any) => {
-    const result = new Anonymous();
-    result.init(data);
-    return result;
-  });
-  addResultTypeFactory('Client___presigned', (data: any) => {
-    const result = new Anonymous3();
-    result.init(data);
-    return result;
-  });
-  addResultTypeFactory('Client___meGET', (data: any) => {
-    const result = new Anonymous4();
-    result.init(data);
-    return result;
-  });
+  
+  addResultTypeFactory('Client___teamsGET', (data: any) => { const result = new Anonymous(); result.init(data); return result; });
+  addResultTypeFactory('Client___presigned', (data: any) => { const result = new Anonymous3(); result.init(data); return result; });
+  addResultTypeFactory('Client___meGET', (data: any) => { const result = new Anonymous4(); result.init(data); return result; });
+
+
 }
 //-----/PersistorHydrator.File----
