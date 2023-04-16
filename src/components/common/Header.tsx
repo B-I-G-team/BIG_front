@@ -2,23 +2,28 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
-import Search from 'components/common/Search';
+import { blue } from '@ant-design/colors';
+
 import { CiSearch } from 'react-icons/ci';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
-import { useAtomValue } from 'jotai';
-import { userAtom } from 'atoms/common';
-import * as api from 'api/auth';
+
 import Drawer from './Drawer';
+import { useMeGETQuery } from 'api/axios-client/Query';
+import { Button, Input, Popover } from 'antd';
+import { useMeGETQueryKey } from 'api/queryKeyHooks';
+
+const { Search } = Input;
 
 const Header = () => {
   const location = useLocation();
-  const user = useAtomValue(userAtom);
-  const [open, setOpen] = useState(false);
+  const { meQueryKey } = useMeGETQueryKey();
+  const { data: user } = useMeGETQuery({
+    queryKey: meQueryKey,
+  });
 
-  const onClickLogout = () => {
-    api.signout();
-  };
+  const [open, setOpen] = useState(false);
+  const [popOverOpen, setPopOverOpen] = useState(false);
 
   const openDrawer = () => {
     setOpen(true);
@@ -26,6 +31,10 @@ const Header = () => {
 
   const closeDrawer = () => {
     setOpen(false);
+  };
+
+  const logout = () => {
+    localStorage.removeItem('access_token');
   };
 
   if (location.pathname !== '/login' && location.pathname !== '/signup')
@@ -36,39 +45,78 @@ const Header = () => {
             <LogoLink to="/">
               <Logo src={logoImage} />
             </LogoLink>
-            <LeftItem to="/">픽업게임</LeftItem>
-            <LeftItem to="/">팀대관</LeftItem>
-            <LeftItem to="/">개인대관</LeftItem>
-            <LeftItem to="/">팀 순위</LeftItem>
-            <LeftItem to="/">커뮤니티</LeftItem>
-            <Search />
-
-            {/* 인풋 */}
+            <LeftItem to="/" active={location.pathname === '/pickup'}>
+              픽업게임
+            </LeftItem>
+            <LeftItem
+              to="/team-rental"
+              active={location.pathname === '/team-rental'}
+            >
+              팀대관
+            </LeftItem>
+            <LeftItem
+              to="/team-rank"
+              active={location.pathname === '/team-rank'}
+            >
+              팀 순위
+            </LeftItem>
           </LeftSection>
-
           <RightSecton>
             {/* 태블릿까지 */}
             <button type="button">
-              <SearchIcon size={30} />
+              <SearchIcon size={24} />
             </button>
             <button type="button" onClick={openDrawer}>
-              <HamburgerIcon size={30} />
+              <HamburgerIcon size={24} />
             </button>
 
             {/* 랩탑부터 */}
-            <NavList>
-              <StyledLink to="/gym">내 정보</StyledLink>
-              {user?.email ? (
-                <StyledLink to="/" onClick={onClickLogout}>
-                  로그아웃
-                </StyledLink>
+            <RightContents>
+              <Search placeholder="체육관 업체 검색" style={{ width: 350 }} />
+              {user ? (
+                <UserIcons>
+                  <button type="button" style={{ marginRight: '10px' }}>
+                    <BiBell size={24} />
+                  </button>
+                  <Popover
+                    content={
+                      <PopOverContent>
+                        <StyledLink
+                          to="/mypage"
+                          onClick={() => {
+                            setPopOverOpen(false);
+                          }}
+                        >
+                          내 정보
+                        </StyledLink>
+                        <button
+                          type="button"
+                          style={{ padding: 0 }}
+                          onClick={() => {
+                            logout();
+                            setPopOverOpen(false);
+                          }}
+                        >
+                          로그아웃
+                        </button>
+                      </PopOverContent>
+                    }
+                    trigger="click"
+                    open={popOverOpen}
+                    onOpenChange={(visible) => {
+                      setPopOverOpen(visible);
+                    }}
+                  >
+                    <button type="button">
+                      <Profile src={user.image} popOverOpen={popOverOpen} />
+                    </button>
+                  </Popover>
+                </UserIcons>
               ) : (
-                <StyledLink to="/login">로그인</StyledLink>
+                <LoginLink to="/login">로그인</LoginLink>
               )}
-              <button type="button">
-                <BiBell size={30} />
-              </button>
-            </NavList>
+              <Button type="primary">체육관 등록하기</Button>
+            </RightContents>
           </RightSecton>
         </Container>
 
@@ -86,21 +134,25 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 45px;
   @media ${({ theme }) => theme.grid.tablet} {
-    height: 80px;
+    height: 60px;
   }
 `;
 
 const LogoLink = styled(Link)`
   margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Logo = styled.img`
-  width: 90px;
+  width: 70px;
   height: auto;
 
   @media ${({ theme }) => theme.grid.tablet} {
-    width: 150px;
+    width: 95px;
   }
 `;
 
@@ -128,7 +180,7 @@ const HamburgerIcon = styled(RxHamburgerMenu)`
   }
 `;
 
-const NavList = styled.div`
+const RightContents = styled.div`
   display: none;
   @media ${({ theme }) => theme.grid.tablet} {
     display: flex;
@@ -137,8 +189,9 @@ const NavList = styled.div`
   }
 `;
 
-const LeftItem = styled(Link)`
+const LeftItem = styled(Link)<{ active: boolean }>`
   display: none;
+  color: ${({ active }) => (active ? blue.primary : 'black')} !important;
 
   @media ${({ theme }) => theme.grid.tablet} {
     display: block;
@@ -151,12 +204,35 @@ const LeftItem = styled(Link)`
 `;
 
 const StyledLink = styled(Link)`
-  ::after {
-    content: '|';
-    margin: 0 15px;
+  margin-bottom: 4px;
+`;
 
-    font-size: ${({ theme }) => theme.font.size.body_1};
-    font-weight: ${({ theme }) => theme.font.weight.medium};
-    color: ${({ theme }) => theme.color.black};
-  }
+const Profile = styled.img<{ popOverOpen: boolean }>`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+
+  border: 2px solid ${({ popOverOpen }) => (popOverOpen ? blue[4] : 'white')};
+
+  transition: 200ms;
+`;
+
+const UserIcons = styled.div`
+  margin: 0 20px;
+`;
+
+const PopOverContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: flex-start;
+`;
+
+const LoginLink = styled(Link)`
+  font-size: ${({ theme }) => theme.font.size.body_1};
+  font-weight: ${({ theme }) => theme.font.weight.medium};
+  color: ${({ theme }) => theme.color.black};
+
+  padding: 0 20px;
 `;

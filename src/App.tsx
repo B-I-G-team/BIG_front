@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from 'container';
@@ -6,22 +6,14 @@ import Mypage from 'container/mypage';
 import Login from 'container/login';
 import TeamRental from 'container/team-rental';
 import Owner from 'container/owner';
-import Signup from 'container/signup';
+import TeamRank from 'container/team-rank';
+
 import Header from 'components/common/Header';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { useSetAtom } from 'jotai';
-import { userAtom } from 'atoms/common';
+
 import styled from 'styled-components';
 
 function App() {
-  const setUser = useSetAtom(userAtom);
-
-  useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-  }, [setUser]);
+  // const setUser = useSetAtom(userAtom);
 
   return (
     <Container>
@@ -33,8 +25,8 @@ function App() {
             <Route path="mypage" element={<Mypage />} />
             <Route path="owner" element={<Owner />} />
             <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
             <Route path="team-rental" element={<TeamRental />} />
+            <Route path="team-rank" element={<TeamRank />} />
           </Routes>
         </BrowserRouter>
       </ContentWrrapper>

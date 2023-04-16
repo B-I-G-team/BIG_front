@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AiOutlineClose } from 'react-icons/ai';
-import { useAtomValue } from 'jotai';
-import { userAtom } from 'atoms/common';
-import * as api from 'api/auth';
+import { blue } from '@ant-design/colors';
+
+import { useMeGETQuery } from 'api/axios-client/Query';
+import { useMeGETQueryKey } from 'api/queryKeyHooks';
 
 interface Props {
   open: boolean;
@@ -13,11 +14,20 @@ interface Props {
 }
 
 const Drawer = ({ open, closeDrawer }: Props) => {
-  const user = useAtomValue(userAtom);
+  const { meQueryKey } = useMeGETQueryKey();
+  const { data: user } = useMeGETQuery({
+    queryKey: meQueryKey,
+  });
 
-  const onClickLogout = () => {
-    api.signout();
+  const logout = () => {
+    localStorage.removeItem('access_token');
   };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    closeDrawer();
+  }, [location]);
 
   return (
     <>
@@ -29,15 +39,22 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           <LogoLink to="/">
             <Logo src={logoImage} />
           </LogoLink>
-          <LinkItem to="/">픽업 게임</LinkItem>
-          <LinkItem to="/">팀 대관</LinkItem>
-          <LinkItem to="/">개인 대관</LinkItem>
-          <LinkItem to="/">팀 순위</LinkItem>
-          <LinkItem to="/">커뮤니티</LinkItem>
-          {user?.email ? (
+          <LinkItem to="/" active={location.pathname === '/pickup'}>
+            픽업 게임
+          </LinkItem>
+          <LinkItem
+            to="/team-rental"
+            active={location.pathname === '/team-rental'}
+          >
+            팀 대관
+          </LinkItem>
+          <LinkItem to="/team-rank" active={location.pathname === '/team-rank'}>
+            팀 순위
+          </LinkItem>
+          {user ? (
             <>
-              <LinkItem to="/">내 정보</LinkItem>
-              <LinkItem to="/" onClick={onClickLogout}>
+              <LinkItem to="/mypage">내 정보</LinkItem>
+              <LinkItem to="/" onClick={() => logout()}>
                 로그아웃
               </LinkItem>
             </>
@@ -63,7 +80,7 @@ const Container = styled.div<{ open: boolean }>`
   top: 0;
   right: 0;
   background-color: #fff;
-  z-index: 2;
+  z-index: 10;
 
   transform: ${({ open }) => (open ? 'translanteX(0)' : 'translateX(100%)')};
   transition: 200ms;
@@ -100,12 +117,14 @@ const Logo = styled.img`
   height: auto;
 `;
 
-const LinkItem = styled(Link)`
+const LinkItem = styled(Link)<{ active?: boolean }>`
   width: 100%;
   text-align: center;
   padding: 14px 0;
   font-size: ${({ theme }) => theme.font.size.subtitle_1};
   font-weight: 600;
+
+  color: ${({ active }) => (active ? blue.primary : 'black')} !important;
 `;
 
 const Overlay = styled.div<{ open: boolean }>`
