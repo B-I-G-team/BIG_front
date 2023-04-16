@@ -18,6 +18,7 @@ const tempDataArr = [
 
 const Index = () => {
   const [open, setOpen] = useState(true);
+
   return (
     <>
       {/* 슬라이드 */}

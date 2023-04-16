@@ -3,6 +3,7 @@ import { initPersister, setAxiosFactory } from 'api/axios-client';
 import {
   setMeGETDefaultOptions,
   setPresignedDefaultOptions,
+  setTeamsGETDefaultOptions,
 } from 'api/axios-client/Query';
 import axios from 'axios';
 import React from 'react';
@@ -43,6 +44,13 @@ setPresignedDefaultOptions({
   refetchOnMount: false,
   refetchOnWindowFocus: false,
   enabled: false,
+});
+
+setTeamsGETDefaultOptions({
+  staleTime: Infinity,
+  retry: false,
+  refetchOnMount: false,
+  refetchOnWindowFocus: false,
 });
 
 const root = ReactDOM.createRoot(

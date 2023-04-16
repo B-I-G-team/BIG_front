@@ -17,3 +17,9 @@ export const FlexAround = styled.div`
   justify-content: space-around;
   align-items: center;
 `;
+
+export const FlexStart = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+`;
