@@ -1,10 +1,11 @@
-import React, { useMemo, useState } from 'react';
-import { useTeamsAllQuery } from 'api/axios-client/Query';
+import React, { useEffect, useMemo, useState } from 'react';
+import { setTeamsGETData, useTeamsGETQuery } from 'api/axios-client/Query';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import styled from 'styled-components';
 import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import useWindowSize from 'hooks/common/useWindowSize';
+import { FlexStart } from 'components/common/Wrapper';
 
 interface DataType {
   id: string;
@@ -29,10 +30,10 @@ const columns: ColumnsType<DataType> = [
     dataIndex: 'teamName',
     key: 'teamName',
     render: (text, { teamImage }) => (
-      <>
+      <FlexStart>
         <TeamLogo src={teamImage} />
         <>{text}</>
-      </>
+      </FlexStart>
     ),
     width: 80,
   },
@@ -47,10 +48,10 @@ const columns: ColumnsType<DataType> = [
     dataIndex: 'leaderName',
     key: 'leaderName',
     render: (text, { leaderImage }) => (
-      <>
+      <FlexStart>
         <TeamLogo src={leaderImage} />
         <>{text}</>
-      </>
+      </FlexStart>
     ),
     width: 80,
   },
@@ -84,6 +85,12 @@ const columns: ColumnsType<DataType> = [
     key: 'peopleCount',
     width: 30,
   },
+  {
+    title: '팀신청',
+    width: 40,
+    render: () => <Button>신청</Button>,
+    fixed: 'right',
+  },
 ];
 
 const Index = () => {
@@ -93,14 +100,23 @@ const Index = () => {
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 10,
-    total: 200,
+    total: 1,
   });
-  const { data } = useTeamsAllQuery({
-    offset: String(pagination.current),
+  const { data } = useTeamsGETQuery({
+    offset: String(
+      ((pagination.current as number) - 1) * (pagination.pageSize as number) +
+        1,
+    ),
     limit: String(pagination.pageSize),
     search: '',
   });
 
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      total: data?.totalCount,
+    }));
+  }, [data?.totalCount]);
   const handleTableChange = (_pagination: TablePaginationConfig) => {
     setPagination(_pagination);
   };
@@ -108,10 +124,10 @@ const Index = () => {
   return (
     <Table
       columns={columns}
-      dataSource={data}
+      dataSource={data?.data}
       pagination={{ ...pagination, position: ['bottomCenter'] }}
       onChange={handleTableChange}
-      scroll={{ x: isMobile ? 800 : 1500 }}
+      scroll={{ x: isMobile ? 1200 : 1500 }}
     />
   );
 };
@@ -121,4 +137,7 @@ export default Index;
 const TeamLogo = styled.img`
   width: 24px;
   height: 24px;
+  border-radius: 50%;
+
+  margin-right: 4px;
 `;
