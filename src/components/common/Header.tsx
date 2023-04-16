@@ -45,9 +45,21 @@ const Header = () => {
             <LogoLink to="/">
               <Logo src={logoImage} />
             </LogoLink>
-            <LeftItem to="/">픽업게임</LeftItem>
-            <LeftItem to="/team-rental">팀대관</LeftItem>
-            <LeftItem to="/team-rank">팀 순위</LeftItem>
+            <LeftItem to="/" active={location.pathname === '/pickup'}>
+              픽업게임
+            </LeftItem>
+            <LeftItem
+              to="/team-rental"
+              active={location.pathname === '/team-rental'}
+            >
+              팀대관
+            </LeftItem>
+            <LeftItem
+              to="/team-rank"
+              active={location.pathname === '/team-rank'}
+            >
+              팀 순위
+            </LeftItem>
           </LeftSection>
           <RightSecton>
             {/* 태블릿까지 */}
@@ -177,8 +189,9 @@ const RightContents = styled.div`
   }
 `;
 
-const LeftItem = styled(Link)`
+const LeftItem = styled(Link)<{ active: boolean }>`
   display: none;
+  color: ${({ active }) => (active ? blue.primary : 'black')} !important;
 
   @media ${({ theme }) => theme.grid.tablet} {
     display: block;
