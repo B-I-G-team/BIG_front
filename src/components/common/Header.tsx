@@ -11,12 +11,16 @@ import { BiBell } from 'react-icons/bi';
 import Drawer from './Drawer';
 import { useMeGETQuery } from 'api/axios-client/Query';
 import { Button, Input, Popover } from 'antd';
+import { useMeGETQueryKey } from 'api/queryKeyHooks';
 
 const { Search } = Input;
 
 const Header = () => {
   const location = useLocation();
-  const { data: user } = useMeGETQuery();
+  const { meQueryKey } = useMeGETQueryKey();
+  const { data: user } = useMeGETQuery({
+    queryKey: meQueryKey,
+  });
 
   const [open, setOpen] = useState(false);
   const [popOverOpen, setPopOverOpen] = useState(false);
@@ -41,9 +45,21 @@ const Header = () => {
             <LogoLink to="/">
               <Logo src={logoImage} />
             </LogoLink>
-            <LeftItem to="/">픽업게임</LeftItem>
-            <LeftItem to="/team-rental">팀대관</LeftItem>
-            <LeftItem to="/">팀 순위</LeftItem>
+            <LeftItem to="/" active={location.pathname === '/pickup'}>
+              픽업게임
+            </LeftItem>
+            <LeftItem
+              to="/team-rental"
+              active={location.pathname === '/team-rental'}
+            >
+              팀대관
+            </LeftItem>
+            <LeftItem
+              to="/team-rank"
+              active={location.pathname === '/team-rank'}
+            >
+              팀 순위
+            </LeftItem>
           </LeftSection>
           <RightSecton>
             {/* 태블릿까지 */}
@@ -173,8 +189,9 @@ const RightContents = styled.div`
   }
 `;
 
-const LeftItem = styled(Link)`
+const LeftItem = styled(Link)<{ active: boolean }>`
   display: none;
+  color: ${({ active }) => (active ? blue.primary : 'black')} !important;
 
   @media ${({ theme }) => theme.grid.tablet} {
     display: block;

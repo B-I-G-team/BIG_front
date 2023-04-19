@@ -6,6 +6,7 @@ import Mypage from 'container/mypage';
 import Login from 'container/login';
 import TeamRental from 'container/team-rental';
 import Owner from 'container/owner';
+import TeamRank from 'container/team-rank';
 
 import Header from 'components/common/Header';
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="owner" element={<Owner />} />
             <Route path="login" element={<Login />} />
             <Route path="team-rental" element={<TeamRental />} />
+            <Route path="team-rank" element={<TeamRank />} />
           </Routes>
         </BrowserRouter>
       </ContentWrrapper>
