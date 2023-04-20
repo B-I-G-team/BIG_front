@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-
+import { useMePUTMutation } from 'api/axios-client/Query';
 import styled from 'styled-components';
-import { User } from 'types/common';
 import Reserve from 'components/mypage/Reserve';
 import type { RadioChangeEvent } from 'antd';
 import { useMeGETQuery } from 'api/axios-client/Query';
 import { Tabs, Radio, Select, Input, Button } from 'antd';
 import ReserveStateNotify from 'components/mypage/ReserveStateNotify';
+import Swal from 'sweetalert2';
+import { Body2 } from 'api/axios-client';
 const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
@@ -14,23 +15,45 @@ const TEAM = 'team-rental';
 const PICKUP = 'pickup';
 const INDIVIDUAL = 'individual-rental';
 
+interface User {
+  id: string;
+  image: string;
+  name: string;
+  height: number;
+  weight: number;
+  position: string;
+  team: {
+    name: string;
+  };
+}
+
 const Index = () => {
   const { data: user } = useMeGETQuery() as {
     data: User;
   };
+  console.log(user);
+  const [userHeight, setUserHeight] = useState(0);
+  const [userWeight, setUserWeight] = useState(0);
+  const [userPosition, setUserPosition] = useState('');
+  const { mutate: userModifyMutate } = useMePUTMutation({
+    onSuccess: () => {
+      setUserHeight(0);
+      setUserWeight(0);
+      setUserPosition('');
+      Swal.fire({
+        icon: 'success',
+        title: '유저 정보 수정 성공',
+      });
+    },
+    onError: () => {
+      Swal.fire({
+        icon: 'error',
+        title: '유저 정보 수정 실패',
+      });
+    },
+  });
 
   const [modify, setModify] = useState(false);
-  let addInfoUser = {
-    ...user,
-    team: '스타트',
-    position: '센터',
-    height: 190,
-    weight: 88,
-  };
-
-  const tempUser = {
-    ...addInfoUser,
-  };
   const [reserveState, setReserveState] = useState(WAIT_CONFIRM);
   const onChange = (e: RadioChangeEvent) => {
     setReserveState(e.target.value);
@@ -38,13 +61,19 @@ const Index = () => {
 
   const handleSaveButton = () => {
     setModify(false);
+    userModifyMutate(
+      new Body2({
+        position: userPosition,
+        height: userHeight,
+        weight: userWeight,
+      }),
+    );
   };
 
   const handleModifyButton = () => {
     setModify(true);
   };
   const handleCancelButton = () => {
-    addInfoUser = tempUser;
     setModify(false);
   };
   const menuArr = [
@@ -79,8 +108,8 @@ const Index = () => {
             <InformationTitle>이름</InformationTitle>
             <Separator>:</Separator>
             <InformationData>
-              <Image src={addInfoUser.image} />
-              {addInfoUser.name}
+              <Image src={user.image} />
+              {user.name}
             </InformationData>
           </Information>
           <Information>
@@ -90,14 +119,20 @@ const Index = () => {
               {modify ? (
                 <>
                   <p style={{ marginRight: 17 }}>
-                    {addInfoUser.team || '아직 팀이 없습니다.'}
+                    {user.team.name || '아직 팀이 없습니다.'}
                   </p>
-                  <Button style={{ margin: 4 }}>팀등록</Button>
-                  <Button style={{ margin: 4 }}>팀참가</Button>
+                  {!user.team.name ? (
+                    <>
+                      <Button style={{ margin: 4 }}>팀등록</Button>
+                      <Button style={{ margin: 4 }}>팀참가</Button>
+                    </>
+                  ) : (
+                    <></>
+                  )}
                 </>
               ) : (
                 <p style={{ marginRight: 17 }}>
-                  {addInfoUser.team || '아직 팀이 없습니다.'}
+                  {user.team.name || '아직 팀이 없습니다.'}
                 </p>
               )}
             </InformationData>
@@ -109,8 +144,9 @@ const Index = () => {
               {modify ? (
                 <>
                   <Select
-                    defaultValue={addInfoUser.position || 'None'}
                     style={{ width: 210 }}
+                    onChange={(value) => setUserPosition(value)}
+                    value={userPosition || 'None'}
                     options={[
                       { value: '포인트가드', label: '포인트가드' },
                       { value: '슈팅가드', label: '슈팅가드' },
@@ -122,7 +158,7 @@ const Index = () => {
                   />
                 </>
               ) : (
-                <p>{addInfoUser.position}</p>
+                <p>{user.position}</p>
               )}
             </InformationData>
           </Information>
@@ -145,8 +181,8 @@ const Index = () => {
                 </>
               ) : (
                 <>
-                  {addInfoUser.height || '미등록'} {' / '}
-                  {addInfoUser.weight || '미등록'}
+                  {user.height || '미등록'} {' / '}
+                  {user.weight || '미등록'}
                 </>
               )}
             </InformationData>
@@ -186,7 +222,6 @@ const Index = () => {
     </Container>
   );
 };
-
 export default Index;
 const Image = styled.img`
   width: 30px;
