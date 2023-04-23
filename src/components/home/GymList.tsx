@@ -2,6 +2,8 @@ import React from 'react';
 import placeImg from 'assets/place1.jpeg';
 import styled from 'styled-components';
 import GymItem from './GymItem';
+import { Button } from 'antd';
+import { useNavigate } from 'react-router-dom';
 
 const tempDataArr = [
   {
@@ -44,9 +46,17 @@ const tempDataArr = [
 ];
 
 const GymList = () => {
+  const navigate = useNavigate();
+
   return (
     <Container>
-      <Title>인기 팀대관 체육관</Title>
+      <Header>
+        <Title>인기 체육관</Title>
+        <Button size="small" onClick={() => navigate('/team-rental')}>
+          더보기
+        </Button>
+      </Header>
+
       <Wrapper>
         <ListContainer>
           {tempDataArr.map((item) => (
@@ -62,6 +72,12 @@ export default GymList;
 
 const Container = styled.div`
   padding: 5px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Title = styled.div`
