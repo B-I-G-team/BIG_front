@@ -133,7 +133,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
           <Button type="primary" onClick={onClickCreate}>
             생성하기
           </Button>
-          <Button>취소</Button>
+          <Button onClick={() => setOpen(false)}>취소</Button>
         </FooterContainer>
       }
     >

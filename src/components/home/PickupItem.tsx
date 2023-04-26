@@ -54,6 +54,15 @@ const Container = styled.div`
   border: ${({ theme }) => `1px solid ${theme.color.border}`};
   border-radius: 4px;
   padding: 8px;
+
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    width: 100%;
+  }
 `;
 
 const Header = styled.div`

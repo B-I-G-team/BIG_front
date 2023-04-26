@@ -28,9 +28,39 @@ const tempDataArr = [
   {
     id: 3,
     homeTeam: '스타트',
-    homeTeamLogo: '',
-    awayTeam: '',
-    awayTeamLogo: '',
+    homeTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-db.svg',
+    awayTeam: '???',
+    awayTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-sk.svg',
+    gym: '사하인피니티 체육관',
+    startDate: '2023-04-24 09:00',
+    endDate: '2023-04-24 11:00',
+  },
+  {
+    id: 4,
+    homeTeam: 'KT 소닉붐',
+    homeTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-kt.svg',
+    awayTeam: 'KCC',
+    awayTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-kcc.svg',
+    gym: '사하인피니티 체육관',
+    startDate: '2023-04-24 09:00',
+    endDate: '2023-04-24 11:00',
+  },
+  {
+    id: 5,
+    homeTeam: '스타트',
+    homeTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-db.svg',
+    awayTeam: '???',
+    awayTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-sk.svg',
+    gym: '사하인피니티 체육관',
+    startDate: '2023-04-24 09:00',
+    endDate: '2023-04-24 11:00',
+  },
+  {
+    id: 6,
+    homeTeam: 'KT 소닉붐',
+    homeTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-kt.svg',
+    awayTeam: 'KCC',
+    awayTeamLogo: 'https://kbl.or.kr/imgs/logo/emblem-kcc.svg',
     gym: '사하인피니티 체육관',
     startDate: '2023-04-24 09:00',
     endDate: '2023-04-24 11:00',
@@ -63,6 +93,10 @@ export default PickupList;
 
 const Container = styled.div`
   padding: 5px;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    width: 66%;
+  }
 `;
 
 const Header = styled.div`
@@ -94,6 +128,10 @@ const ListWrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    height: auto;
+  }
 `;
 
 const List = styled.div`
@@ -103,4 +141,11 @@ const List = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, auto));
+    grid-gap: 15px;
+  }
 `;
