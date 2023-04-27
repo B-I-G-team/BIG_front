@@ -14,6 +14,9 @@ const RESERVE = 'reserve';
 const TEAM = 'team-rental';
 const PICKUP = 'pickup';
 const INDIVIDUAL = 'individual-rental';
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import { Statement } from 'typescript';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface User {
   id: string;
@@ -28,22 +31,32 @@ interface User {
 }
 
 const Index = () => {
-  const { data: user } = useMeGETQuery() as {
+  const {
+    data: user,
+    isFetching: isFetching,
+    refetch: refetch,
+  } = useMeGETQuery() as {
     data: User;
+    isFetching: boolean;
+    refetch: () => {};
   };
+
   console.log(user);
   const [userHeight, setUserHeight] = useState(0);
   const [userWeight, setUserWeight] = useState(0);
   const [userPosition, setUserPosition] = useState('');
   const { mutate: userModifyMutate } = useMePUTMutation({
-    onSuccess: () => {
+    onMutate: () => {
       setUserHeight(0);
       setUserWeight(0);
       setUserPosition('');
+    },
+    onSuccess: () => {
       Swal.fire({
         icon: 'success',
         title: '유저 정보 수정 성공',
       });
+      refetch();
     },
     onError: () => {
       Swal.fire({
@@ -63,9 +76,9 @@ const Index = () => {
     setModify(false);
     userModifyMutate(
       new Body2({
-        position: userPosition,
-        height: userHeight,
-        weight: userWeight,
+        position: userPosition || user.position,
+        height: userHeight || user.height,
+        weight: userWeight || user.weight,
       }),
     );
   };
@@ -81,6 +94,9 @@ const Index = () => {
     { name: '팀 대관', content: TEAM },
     { name: '개인 대관', content: INDIVIDUAL },
   ];
+  if (isFetching) {
+    return <>Loading</>;
+  }
 
   return (
     <Container>
@@ -146,7 +162,7 @@ const Index = () => {
                   <Select
                     style={{ width: 210 }}
                     onChange={(value) => setUserPosition(value)}
-                    value={userPosition || 'None'}
+                    value={userPosition || user.position}
                     options={[
                       { value: '포인트가드', label: '포인트가드' },
                       { value: '슈팅가드', label: '슈팅가드' },
@@ -171,18 +187,26 @@ const Index = () => {
                 <>
                   <Input
                     placeholder="키"
+                    value={userHeight || user.height}
+                    onChange={({ target: { value } }) =>
+                      setUserHeight(parseInt(value))
+                    }
                     style={{ width: 92, marginRight: 8 }}
                   />
                   /
                   <Input
                     placeholder="몸무게"
+                    value={userWeight || user.weight}
+                    onChange={({ target: { value } }) =>
+                      setUserWeight(parseInt(value))
+                    }
                     style={{ width: 92, marginLeft: 8 }}
                   />
                 </>
               ) : (
                 <>
-                  {user.height || '미등록'} {' / '}
-                  {user.weight || '미등록'}
+                  {user?.height || '미등록'} {' / '}
+                  {user?.weight || '미등록'}
                 </>
               )}
             </InformationData>
