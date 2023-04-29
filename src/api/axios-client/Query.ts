@@ -24,6 +24,12 @@ export type CallbackQueryParameters = {
   code: string;
 };
 
+export type BookingsAllQueryParameters = {
+  gymID: string;
+  firstTime: Date;
+  lastTime: Date;
+};
+
 export type TeamsGETQueryParameters = {
   offset: string | null | undefined;
   limit: string | null | undefined;
@@ -274,6 +280,194 @@ export function setCallbackDataByQueryId(queryClient: QueryClient, queryKey: Que
 }
     
     
+export function bookingsUrl(): string {
+  let url_ = getBaseUrl() + "/bookings";
+  url_ = url_.replace(/[?&]$/, "");
+  return url_;
+}
+
+export function bookingsMutationKey(): MutationKey {
+  return trimArrayEnd([
+      'Client',
+      'bookings',
+    ]);
+}
+
+/**
+ * @param body (optional) 
+ * @return Default Response
+ */
+export function useBookingsMutation<TContext>(options?: Omit<UseMutationOptions<Types.Anonymous, unknown, Types.Body, TContext>, 'mutationKey' | 'mutationFn'>): UseMutationResult<Types.Anonymous, unknown, Types.Body, TContext> {
+  const key = bookingsMutationKey();
+  
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  
+      return useMutation((body: Types.Body) => Client().bookings(body), {...options, mutationKey: key});
+}
+  
+    
+export function bookingsAllUrl(gymID: string, firstTime: Date, lastTime: Date): string {
+  let url_ = getBaseUrl() + "/bookings?";
+  if (gymID === undefined || gymID === null)
+    throw new Error("The parameter 'gymID' must be defined and cannot be null.");
+  else
+    url_ += "gymID=" + encodeURIComponent("" + gymID) + "&";
+  if (firstTime === undefined || firstTime === null)
+    throw new Error("The parameter 'firstTime' must be defined and cannot be null.");
+  else
+    url_ += "firstTime=" + encodeURIComponent(firstTime ? "" + firstTime.toISOString() : "") + "&";
+  if (lastTime === undefined || lastTime === null)
+    throw new Error("The parameter 'lastTime' must be defined and cannot be null.");
+  else
+    url_ += "lastTime=" + encodeURIComponent(lastTime ? "" + lastTime.toISOString() : "") + "&";
+  url_ = url_.replace(/[?&]$/, "");
+  return url_;
+}
+
+let bookingsAllDefaultOptions: UseQueryOptions<Types.Anonymous2[], unknown, Types.Anonymous2[]> = {
+  queryFn: __bookingsAll,
+};
+export function getBookingsAllDefaultOptions(): UseQueryOptions<Types.Anonymous2[], unknown, Types.Anonymous2[]> {
+  return bookingsAllDefaultOptions;
+};
+export function setBookingsAllDefaultOptions(options: UseQueryOptions<Types.Anonymous2[], unknown, Types.Anonymous2[]>) {
+  bookingsAllDefaultOptions = options;
+}
+
+export function bookingsAllQueryKey(dto: BookingsAllQueryParameters): QueryKey;
+export function bookingsAllQueryKey(gymID: string, firstTime: Date, lastTime: Date): QueryKey;
+export function bookingsAllQueryKey(...params: any[]): QueryKey {
+  if (params.length === 1 && isParameterObject(params[0])) {
+    const { gymID, firstTime, lastTime,  } = params[0] as BookingsAllQueryParameters;
+
+    return trimArrayEnd([
+        'Client',
+        'bookingsAll',
+        gymID as any,
+        firstTime as any,
+        lastTime as any,
+      ]);
+  } else {
+    return trimArrayEnd([
+        'Client',
+        'bookingsAll',
+        ...params
+      ]);
+  }
+}
+function __bookingsAll(context: QueryFunctionContext) {
+  return Client().bookingsAll(
+      context.queryKey[2] as string,       context.queryKey[3] as Date,       context.queryKey[4] as Date    );
+}
+
+export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(dto: BookingsAllQueryParameters, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+/**
+ * @return Default Response
+ */
+export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(gymID: string, firstTime: Date, lastTime: Date, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<Types.Anonymous2[], TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
+  let gymID: any = undefined;
+  let firstTime: any = undefined;
+  let lastTime: any = undefined;
+  
+  if (params.length > 0) {
+    if (isParameterObject(params[0])) {
+      ({ gymID, firstTime, lastTime,  } = params[0] as BookingsAllQueryParameters);
+      options = params[1];
+      axiosConfig = params[2];
+    } else {
+      [gymID, firstTime, lastTime, options, axiosConfig] = params;
+    }
+  }
+
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
+
+  return useQuery<Types.Anonymous2[], TError, TSelectData>({
+    queryFn: __bookingsAll,
+    queryKey: bookingsAllQueryKey(gymID, firstTime, lastTime),
+    ...bookingsAllDefaultOptions as unknown as UseQueryOptions<Types.Anonymous2[], TError, TSelectData>,
+    ...options,
+  });
+}
+/**
+ * @return Default Response
+ */
+export function setBookingsAllData(queryClient: QueryClient, updater: (data: Types.Anonymous2[] | undefined) => Types.Anonymous2[], gymID: string, firstTime: Date, lastTime: Date) {
+  queryClient.setQueryData(bookingsAllQueryKey(gymID, firstTime, lastTime),
+    updater
+  );
+}
+
+/**
+ * @return Default Response
+ */
+export function setBookingsAllDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.Anonymous2[] | undefined) => Types.Anonymous2[]) {
+  queryClient.setQueryData(queryKey, updater);
+}
+    
+    
+export function gymUrl(): string {
+  let url_ = getBaseUrl() + "/gym";
+  url_ = url_.replace(/[?&]$/, "");
+  return url_;
+}
+
+export function gymMutationKey(): MutationKey {
+  return trimArrayEnd([
+      'Client',
+      'gym',
+    ]);
+}
+
+/**
+ * @param body (optional) 
+ * @return Default Response
+ */
+export function useGymMutation<TContext>(options?: Omit<UseMutationOptions<Types.Anonymous3, unknown, Types.Body2, TContext>, 'mutationKey' | 'mutationFn'>): UseMutationResult<Types.Anonymous3, unknown, Types.Body2, TContext> {
+  const key = gymMutationKey();
+  
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  
+      return useMutation((body: Types.Body2) => Client().gym(body), {...options, mutationKey: key});
+}
+  
+    
+export function teamsPOSTUrl(): string {
+  let url_ = getBaseUrl() + "/teams";
+  url_ = url_.replace(/[?&]$/, "");
+  return url_;
+}
+
+export function teamsPOSTMutationKey(): MutationKey {
+  return trimArrayEnd([
+      'Client',
+      'teamsPOST',
+    ]);
+}
+
+/**
+ * @param body (optional) 
+ * @return Default Response
+ */
+export function useTeamsPOSTMutation<TContext>(options?: Omit<UseMutationOptions<Types.Anonymous4, unknown, Types.Body3, TContext>, 'mutationKey' | 'mutationFn'>): UseMutationResult<Types.Anonymous4, unknown, Types.Body3, TContext> {
+  const key = teamsPOSTMutationKey();
+  
+  const metaContext = useContext(QueryMetaContext);
+  options = addMetaToOptions(options, metaContext);
+  
+      return useMutation((body: Types.Body3) => Client().teamsPOST(body), {...options, mutationKey: key});
+}
+  
+    
 export function teamsGETUrl(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined): string {
   let url_ = getBaseUrl() + "/teams?";
 if (offset !== undefined && offset !== null)
@@ -286,13 +480,13 @@ if (search !== undefined && search !== null)
   return url_;
 }
 
-let teamsGETDefaultOptions: UseQueryOptions<Types.Anonymous, unknown, Types.Anonymous> = {
+let teamsGETDefaultOptions: UseQueryOptions<Types.Anonymous5, unknown, Types.Anonymous5> = {
   queryFn: __teamsGET,
 };
-export function getTeamsGETDefaultOptions(): UseQueryOptions<Types.Anonymous, unknown, Types.Anonymous> {
+export function getTeamsGETDefaultOptions(): UseQueryOptions<Types.Anonymous5, unknown, Types.Anonymous5> {
   return teamsGETDefaultOptions;
 };
-export function setTeamsGETDefaultOptions(options: UseQueryOptions<Types.Anonymous, unknown, Types.Anonymous>) {
+export function setTeamsGETDefaultOptions(options: UseQueryOptions<Types.Anonymous5, unknown, Types.Anonymous5>) {
   teamsGETDefaultOptions = options;
 }
 
@@ -322,16 +516,16 @@ function __teamsGET(context: QueryFunctionContext) {
       context.queryKey[2] as string | null | undefined,       context.queryKey[3] as string | null | undefined,       context.queryKey[4] as string | null | undefined    );
 }
 
-export function useTeamsGETQuery<TSelectData = Types.Anonymous, TError = unknown>(dto: TeamsGETQueryParameters, options?: UseQueryOptions<Types.Anonymous, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useTeamsGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(dto: TeamsGETQueryParameters, options?: UseQueryOptions<Types.Anonymous5, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @param offset (optional) number
  * @param limit (optional) number
  * @param search (optional) 검색어
  * @return Default Response
  */
-export function useTeamsGETQuery<TSelectData = Types.Anonymous, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined, options?: UseQueryOptions<Types.Anonymous, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
-export function useTeamsGETQuery<TSelectData = Types.Anonymous, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<Types.Anonymous, TError, TSelectData> | undefined = undefined;
+export function useTeamsGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined, options?: UseQueryOptions<Types.Anonymous5, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useTeamsGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<Types.Anonymous5, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
   let offset: any = undefined;
   let limit: any = undefined;
@@ -354,10 +548,10 @@ export function useTeamsGETQuery<TSelectData = Types.Anonymous, TError = unknown
     options!.meta = { ...options!.meta, axiosConfig };
   }
 
-  return useQuery<Types.Anonymous, TError, TSelectData>({
+  return useQuery<Types.Anonymous5, TError, TSelectData>({
     queryFn: __teamsGET,
     queryKey: teamsGETQueryKey(offset, limit, search),
-    ...teamsGETDefaultOptions as unknown as UseQueryOptions<Types.Anonymous, TError, TSelectData>,
+    ...teamsGETDefaultOptions as unknown as UseQueryOptions<Types.Anonymous5, TError, TSelectData>,
     ...options,
   });
 }
@@ -367,7 +561,7 @@ export function useTeamsGETQuery<TSelectData = Types.Anonymous, TError = unknown
  * @param search (optional) 검색어
  * @return Default Response
  */
-export function setTeamsGETData(queryClient: QueryClient, updater: (data: Types.Anonymous | undefined) => Types.Anonymous, offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined) {
+export function setTeamsGETData(queryClient: QueryClient, updater: (data: Types.Anonymous5 | undefined) => Types.Anonymous5, offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined) {
   queryClient.setQueryData(teamsGETQueryKey(offset, limit, search),
     updater
   );
@@ -379,37 +573,10 @@ export function setTeamsGETData(queryClient: QueryClient, updater: (data: Types.
  * @param search (optional) 검색어
  * @return Default Response
  */
-export function setTeamsGETDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.Anonymous | undefined) => Types.Anonymous) {
+export function setTeamsGETDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.Anonymous5 | undefined) => Types.Anonymous5) {
   queryClient.setQueryData(queryKey, updater);
 }
     
-    
-export function teamsPOSTUrl(): string {
-  let url_ = getBaseUrl() + "/teams";
-  url_ = url_.replace(/[?&]$/, "");
-  return url_;
-}
-
-export function teamsPOSTMutationKey(): MutationKey {
-  return trimArrayEnd([
-      'Client',
-      'teamsPOST',
-    ]);
-}
-
-/**
- * @param body (optional) 
- * @return Default Response
- */
-export function useTeamsPOSTMutation<TContext>(options?: Omit<UseMutationOptions<Types.Anonymous2, unknown, Types.Body, TContext>, 'mutationKey' | 'mutationFn'>): UseMutationResult<Types.Anonymous2, unknown, Types.Body, TContext> {
-  const key = teamsPOSTMutationKey();
-  
-  const metaContext = useContext(QueryMetaContext);
-  options = addMetaToOptions(options, metaContext);
-  
-      return useMutation((body: Types.Body) => Client().teamsPOST(body), {...options, mutationKey: key});
-}
-  
     
 export function presignedUrl(extension: string | null | undefined): string {
   let url_ = getBaseUrl() + "/upload/presigned?";
@@ -419,13 +586,13 @@ if (extension !== undefined && extension !== null)
   return url_;
 }
 
-let presignedDefaultOptions: UseQueryOptions<Types.Anonymous3, unknown, Types.Anonymous3> = {
+let presignedDefaultOptions: UseQueryOptions<Types.Anonymous6, unknown, Types.Anonymous6> = {
   queryFn: __presigned,
 };
-export function getPresignedDefaultOptions(): UseQueryOptions<Types.Anonymous3, unknown, Types.Anonymous3> {
+export function getPresignedDefaultOptions(): UseQueryOptions<Types.Anonymous6, unknown, Types.Anonymous6> {
   return presignedDefaultOptions;
 };
-export function setPresignedDefaultOptions(options: UseQueryOptions<Types.Anonymous3, unknown, Types.Anonymous3>) {
+export function setPresignedDefaultOptions(options: UseQueryOptions<Types.Anonymous6, unknown, Types.Anonymous6>) {
   presignedDefaultOptions = options;
 }
 
@@ -452,14 +619,14 @@ function __presigned(context: QueryFunctionContext) {
       context.queryKey[2] as string | null | undefined    );
 }
 
-export function usePresignedQuery<TSelectData = Types.Anonymous3, TError = unknown>(dto: PresignedQueryParameters, options?: UseQueryOptions<Types.Anonymous3, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function usePresignedQuery<TSelectData = Types.Anonymous6, TError = unknown>(dto: PresignedQueryParameters, options?: UseQueryOptions<Types.Anonymous6, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @param extension (optional) 파일의 확장자 (ex. png, jpeg, ...)
  * @return Default Response
  */
-export function usePresignedQuery<TSelectData = Types.Anonymous3, TError = unknown>(extension: string | null | undefined, options?: UseQueryOptions<Types.Anonymous3, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
-export function usePresignedQuery<TSelectData = Types.Anonymous3, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<Types.Anonymous3, TError, TSelectData> | undefined = undefined;
+export function usePresignedQuery<TSelectData = Types.Anonymous6, TError = unknown>(extension: string | null | undefined, options?: UseQueryOptions<Types.Anonymous6, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function usePresignedQuery<TSelectData = Types.Anonymous6, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<Types.Anonymous6, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
   let extension: any = undefined;
   
@@ -480,10 +647,10 @@ export function usePresignedQuery<TSelectData = Types.Anonymous3, TError = unkno
     options!.meta = { ...options!.meta, axiosConfig };
   }
 
-  return useQuery<Types.Anonymous3, TError, TSelectData>({
+  return useQuery<Types.Anonymous6, TError, TSelectData>({
     queryFn: __presigned,
     queryKey: presignedQueryKey(extension),
-    ...presignedDefaultOptions as unknown as UseQueryOptions<Types.Anonymous3, TError, TSelectData>,
+    ...presignedDefaultOptions as unknown as UseQueryOptions<Types.Anonymous6, TError, TSelectData>,
     ...options,
   });
 }
@@ -491,7 +658,7 @@ export function usePresignedQuery<TSelectData = Types.Anonymous3, TError = unkno
  * @param extension (optional) 파일의 확장자 (ex. png, jpeg, ...)
  * @return Default Response
  */
-export function setPresignedData(queryClient: QueryClient, updater: (data: Types.Anonymous3 | undefined) => Types.Anonymous3, extension: string | null | undefined) {
+export function setPresignedData(queryClient: QueryClient, updater: (data: Types.Anonymous6 | undefined) => Types.Anonymous6, extension: string | null | undefined) {
   queryClient.setQueryData(presignedQueryKey(extension),
     updater
   );
@@ -501,7 +668,7 @@ export function setPresignedData(queryClient: QueryClient, updater: (data: Types
  * @param extension (optional) 파일의 확장자 (ex. png, jpeg, ...)
  * @return Default Response
  */
-export function setPresignedDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.Anonymous3 | undefined) => Types.Anonymous3) {
+export function setPresignedDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.Anonymous6 | undefined) => Types.Anonymous6) {
   queryClient.setQueryData(queryKey, updater);
 }
     
@@ -512,13 +679,13 @@ export function meGETUrl(): string {
   return url_;
 }
 
-let meGETDefaultOptions: UseQueryOptions<Types.Anonymous4, unknown, Types.Anonymous4> = {
+let meGETDefaultOptions: UseQueryOptions<Types.Anonymous7, unknown, Types.Anonymous7> = {
   queryFn: __meGET,
 };
-export function getMeGETDefaultOptions(): UseQueryOptions<Types.Anonymous4, unknown, Types.Anonymous4> {
+export function getMeGETDefaultOptions(): UseQueryOptions<Types.Anonymous7, unknown, Types.Anonymous7> {
   return meGETDefaultOptions;
 };
-export function setMeGETDefaultOptions(options: UseQueryOptions<Types.Anonymous4, unknown, Types.Anonymous4>) {
+export function setMeGETDefaultOptions(options: UseQueryOptions<Types.Anonymous7, unknown, Types.Anonymous7>) {
   meGETDefaultOptions = options;
 }
 
@@ -537,9 +704,9 @@ function __meGET() {
 /**
  * @return Default Response
  */
-export function useMeGETQuery<TSelectData = Types.Anonymous4, TError = unknown>(options?: UseQueryOptions<Types.Anonymous4, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
-export function useMeGETQuery<TSelectData = Types.Anonymous4, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
-  let options: UseQueryOptions<Types.Anonymous4, TError, TSelectData> | undefined = undefined;
+export function useMeGETQuery<TSelectData = Types.Anonymous7, TError = unknown>(options?: UseQueryOptions<Types.Anonymous7, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useMeGETQuery<TSelectData = Types.Anonymous7, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
+  let options: UseQueryOptions<Types.Anonymous7, TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
   
 
@@ -553,17 +720,17 @@ export function useMeGETQuery<TSelectData = Types.Anonymous4, TError = unknown>(
     options!.meta = { ...options!.meta, axiosConfig };
   }
 
-  return useQuery<Types.Anonymous4, TError, TSelectData>({
+  return useQuery<Types.Anonymous7, TError, TSelectData>({
     queryFn: __meGET,
     queryKey: meGETQueryKey(),
-    ...meGETDefaultOptions as unknown as UseQueryOptions<Types.Anonymous4, TError, TSelectData>,
+    ...meGETDefaultOptions as unknown as UseQueryOptions<Types.Anonymous7, TError, TSelectData>,
     ...options,
   });
 }
 /**
  * @return Default Response
  */
-export function setMeGETData(queryClient: QueryClient, updater: (data: Types.Anonymous4 | undefined) => Types.Anonymous4, ) {
+export function setMeGETData(queryClient: QueryClient, updater: (data: Types.Anonymous7 | undefined) => Types.Anonymous7, ) {
   queryClient.setQueryData(meGETQueryKey(),
     updater
   );
@@ -572,7 +739,7 @@ export function setMeGETData(queryClient: QueryClient, updater: (data: Types.Ano
 /**
  * @return Default Response
  */
-export function setMeGETDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.Anonymous4 | undefined) => Types.Anonymous4) {
+export function setMeGETDataByQueryId(queryClient: QueryClient, queryKey: QueryKey, updater: (data: Types.Anonymous7 | undefined) => Types.Anonymous7) {
   queryClient.setQueryData(queryKey, updater);
 }
     
@@ -594,11 +761,11 @@ export function mePUTMutationKey(): MutationKey {
  * @param body (optional) 
  * @return Default Response
  */
-export function useMePUTMutation<TContext>(options?: Omit<UseMutationOptions<Types.Anonymous5, unknown, Types.Body2, TContext>, 'mutationKey' | 'mutationFn'>): UseMutationResult<Types.Anonymous5, unknown, Types.Body2, TContext> {
+export function useMePUTMutation<TContext>(options?: Omit<UseMutationOptions<Types.Anonymous8, unknown, Types.Body4, TContext>, 'mutationKey' | 'mutationFn'>): UseMutationResult<Types.Anonymous8, unknown, Types.Body4, TContext> {
   const key = mePUTMutationKey();
   
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
   
-      return useMutation((body: Types.Body2) => Client().mePUT(body), {...options, mutationKey: key});
+      return useMutation((body: Types.Body4) => Client().mePUT(body), {...options, mutationKey: key});
 }
