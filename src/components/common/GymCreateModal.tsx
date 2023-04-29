@@ -1,4 +1,6 @@
 import { Button, Checkbox, Input, Modal, Select } from 'antd';
+import { Body2 } from 'api/axios-client';
+import { useGymMutation } from 'api/axios-client/Query';
 import {
   Content,
   FooterContainer,
@@ -7,6 +9,7 @@ import {
 } from 'components/styled/modal-common';
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import { FlexColumnCenterStart, FlexStart } from './Wrapper';
 
 const makeTimeOption = () => {
@@ -48,7 +51,42 @@ const GymCreateModal = ({ open, setOpen }: Props) => {
   const [phone, setPhone] = useState('');
   const [timeSelectDisable, setTimeSelectDisable] = useState(false);
 
-  const createGym = () => {};
+  const { mutate: createGymMutate } = useGymMutation({
+    onSuccess: () => {
+      Swal.fire({
+        icon: 'success',
+        title: '체육관 등록 완료',
+      });
+      setOpen(false);
+    },
+    onError: () => {
+      Swal.fire({
+        icon: 'error',
+        title: '체육관 등록 실패',
+      });
+    },
+  });
+
+  const createGym = () => {
+    if (
+      address1 &&
+      ((openTime && closeTime) || timeSelectDisable) &&
+      name &&
+      defaultPrice &&
+      phone
+    )
+      createGymMutate(
+        new Body2({
+          address1,
+          address2,
+          openTime: timeSelectDisable ? '00:00' : (openTime as string),
+          closeTime: timeSelectDisable ? '00:00' : (closeTime as string),
+          defaultPrice,
+          name,
+          phone,
+        }),
+      );
+  };
 
   return (
     <StyledModal

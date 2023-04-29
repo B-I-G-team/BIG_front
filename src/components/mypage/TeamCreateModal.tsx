@@ -13,7 +13,7 @@ import {
   useTeamsPOSTMutation,
 } from 'api/axios-client/Query';
 import Swal from 'sweetalert2';
-import { Body } from 'api/axios-client';
+import { Body3 } from 'api/axios-client';
 import {
   FooterContainer,
   StyledModal,
@@ -115,7 +115,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
 
         if (success) {
           teamCreateMutate(
-            new Body({
+            new Body3({
               name: teamName,
               local: teamLocal,
               image: url,

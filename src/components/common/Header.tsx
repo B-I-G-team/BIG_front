@@ -191,7 +191,8 @@ const RightContents = styled.div`
 
 const LeftItem = styled(Link)<{ active: string }>`
   display: none;
-  color: ${({ active }) => (active ? blue.primary : 'black')} !important;
+  color: ${({ active }) =>
+    active === 'true' ? blue.primary : 'black'} !important;
 
   @media ${({ theme }) => theme.grid.tablet} {
     display: block;
