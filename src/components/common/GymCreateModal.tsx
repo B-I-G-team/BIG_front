@@ -1,16 +1,27 @@
-import { Button, Checkbox, Input, Modal, Select } from 'antd';
+import {
+  Button,
+  Checkbox,
+  Input,
+  Modal,
+  Select,
+  Upload,
+  UploadFile,
+  UploadProps,
+} from 'antd';
 import { Body2 } from 'api/axios-client';
-import { useGymMutation } from 'api/axios-client/Query';
+import { useGymMutation, usePresignedQuery } from 'api/axios-client/Query';
 import {
   Content,
   FooterContainer,
   StyledModal,
   Title,
 } from 'components/styled/modal-common';
-import React, { useState } from 'react';
+import { PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
 import { FlexColumnCenterStart, FlexStart } from './Wrapper';
+import { uploadFile } from 'utils/common';
 
 const makeTimeOption = () => {
   const options = [];
@@ -50,6 +61,14 @@ const GymCreateModal = ({ open, setOpen }: Props) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [timeSelectDisable, setTimeSelectDisable] = useState(false);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [file, setFile] = useState<any>();
+  const [imageUrlList, setImageUrlList] = useState<
+    { uid: string; url: string }[]
+  >([]);
+
+  const { data: presigendData, refetch: presignedQueryRefetch } =
+    usePresignedQuery('png');
 
   const { mutate: createGymMutate } = useGymMutation({
     onSuccess: () => {
@@ -67,14 +86,15 @@ const GymCreateModal = ({ open, setOpen }: Props) => {
     },
   });
 
-  const createGym = () => {
+  const createGym = async () => {
     if (
       address1 &&
       ((openTime && closeTime) || timeSelectDisable) &&
       name &&
       defaultPrice &&
-      phone
-    )
+      phone &&
+      imageUrlList.length > 0
+    ) {
       createGymMutate(
         new Body2({
           address1,
@@ -84,9 +104,44 @@ const GymCreateModal = ({ open, setOpen }: Props) => {
           defaultPrice,
           name,
           phone,
+          images: imageUrlList.map(({ url }) => url),
         }),
       );
+    }
   };
+
+  const handleUploadChange: UploadProps['onChange'] = ({
+    fileList: newFileList,
+  }) => {
+    setFileList(
+      newFileList.map((file) => ({
+        ...file,
+        status: 'done',
+        url: '',
+      })),
+    );
+  };
+
+  useEffect(() => {
+    const preUpload = async () => {
+      if (presigendData && file) {
+        const { presigned, url } = presigendData;
+        const success = await uploadFile(file, presigned);
+        if (success) {
+          setImageUrlList((prev) => [...prev, { uid: file.uid, url }]);
+        }
+        setFile(undefined);
+      }
+    };
+    preUpload();
+  }, [presigendData]);
+
+  const uploadButton = (
+    <div>
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </div>
+  );
 
   return (
     <StyledModal
@@ -109,6 +164,25 @@ const GymCreateModal = ({ open, setOpen }: Props) => {
             value={name}
             onChange={({ target: { value } }) => setName(value)}
           />
+        </Wrapper>
+
+        <Wrapper>
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onChange={handleUploadChange}
+            customRequest={({ file }) => {
+              presignedQueryRefetch();
+              setFile(file);
+            }}
+            onRemove={(_file) => {
+              setImageUrlList((prev) =>
+                prev.filter(({ uid }) => uid !== _file.uid),
+              );
+            }}
+          >
+            {fileList.length >= 8 ? null : uploadButton}
+          </Upload>
         </Wrapper>
 
         <Wrapper>
