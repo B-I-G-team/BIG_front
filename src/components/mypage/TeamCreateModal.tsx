@@ -14,6 +14,11 @@ import {
 } from 'api/axios-client/Query';
 import Swal from 'sweetalert2';
 import { Body } from 'api/axios-client';
+import {
+  FooterContainer,
+  StyledModal,
+  Title,
+} from 'components/styled/modal-common';
 
 const { TextArea } = Input;
 
@@ -133,7 +138,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
           <Button type="primary" onClick={onClickCreate}>
             생성하기
           </Button>
-          <Button>취소</Button>
+          <Button onClick={() => setOpen(false)}>취소</Button>
         </FooterContainer>
       }
     >
@@ -197,18 +202,6 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
 
 export default TeamCreateModal;
 
-const StyledModal = styled(Modal)`
-  .ant-modal-content {
-    padding: 0;
-  }
-`;
-
-const Title = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.color.border};
-
-  padding: 16px 20px;
-`;
-
 const Content = styled.div`
   padding: 16px 24px;
 `;
@@ -261,12 +254,4 @@ const StyledInput = styled(Input)`
 
 const StyledSelect = styled(Select)`
   flex: 1;
-`;
-
-const FooterContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 0;
 `;

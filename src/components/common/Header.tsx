@@ -45,18 +45,18 @@ const Header = () => {
             <LogoLink to="/">
               <Logo src={logoImage} />
             </LogoLink>
-            <LeftItem to="/" active={location.pathname === '/pickup'}>
+            <LeftItem to="/" active={String(location.pathname === '/pickup')}>
               픽업게임
             </LeftItem>
             <LeftItem
               to="/team-rental"
-              active={location.pathname === '/team-rental'}
+              active={String(location.pathname === '/team-rental')}
             >
               팀대관
             </LeftItem>
             <LeftItem
               to="/team-rank"
-              active={location.pathname === '/team-rank'}
+              active={String(location.pathname === '/team-rank')}
             >
               팀 순위
             </LeftItem>
@@ -189,7 +189,7 @@ const RightContents = styled.div`
   }
 `;
 
-const LeftItem = styled(Link)<{ active: boolean }>`
+const LeftItem = styled(Link)<{ active: string }>`
   display: none;
   color: ${({ active }) => (active ? blue.primary : 'black')} !important;
 

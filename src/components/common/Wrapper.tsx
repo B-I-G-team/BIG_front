@@ -23,3 +23,10 @@ export const FlexStart = styled.div`
   justify-content: flex-start;
   align-items: center;
 `;
+
+export const FlexColumnCenterStart = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+`;
