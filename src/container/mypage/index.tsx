@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMePUTMutation } from 'api/axios-client/Query';
 import styled from 'styled-components';
 import Reserve from 'components/mypage/Reserve';
@@ -8,15 +8,14 @@ import { Tabs, Radio, Select, Input, Button } from 'antd';
 import ReserveStateNotify from 'components/mypage/ReserveStateNotify';
 import Swal from 'sweetalert2';
 import { Body2 } from 'api/axios-client';
+import { useMeGETQueryKey } from 'api/queryKeyHooks';
+import { useQueryClient } from '@tanstack/react-query';
 const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
 const TEAM = 'team-rental';
 const PICKUP = 'pickup';
 const INDIVIDUAL = 'individual-rental';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
-import { Statement } from 'typescript';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface User {
   id: string;
@@ -31,34 +30,44 @@ interface User {
 }
 
 const Index = () => {
-  const {
-    data: user,
-    isFetching: isFetching,
-    refetch: refetch,
-  } = useMeGETQuery() as {
+  const queryClient = useQueryClient();
+  const { meQueryKey } = useMeGETQueryKey();
+  const { data: user, isFetching: isFetching } = useMeGETQuery({
+    queryKey: meQueryKey,
+  }) as {
     data: User;
     isFetching: boolean;
-    refetch: () => {};
   };
 
-  console.log(user);
   const [userHeight, setUserHeight] = useState(0);
   const [userWeight, setUserWeight] = useState(0);
   const [userPosition, setUserPosition] = useState('');
+  useEffect(() => {
+    if (user) {
+      setUserHeight(user.height);
+      setUserWeight(user.weight);
+      setUserPosition(user.position);
+    }
+  }, [user]);
   const { mutate: userModifyMutate } = useMePUTMutation({
     onMutate: () => {
-      setUserHeight(0);
-      setUserWeight(0);
-      setUserPosition('');
+      const oldData = queryClient.getQueryData(meQueryKey);
+      queryClient.setQueryData(meQueryKey, {
+        ...user,
+        height: userHeight || user.height,
+        weight: userWeight || user.weight,
+        position: userPosition || user.position,
+      });
+      return oldData;
     },
     onSuccess: () => {
       Swal.fire({
         icon: 'success',
         title: '유저 정보 수정 성공',
       });
-      refetch();
     },
-    onError: () => {
+    onError: (error, variable, oldData) => {
+      queryClient.setQueryData(meQueryKey, oldData);
       Swal.fire({
         icon: 'error',
         title: '유저 정보 수정 실패',
@@ -68,7 +77,7 @@ const Index = () => {
 
   const [modify, setModify] = useState(false);
   const [reserveState, setReserveState] = useState(WAIT_CONFIRM);
-  const onChange = (e: RadioChangeEvent) => {
+  const onChangeReserveState = (e: RadioChangeEvent) => {
     setReserveState(e.target.value);
   };
 
@@ -97,7 +106,6 @@ const Index = () => {
   if (isFetching) {
     return <>Loading</>;
   }
-
   return (
     <Container>
       <Title>
@@ -162,7 +170,7 @@ const Index = () => {
                   <Select
                     style={{ width: 210 }}
                     onChange={(value) => setUserPosition(value)}
-                    value={userPosition || user.position}
+                    value={userPosition}
                     options={[
                       { value: '포인트가드', label: '포인트가드' },
                       { value: '슈팅가드', label: '슈팅가드' },
@@ -179,34 +187,37 @@ const Index = () => {
             </InformationData>
           </Information>
           <Information>
-            <InformationTitle>이름</InformationTitle>
+            <InformationTitle>키/몸무게</InformationTitle>
             <Separator>:</Separator>
 
             <InformationData>
               {modify ? (
                 <>
                   <Input
+                    type="number"
                     placeholder="키"
-                    value={userHeight || user.height}
-                    onChange={({ target: { value } }) =>
-                      setUserHeight(parseInt(value))
-                    }
+                    value={userHeight}
+                    onChange={({ target: { value } }) => {
+                      setUserHeight(Number(value));
+                      console.log(value);
+                    }}
                     style={{ width: 92, marginRight: 8 }}
                   />
                   /
                   <Input
+                    type="number"
                     placeholder="몸무게"
-                    value={userWeight || user.weight}
+                    value={userWeight}
                     onChange={({ target: { value } }) =>
-                      setUserWeight(parseInt(value))
+                      setUserWeight(Number(value))
                     }
                     style={{ width: 92, marginLeft: 8 }}
                   />
                 </>
               ) : (
                 <>
-                  {user?.height || '미등록'} {' / '}
-                  {user?.weight || '미등록'}
+                  {user.height || '미등록'} {' / '}
+                  {user.weight || '미등록'}
                 </>
               )}
             </InformationData>
@@ -226,7 +237,7 @@ const Index = () => {
                 <SubTab>
                   <Radio.Group
                     value={reserveState}
-                    onChange={onChange}
+                    onChange={onChangeReserveState}
                     style={{ marginBottom: 16 }}
                   >
                     <Radio.Button value={WAIT_CONFIRM}>
