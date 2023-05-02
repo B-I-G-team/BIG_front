@@ -39,18 +39,18 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           <LogoLink to="/">
             <Logo src={logoImage} />
           </LogoLink>
-          <LinkItem to="/" active={String(location.pathname === '/pickup')}>
+          <LinkItem to="/" $active={location.pathname === '/pickup'}>
             픽업 게임
           </LinkItem>
           <LinkItem
             to="/team-rental"
-            active={String(location.pathname === '/team-rental')}
+            $active={location.pathname === '/team-rental'}
           >
             팀 대관
           </LinkItem>
           <LinkItem
             to="/team-rank"
-            active={String(location.pathname === '/team-rank')}
+            $active={location.pathname === '/team-rank'}
           >
             팀 순위
           </LinkItem>
@@ -120,15 +120,14 @@ const Logo = styled.img`
   height: auto;
 `;
 
-const LinkItem = styled(Link)<{ active?: string }>`
+const LinkItem = styled(Link)<{ $active?: boolean }>`
   width: 100%;
   text-align: center;
   padding: 14px 0;
   font-size: ${({ theme }) => theme.font.size.subtitle_1};
   font-weight: 600;
 
-  color: ${({ active }) =>
-    active === 'true' ? blue.primary : 'black'} !important;
+  color: ${({ $active }) => ($active ? blue.primary : 'black')} !important;
 `;
 
 const Overlay = styled.div<{ open: boolean }>`
