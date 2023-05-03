@@ -9,7 +9,7 @@ const TEAM = 'team-rental';
 const PICKUP = 'pickup';
 const INDIVIDUAL = 'individual-rental';
 interface Props {
-  Data: string;
+  content: string;
   subData: string;
 }
 const tempDataArr = [
@@ -95,15 +95,13 @@ const tempDataArr = [
   },
 ];
 
-const Reserve = ({ Data, subData }: Props) => {
+const Reserve = ({ content, subData }: Props) => {
   return (
     <Container>
       {tempDataArr.map((el, index) => (
         <ReserveInfoBox
           key={index}
-          className={
-            Data === el.type && subData === el.state ? 'active' : 'unactive'
-          }
+          active={content === el.type && subData === el.state}
         >
           <Image src={el.image} alt="" />
           <ReserveInfo>
@@ -128,9 +126,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   list-style: none;
-  .unactive {
-    display: none;
-  }
 `;
 const Image = styled.img`
   @media ${({ theme }) => theme.grid.tablet} {
@@ -142,7 +137,9 @@ const Image = styled.img`
   width: 80px;
   height: 60px;
 `;
-const ReserveInfoBox = styled.div`
+const ReserveInfoBox = styled.div<{ active: boolean }>`
+  display: ${({ active }) => (active ? 'block' : 'none')};
+
   margin-bottom: 20px;
   padding: 15px;
   display: flex;

@@ -3,6 +3,8 @@ import { useMePUTMutation } from 'api/axios-client/Query';
 import styled from 'styled-components';
 import Reserve from 'components/mypage/Reserve';
 import type { RadioChangeEvent } from 'antd';
+import { Typography } from 'antd';
+
 import { useMeGETQuery } from 'api/axios-client/Query';
 import { Tabs, Radio, Select, Input, Button } from 'antd';
 import ReserveStateNotify from 'components/mypage/ReserveStateNotify';
@@ -10,6 +12,7 @@ import Swal from 'sweetalert2';
 import { Body2 } from 'api/axios-client';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
 import { useQueryClient } from '@tanstack/react-query';
+import { H1, H3, H5 } from 'styles/mixin';
 const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
@@ -39,9 +42,15 @@ const Index = () => {
     isFetching: boolean;
   };
 
+  console.log(Typography);
+
   const [userHeight, setUserHeight] = useState(0);
   const [userWeight, setUserWeight] = useState(0);
   const [userPosition, setUserPosition] = useState('');
+
+  const [modify, setModify] = useState(false);
+  const [reserveState, setReserveState] = useState(WAIT_CONFIRM);
+
   useEffect(() => {
     if (user) {
       setUserHeight(user.height);
@@ -49,6 +58,7 @@ const Index = () => {
       setUserPosition(user.position);
     }
   }, [user]);
+
   const { mutate: userModifyMutate } = useMePUTMutation({
     onMutate: () => {
       const oldData = queryClient.getQueryData(meQueryKey);
@@ -75,10 +85,8 @@ const Index = () => {
     },
   });
 
-  const [modify, setModify] = useState(false);
-  const [reserveState, setReserveState] = useState(WAIT_CONFIRM);
-  const onChangeReserveState = (e: RadioChangeEvent) => {
-    setReserveState(e.target.value);
+  const onChangeReserveState = ({ target: { value } }: RadioChangeEvent) => {
+    setReserveState(value);
   };
 
   const handleSaveButton = () => {
@@ -95,21 +103,25 @@ const Index = () => {
   const handleModifyButton = () => {
     setModify(true);
   };
+
   const handleCancelButton = () => {
     setModify(false);
   };
+
   const menuArr = [
     { name: '픽업게임', content: PICKUP },
     { name: '팀 대관', content: TEAM },
     { name: '개인 대관', content: INDIVIDUAL },
   ];
+
   if (isFetching) {
     return <>Loading</>;
   }
+
   return (
     <Container>
       <Title>
-        <p style={{ marginRight: 17 }}>내 정보</p>
+        <Title>내 정보</Title>
         {modify ? (
           <>
             <Button onClick={handleSaveButton} style={{ margin: 4 }}>
@@ -177,7 +189,7 @@ const Index = () => {
                       { value: '스몰포워드', label: '스몰포워드' },
                       { value: '파워포워드', label: '파워포워드' },
                       { value: '센터', label: '센터' },
-                      { value: 'None', label: 'None' },
+                      { value: undefined, label: 'None' },
                     ]}
                   />
                 </>
@@ -187,7 +199,7 @@ const Index = () => {
             </InformationData>
           </Information>
           <Information>
-            <InformationTitle>키/몸무게</InformationTitle>
+            <InformationTitle>키 / 몸무게</InformationTitle>
             <Separator>:</Separator>
 
             <InformationData>
@@ -199,7 +211,6 @@ const Index = () => {
                     value={userHeight}
                     onChange={({ target: { value } }) => {
                       setUserHeight(Number(value));
-                      console.log(value);
                     }}
                     style={{ width: 92, marginRight: 8 }}
                   />
@@ -227,70 +238,65 @@ const Index = () => {
 
       <Title>진행중인 예약정보</Title>
       <Tabs
-        items={menuArr.map((tab, index) => {
-          const id = String(index + 1);
-          return {
-            label: tab.name,
-            key: id,
-            children: (
-              <>
-                <SubTab>
-                  <Radio.Group
-                    value={reserveState}
-                    onChange={onChangeReserveState}
-                    style={{ marginBottom: 16 }}
-                  >
-                    <Radio.Button value={WAIT_CONFIRM}>
-                      승인 대기중
-                    </Radio.Button>
-                    <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
-                    <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
-                  </Radio.Group>
-                  <ReserveStateNotify data={reserveState} />
-                </SubTab>
-                <Reserve Data={tab.content} subData={reserveState}></Reserve>
-              </>
-            ),
-          };
-        })}
+        items={menuArr.map((tab) => ({
+          label: tab.name,
+          key: tab.content,
+          children: (
+            <>
+              <SubTab>
+                <Radio.Group
+                  value={reserveState}
+                  onChange={onChangeReserveState}
+                  style={{ marginBottom: 16 }}
+                >
+                  <Radio.Button value={WAIT_CONFIRM}>승인 대기중</Radio.Button>
+                  <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
+                  <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
+                </Radio.Group>
+                <ReserveStateNotify reserveState={reserveState} />
+              </SubTab>
+              <Reserve content={tab.content} subData={reserveState} />
+            </>
+          ),
+        }))}
       />
     </Container>
   );
 };
 export default Index;
+
+const Container = styled.div`
+  padding: 8px;
+`;
+
+const Title = styled.div`
+  margin: 12px 0;
+
+  display: flex;
+  align-items: center;
+
+  ${H5}
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    ${H3}
+  }
+`;
+
+const TitleText = styled.div``;
+
 const Image = styled.img`
   width: 30px;
   height: 30px;
   margin-right: 11px;
   border-radius: 50px;
 `;
-const Container = styled.div`
-  height: 150vh;
-`;
+
 const InformationBox = styled.div`
   display: flex;
   @media ${({ theme }) => theme.grid.tablet} {
     justify-content: flex-start;
   }
   margin-bottom: 34px;
-
-  .unactive {
-    display: none;
-  }
-
-  .active {
-    display: flex;
-  }
-`;
-
-const Title = styled.div`
-  font-size: ${({ theme }) => theme.font.size.heading_4};
-  font-weight: 700;
-  padding: 0px;
-  margin-bottom: 20px;
-  margin-top: 34px;
-  display: flex;
-  align-items: center;
 `;
 
 const Informations = styled.ul`
@@ -311,19 +317,23 @@ const Information = styled.li`
   height: 32px;
   margin-bottom: 20px;
 `;
+
 const InformationTitle = styled.div`
   width: 92px;
 `;
+
 const Separator = styled.div`
   width: 30px;
   @media ${({ theme }) => theme.grid.tablet} {
     width: 90px;
   }
 `;
+
 const InformationData = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const SubTab = styled.div`
   display: flex;
   align-items: center;

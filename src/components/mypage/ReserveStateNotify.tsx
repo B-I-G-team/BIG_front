@@ -4,13 +4,13 @@ const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 
 interface Props {
-  data: string;
+  reserveState: string;
 }
 
-const ReserveStateNotify = ({ data }: Props) => {
-  if (data === WAIT_CONFIRM) {
+const ReserveStateNotify = ({ reserveState }: Props) => {
+  if (reserveState === WAIT_CONFIRM) {
     return <Notify>😊 사장님의 승인요청을 기다리고 있습니다.</Notify>;
-  } else if (data === WAIT_PAY) {
+  } else if (reserveState === WAIT_PAY) {
     return <Notify>😊 결제가 완료되면 예약이 완료됩니다.</Notify>;
   }
   return <></>;
