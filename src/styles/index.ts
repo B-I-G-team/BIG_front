@@ -45,7 +45,12 @@ const GlobalStyle = createGlobalStyle`
     border:none;
   }
 
-
+ 
+  .ant-upload-list-item-actions{
+    a{
+      display: none;
+    }
+  }
 `;
 
 export default GlobalStyle;

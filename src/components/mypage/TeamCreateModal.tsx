@@ -13,29 +13,15 @@ import {
   useTeamsPOSTMutation,
 } from 'api/axios-client/Query';
 import Swal from 'sweetalert2';
-import { Body } from 'api/axios-client';
+import { Body3 } from 'api/axios-client';
+import {
+  FooterContainer,
+  StyledModal,
+  Title,
+} from 'components/styled/modal-common';
+import { getBase64, uploadFile } from 'utils/common';
 
 const { TextArea } = Input;
-
-const uploadFile = (file: File, presigned: string) => {
-  return new Promise<any>((resolve) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('PUT', presigned, true);
-    xhr.setRequestHeader('Content-Type', file.type);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        resolve(true);
-      }
-    };
-    xhr.send(file);
-  });
-};
-
-const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result as string));
-  reader.readAsDataURL(img);
-};
 
 interface Props {
   open: boolean;
@@ -110,7 +96,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
 
         if (success) {
           teamCreateMutate(
-            new Body({
+            new Body3({
               name: teamName,
               local: teamLocal,
               image: url,
@@ -133,7 +119,7 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
           <Button type="primary" onClick={onClickCreate}>
             생성하기
           </Button>
-          <Button>취소</Button>
+          <Button onClick={() => setOpen(false)}>취소</Button>
         </FooterContainer>
       }
     >
@@ -197,18 +183,6 @@ const TeamCreateModal = ({ open, setOpen }: Props) => {
 
 export default TeamCreateModal;
 
-const StyledModal = styled(Modal)`
-  .ant-modal-content {
-    padding: 0;
-  }
-`;
-
-const Title = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.color.border};
-
-  padding: 16px 20px;
-`;
-
 const Content = styled.div`
   padding: 16px 24px;
 `;
@@ -261,12 +235,4 @@ const StyledInput = styled(Input)`
 
 const StyledSelect = styled(Select)`
   flex: 1;
-`;
-
-const FooterContainer = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px 0;
 `;
