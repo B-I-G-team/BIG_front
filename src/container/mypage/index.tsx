@@ -8,7 +8,7 @@ import { useMeGETQuery } from 'api/axios-client/Query';
 import { Tabs, Radio, Select, Input, Button } from 'antd';
 import ReserveStateNotify from 'components/mypage/ReserveStateNotify';
 import Swal from 'sweetalert2';
-import { Body2 } from 'api/axios-client';
+import { Body4 } from 'api/axios-client';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -100,7 +100,7 @@ const Index = () => {
   const handleSaveButton = () => {
     setModify(false);
     userModifyMutate(
-      new Body2({
+      new Body4({
         position,
         height,
         weight,
