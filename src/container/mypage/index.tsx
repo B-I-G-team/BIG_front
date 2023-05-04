@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useMePUTMutation } from 'api/axios-client/Query';
 import styled from 'styled-components';
 import Reserve from 'components/mypage/Reserve';
 import type { RadioChangeEvent } from 'antd';
-import { Typography } from 'antd';
 
 import { useMeGETQuery } from 'api/axios-client/Query';
 import { Tabs, Radio, Select, Input, Button } from 'antd';
@@ -12,7 +11,15 @@ import Swal from 'sweetalert2';
 import { Body2 } from 'api/axios-client';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
 import { useQueryClient } from '@tanstack/react-query';
-import { H1, H3, H5 } from 'styles/mixin';
+import {
+  Body1Bold,
+  Body1Medium,
+  Body2Bold,
+  Body2Medium,
+  H4,
+  H5,
+} from 'styles/mixin';
+import useWindowSize from 'hooks/common/useWindowSize';
 const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
@@ -42,20 +49,21 @@ const Index = () => {
     isFetching: boolean;
   };
 
-  console.log(Typography);
+  const { width: windowWidth } = useWindowSize();
+  const isMobile = useMemo(() => windowWidth <= 400, [windowWidth]);
 
-  const [userHeight, setUserHeight] = useState(0);
-  const [userWeight, setUserWeight] = useState(0);
-  const [userPosition, setUserPosition] = useState('');
+  const [height, setHeight] = useState(0);
+  const [weight, setWeight] = useState(0);
+  const [position, setPosition] = useState('');
 
   const [modify, setModify] = useState(false);
   const [reserveState, setReserveState] = useState(WAIT_CONFIRM);
 
   useEffect(() => {
     if (user) {
-      setUserHeight(user.height);
-      setUserWeight(user.weight);
-      setUserPosition(user.position);
+      setHeight(user.height);
+      setWeight(user.weight);
+      setPosition(user.position);
     }
   }, [user]);
 
@@ -64,9 +72,9 @@ const Index = () => {
       const oldData = queryClient.getQueryData(meQueryKey);
       queryClient.setQueryData(meQueryKey, {
         ...user,
-        height: userHeight || user.height,
-        weight: userWeight || user.weight,
-        position: userPosition || user.position,
+        height,
+        weight,
+        position,
       });
       return oldData;
     },
@@ -93,9 +101,9 @@ const Index = () => {
     setModify(false);
     userModifyMutate(
       new Body2({
-        position: userPosition || user.position,
-        height: userHeight || user.height,
-        weight: userWeight || user.weight,
+        position,
+        height,
+        weight,
       }),
     );
   };
@@ -121,18 +129,30 @@ const Index = () => {
   return (
     <Container>
       <Title>
-        <Title>내 정보</Title>
+        <TitleText>내 정보</TitleText>
         {modify ? (
           <>
-            <Button onClick={handleSaveButton} style={{ margin: 4 }}>
+            <Button
+              onClick={handleSaveButton}
+              style={{ margin: 4 }}
+              size={isMobile ? 'small' : 'middle'}
+            >
               저장
             </Button>
-            <Button onClick={handleCancelButton} style={{ margin: 4 }}>
+            <Button
+              onClick={handleCancelButton}
+              style={{ margin: 4 }}
+              size={isMobile ? 'small' : 'middle'}
+            >
               취소
             </Button>
           </>
         ) : (
-          <Button onClick={handleModifyButton} style={{ margin: 4 }}>
+          <Button
+            onClick={handleModifyButton}
+            style={{ margin: 4 }}
+            size={isMobile ? 'small' : 'middle'}
+          >
             수정
           </Button>
         )}
@@ -141,7 +161,7 @@ const Index = () => {
       <InformationBox>
         <Informations>
           <Information>
-            <InformationTitle>이름</InformationTitle>
+            <InformationTitle>이 름</InformationTitle>
             <Separator>:</Separator>
             <InformationData>
               <Image src={user.image} />
@@ -149,7 +169,7 @@ const Index = () => {
             </InformationData>
           </Information>
           <Information>
-            <InformationTitle>소속팀</InformationTitle>
+            <InformationTitle>소 속 팀</InformationTitle>
             <Separator>:</Separator>
             <InformationData>
               {modify ? (
@@ -159,8 +179,18 @@ const Index = () => {
                   </p>
                   {!user.team.name ? (
                     <>
-                      <Button style={{ margin: 4 }}>팀등록</Button>
-                      <Button style={{ margin: 4 }}>팀참가</Button>
+                      <Button
+                        style={{ margin: 4 }}
+                        size={isMobile ? 'small' : 'middle'}
+                      >
+                        팀등록
+                      </Button>
+                      <Button
+                        style={{ margin: 4 }}
+                        size={isMobile ? 'small' : 'middle'}
+                      >
+                        팀참가
+                      </Button>
                     </>
                   ) : (
                     <></>
@@ -174,27 +204,28 @@ const Index = () => {
             </InformationData>
           </Information>
           <Information>
-            <InformationTitle>포지션</InformationTitle>
+            <InformationTitle>포 지 션</InformationTitle>
             <Separator>:</Separator>
             <InformationData>
               {modify ? (
                 <>
                   <Select
                     style={{ width: 210 }}
-                    onChange={(value) => setUserPosition(value)}
-                    value={userPosition}
+                    size={isMobile ? 'small' : 'middle'}
+                    onChange={(value) => setPosition(value)}
+                    value={position}
                     options={[
                       { value: '포인트가드', label: '포인트가드' },
                       { value: '슈팅가드', label: '슈팅가드' },
                       { value: '스몰포워드', label: '스몰포워드' },
                       { value: '파워포워드', label: '파워포워드' },
                       { value: '센터', label: '센터' },
-                      { value: undefined, label: 'None' },
+                      { value: 'None', label: 'None' },
                     ]}
                   />
                 </>
               ) : (
-                <p>{user.position}</p>
+                <p>{user.position === 'None' ? '미등록' : user.position}</p>
               )}
             </InformationData>
           </Information>
@@ -208,9 +239,10 @@ const Index = () => {
                   <Input
                     type="number"
                     placeholder="키"
-                    value={userHeight}
+                    size={isMobile ? 'small' : 'middle'}
+                    value={height}
                     onChange={({ target: { value } }) => {
-                      setUserHeight(Number(value));
+                      setHeight(Number(value));
                     }}
                     style={{ width: 92, marginRight: 8 }}
                   />
@@ -218,9 +250,10 @@ const Index = () => {
                   <Input
                     type="number"
                     placeholder="몸무게"
-                    value={userWeight}
+                    size={isMobile ? 'small' : 'middle'}
+                    value={weight}
                     onChange={({ target: { value } }) =>
-                      setUserWeight(Number(value))
+                      setWeight(Number(value))
                     }
                     style={{ width: 92, marginLeft: 8 }}
                   />
@@ -236,30 +269,34 @@ const Index = () => {
         </Informations>
       </InformationBox>
 
-      <Title>진행중인 예약정보</Title>
-      <Tabs
-        items={menuArr.map((tab) => ({
-          label: tab.name,
-          key: tab.content,
-          children: (
-            <>
-              <SubTab>
-                <Radio.Group
-                  value={reserveState}
-                  onChange={onChangeReserveState}
-                  style={{ marginBottom: 16 }}
-                >
-                  <Radio.Button value={WAIT_CONFIRM}>승인 대기중</Radio.Button>
-                  <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
-                  <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
-                </Radio.Group>
-                <ReserveStateNotify reserveState={reserveState} />
-              </SubTab>
-              <Reserve content={tab.content} subData={reserveState} />
-            </>
-          ),
-        }))}
-      />
+      <ResevationSection>
+        <TitleText>예약 정보</TitleText>
+        <Tabs
+          items={menuArr.map((tab) => ({
+            label: tab.name,
+            key: tab.content,
+            children: (
+              <>
+                <SubTab>
+                  <Radio.Group
+                    value={reserveState}
+                    onChange={onChangeReserveState}
+                    style={{ marginBottom: 16 }}
+                  >
+                    <Radio.Button value={WAIT_CONFIRM}>
+                      승인 대기중
+                    </Radio.Button>
+                    <Radio.Button value={WAIT_PAY}>결제 대기중</Radio.Button>
+                    <Radio.Button value={RESERVE}>예약 완료</Radio.Button>
+                  </Radio.Group>
+                  <ReserveStateNotify reserveState={reserveState} />
+                </SubTab>
+                <Reserve content={tab.content} subData={reserveState} />
+              </>
+            ),
+          }))}
+        />
+      </ResevationSection>
     </Container>
   );
 };
@@ -270,56 +307,69 @@ const Container = styled.div`
 `;
 
 const Title = styled.div`
-  margin: 12px 0;
+  margin: 4px 0 15px 0;
 
   display: flex;
   align-items: center;
 
-  ${H5}
-
   @media ${({ theme }) => theme.grid.tablet} {
-    ${H3}
+    margin-bottom: 20px;
   }
 `;
 
-const TitleText = styled.div``;
+const TitleText = styled.div`
+  ${H5}
+
+  margin-right: 4px;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    ${H4}
+    margin-right: 8px;
+  }
+`;
 
 const Image = styled.img`
-  width: 30px;
-  height: 30px;
-  margin-right: 11px;
+  width: 15px;
+  height: 15px;
+  margin-right: 4px;
   border-radius: 50px;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    width: 30px;
+    height: 30px;
+  }
 `;
 
 const InformationBox = styled.div`
   display: flex;
-  @media ${({ theme }) => theme.grid.tablet} {
-    justify-content: flex-start;
-  }
-  margin-bottom: 34px;
+  margin-bottom: 30px;
 `;
 
 const Informations = styled.ul`
-  list-style: none;
   display: flex;
-  padding: 0px;
-  margin: 0px;
+
   flex-direction: column;
   align-items: flex-start;
 `;
 
 const Information = styled.li`
-  padding: 10px;
   display: flex;
-  font-size: ${({ theme }) => theme.font.size.heading_6};
-  font-weight: 700;
   align-items: center;
-  height: 32px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    margin-bottom: 25px;
+  }
 `;
 
 const InformationTitle = styled.div`
-  width: 92px;
+  width: 74px;
+
+  ${Body2Bold}
+  @media ${({ theme }) => theme.grid.tablet} {
+    width: 95px;
+    ${Body1Bold}
+  }
 `;
 
 const Separator = styled.div`
@@ -332,9 +382,17 @@ const Separator = styled.div`
 const InformationData = styled.div`
   display: flex;
   align-items: center;
+
+  ${Body2Medium}
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    ${Body1Medium}
+  }
 `;
 
 const SubTab = styled.div`
   display: flex;
   align-items: center;
 `;
+
+const ResevationSection = styled.div``;

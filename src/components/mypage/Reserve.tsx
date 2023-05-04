@@ -18,7 +18,7 @@ const tempDataArr = [
     state: WAIT_CONFIRM,
     image: placeImg,
     type: TEAM,
-    gymName: '사하 인피니트 스포츠 ( 팀대관 승인대기중 )',
+    gymName: '사하 인피니트 스포츠',
     location: '부산광역시 사하구 마하로48번길',
     time: '2023.03.15(수) 15:00 ~ 16:30',
     pay: 12000,
@@ -28,7 +28,7 @@ const tempDataArr = [
     state: WAIT_PAY,
     image: placeImg,
     type: TEAM,
-    gymName: '사하 인피니트 스포츠( 팀대관 결제대기중 )',
+    gymName: '사하 인피니트 스포츠',
     location: '부산광역시 사하구 마하로48번길',
     time: '2023.03.15(수) 15:00 ~ 16:30',
     pay: 13300,
@@ -38,7 +38,7 @@ const tempDataArr = [
     state: RESERVE,
     image: placeImg,
     type: TEAM,
-    gymName: '사하 인피니트 스포츠( 팀대관 예약완료 )',
+    gymName: '사하 인피니트 스포츠',
     location: '부산광역시 사하구 마하로48번길',
     time: '2023.03.15(수) 15:00 ~ 16:30',
     pay: 20000,
@@ -48,7 +48,7 @@ const tempDataArr = [
     state: WAIT_CONFIRM,
     image: placeImg,
     type: PICKUP,
-    gymName: '사하 인피니트 스포츠( 픽업게임 승인대기중 )',
+    gymName: '사하 인피니트 스포츠',
     location: '부산광역시 사하구 마하로48번길',
     time: '2023.03.15(수) 15:00 ~ 16:30',
     pay: 19000,
@@ -58,7 +58,7 @@ const tempDataArr = [
     state: RESERVE,
     image: placeImg,
     type: PICKUP,
-    gymName: '괴정 인피니트 스포츠( 픽업게임 예약완료 )',
+    gymName: '괴정 인피니트 스포츠',
     location: '부산광역시 사하구 괴정로48번길',
     time: '2023.03.17(수) 15:00 ~ 16:30',
     pay: 17000,
@@ -68,7 +68,7 @@ const tempDataArr = [
     state: RESERVE,
     image: placeImg,
     type: PICKUP,
-    gymName: '괴정 인피니트 스포츠( 픽업게임 에약완료 )',
+    gymName: '괴정 인피니트 스포츠',
     location: '부산광역시 사하구 괴정로48번길',
     time: '2023.03.17(수) 15:00 ~ 16:30',
     pay: 17000,
@@ -78,7 +78,7 @@ const tempDataArr = [
     state: WAIT_PAY,
     image: placeImg,
     type: TEAM,
-    gymName: '사하 인피니트 스포츠( 팀대관 결제 대기중 )',
+    gymName: '사하 인피니트 스포츠',
     location: '부산광역시 사하구 마하로48번길',
     time: '2023.03.15(수) 15:00 ~ 16:30',
     pay: 13300,
@@ -88,7 +88,7 @@ const tempDataArr = [
     state: WAIT_PAY,
     image: placeImg,
     type: INDIVIDUAL,
-    gymName: '사하 인피니트 스포츠( 개인대관 결제 대기중 )',
+    gymName: '사하 인피니트 스포츠',
     location: '부산광역시 사하구 마하로48번길',
     time: '2023.03.15(수) 15:00 ~ 16:30',
     pay: 13300,
@@ -112,7 +112,7 @@ const Reserve = ({ content, subData }: Props) => {
               </MainInfo>
               <Time>{el.time}</Time>
             </SectionLeft>
-            <ReserveState Data={el} />
+            <ReserveState data={el} />
           </ReserveInfo>
         </ReserveInfoBox>
       ))}

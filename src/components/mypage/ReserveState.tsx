@@ -6,8 +6,8 @@ const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
 
-interface DataProps {
-  Data: {
+interface Props {
+  data: {
     id: number;
     state: string;
     image: string;
@@ -19,31 +19,31 @@ interface DataProps {
   };
 }
 
-const ReserveState = ({ Data }: DataProps) => {
-  const Paystring = Data.pay.toLocaleString();
-  if (Data.state === WAIT_CONFIRM) {
+const ReserveState = ({ data }: Props) => {
+  const Paystring = data.pay.toLocaleString();
+  if (data.state === WAIT_CONFIRM) {
     return (
       <Container>
-        <Pay>결제할 금액 : {Paystring} </Pay>
+        <Pay>결제할 금액 : {Paystring} 원</Pay>
         <ButtonBox>
           <CancelButton>취소하기</CancelButton>
         </ButtonBox>
       </Container>
     );
-  } else if (Data.state === WAIT_PAY) {
+  } else if (data.state === WAIT_PAY) {
     return (
       <Container>
-        <Pay>결제할 금액 : {Paystring} </Pay>
+        <Pay>결제할 금액 : {Paystring} 원</Pay>
         <ButtonBox>
           <Button>결제하기</Button>
           <CancelButton>취소하기</CancelButton>
         </ButtonBox>
       </Container>
     );
-  } else if (Data.state === RESERVE) {
+  } else if (data.state === RESERVE) {
     return (
       <Container>
-        <Pay>결제 금액 : {Paystring} </Pay>
+        <Pay>결제 금액 : {Paystring} 원</Pay>
         <ButtonBox>
           <Tag icon={<CheckCircleOutlined />} color="success">
             예약완료

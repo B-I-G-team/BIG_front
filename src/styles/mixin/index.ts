@@ -29,3 +29,45 @@ export const H1 = css`
   font-size: 38px;
   line-height: 1.2105263157894737;
 `;
+
+export const Body1Bold = css`
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 22px;
+`;
+
+export const Body1Medium = css`
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 22px;
+`;
+
+export const Body1Regular = css`
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+`;
+
+export const Body2Bold = css`
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 22px;
+`;
+
+export const Body2Medium = css`
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 22px;
+`;
+
+export const Body2Regular = css`
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22px;
+`;
+
+export const Description = css`
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 20px;
+`;
