@@ -1,9 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { setTeamsGETData, useTeamsGETQuery } from 'api/axios-client/Query';
+import { useTeamsGETQuery } from 'api/axios-client/Query';
 import { ColumnsType, TablePaginationConfig } from 'antd/es/table';
 import { Button, Table } from 'antd';
 import styled from 'styled-components';
-import { FilterValue, SorterResult } from 'antd/es/table/interface';
 import useWindowSize from 'hooks/common/useWindowSize';
 import { FlexStart } from 'components/common/Wrapper';
 
@@ -63,31 +62,32 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: '인원',
-    dataIndex: 'peopleCount',
+    dataIndex: 'peopleCount', // 임시
     key: 'peopleCount',
     width: 30,
   },
   {
     title: '승',
-    dataIndex: 'peopleCount',
-    key: 'peopleCount',
+    dataIndex: 'peopleCount', // 임시
+    key: 'winCount',
     width: 30,
   },
   {
     title: '패',
-    dataIndex: 'peopleCount',
-    key: 'peopleCount',
+    dataIndex: 'peopleCount', // 임시
+    key: 'loseCount',
     width: 30,
   },
   {
     title: '승률',
     dataIndex: 'peopleCount',
-    key: 'peopleCount',
+    key: 'odds',
     width: 30,
   },
   {
     title: '팀신청',
     width: 40,
+    key: 'apply',
     render: () => <Button>신청</Button>,
     fixed: 'right',
   },
@@ -111,18 +111,20 @@ const Index = () => {
     search: '',
   });
 
+  const handleTableChange = (_pagination: TablePaginationConfig) => {
+    setPagination(_pagination);
+  };
+
   useEffect(() => {
     setPagination((prev) => ({
       ...prev,
       total: data?.totalCount,
     }));
   }, [data?.totalCount]);
-  const handleTableChange = (_pagination: TablePaginationConfig) => {
-    setPagination(_pagination);
-  };
 
   return (
     <Table
+      rowKey={(data) => data.id}
       columns={columns}
       dataSource={data?.data}
       pagination={{ ...pagination, position: ['bottomCenter'] }}

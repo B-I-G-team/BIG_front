@@ -63,7 +63,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 1,
+    id: 7,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
     address:
@@ -71,7 +71,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 2,
+    id: 8,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage2,
 
@@ -80,7 +80,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 3,
+    id: 9,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage3,
 
@@ -89,7 +89,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 4,
+    id: 10,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage4,
 
@@ -98,7 +98,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 5,
+    id: 11,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
 
@@ -107,7 +107,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 6,
+    id: 12,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
 
@@ -116,7 +116,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 1,
+    id: 13,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
     address:
@@ -124,7 +124,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 2,
+    id: 14,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage2,
 
@@ -133,7 +133,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 3,
+    id: 15,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage3,
 
@@ -142,7 +142,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 4,
+    id: 16,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage4,
 
@@ -151,7 +151,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 5,
+    id: 17,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
 
@@ -160,7 +160,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 6,
+    id: 18,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
 
@@ -169,7 +169,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 1,
+    id: 19,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
     address:
@@ -177,7 +177,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 2,
+    id: 20,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage2,
 
@@ -186,7 +186,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 3,
+    id: 21,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage3,
 
@@ -195,7 +195,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 4,
+    id: 22,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage4,
 
@@ -204,7 +204,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 5,
+    id: 23,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
 
@@ -213,7 +213,7 @@ const tempGymList = [
     pricePerHour: 68000,
   },
   {
-    id: 6,
+    id: 24,
     name: '사하 인피니티 스포츠',
     thumbnail: gymImage1,
 
