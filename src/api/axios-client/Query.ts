@@ -26,8 +26,8 @@ export type CallbackQueryParameters = {
 
 export type BookingsAllQueryParameters = {
   gymID: string;
-  firstTime: Date;
-  lastTime: Date;
+  firstTime: string;
+  lastTime: string;
 };
 
 export type GymGETQueryParameters = {
@@ -317,7 +317,7 @@ export function useBookingsMutation<TContext>(options?: Omit<UseMutationOptions<
 }
   
     
-export function bookingsAllUrl(gymID: string, firstTime: Date, lastTime: Date): string {
+export function bookingsAllUrl(gymID: string, firstTime: string, lastTime: string): string {
   let url_ = getBaseUrl() + "/bookings?";
   if (gymID === undefined || gymID === null)
     throw new Error("The parameter 'gymID' must be defined and cannot be null.");
@@ -326,11 +326,11 @@ export function bookingsAllUrl(gymID: string, firstTime: Date, lastTime: Date): 
   if (firstTime === undefined || firstTime === null)
     throw new Error("The parameter 'firstTime' must be defined and cannot be null.");
   else
-    url_ += "firstTime=" + encodeURIComponent(firstTime ? "" + firstTime.toISOString() : "") + "&";
+    url_ += "firstTime=" + encodeURIComponent("" + firstTime) + "&";
   if (lastTime === undefined || lastTime === null)
     throw new Error("The parameter 'lastTime' must be defined and cannot be null.");
   else
-    url_ += "lastTime=" + encodeURIComponent(lastTime ? "" + lastTime.toISOString() : "") + "&";
+    url_ += "lastTime=" + encodeURIComponent("" + lastTime) + "&";
   url_ = url_.replace(/[?&]$/, "");
   return url_;
 }
@@ -346,7 +346,7 @@ export function setBookingsAllDefaultOptions(options: UseQueryOptions<Types.Anon
 }
 
 export function bookingsAllQueryKey(dto: BookingsAllQueryParameters): QueryKey;
-export function bookingsAllQueryKey(gymID: string, firstTime: Date, lastTime: Date): QueryKey;
+export function bookingsAllQueryKey(gymID: string, firstTime: string, lastTime: string): QueryKey;
 export function bookingsAllQueryKey(...params: any[]): QueryKey {
   if (params.length === 1 && isParameterObject(params[0])) {
     const { gymID, firstTime, lastTime,  } = params[0] as BookingsAllQueryParameters;
@@ -368,14 +368,14 @@ export function bookingsAllQueryKey(...params: any[]): QueryKey {
 }
 function __bookingsAll(context: QueryFunctionContext) {
   return Client().bookingsAll(
-      context.queryKey[2] as string,       context.queryKey[3] as Date,       context.queryKey[4] as Date    );
+      context.queryKey[2] as string,       context.queryKey[3] as string,       context.queryKey[4] as string    );
 }
 
 export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(dto: BookingsAllQueryParameters, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @return Default Response
  */
-export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(gymID: string, firstTime: Date, lastTime: Date, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
+export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(gymID: string, firstTime: string, lastTime: string, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous2[], TError, TSelectData> | undefined = undefined;
   let axiosConfig: AxiosRequestConfig |undefined;
@@ -410,7 +410,7 @@ export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = u
 /**
  * @return Default Response
  */
-export function setBookingsAllData(queryClient: QueryClient, updater: (data: Types.Anonymous2[] | undefined) => Types.Anonymous2[], gymID: string, firstTime: Date, lastTime: Date) {
+export function setBookingsAllData(queryClient: QueryClient, updater: (data: Types.Anonymous2[] | undefined) => Types.Anonymous2[], gymID: string, firstTime: string, lastTime: string) {
   queryClient.setQueryData(bookingsAllQueryKey(gymID, firstTime, lastTime),
     updater
   );

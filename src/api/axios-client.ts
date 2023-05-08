@@ -241,7 +241,7 @@ export class Client {
     /**
      * @return Default Response
      */
-    bookingsAll(gymID: string, firstTime: Date, lastTime: Date , cancelToken?: CancelToken | undefined): Promise<Anonymous2[]> {
+    bookingsAll(gymID: string, firstTime: string, lastTime: string , cancelToken?: CancelToken | undefined): Promise<Anonymous2[]> {
         let url_ = this.baseUrl + "/bookings?";
           if (gymID === undefined || gymID === null)
             throw new Error("The parameter 'gymID' must be defined and cannot be null.");
@@ -250,11 +250,11 @@ export class Client {
           if (firstTime === undefined || firstTime === null)
             throw new Error("The parameter 'firstTime' must be defined and cannot be null.");
           else
-            url_ += "firstTime=" + encodeURIComponent(firstTime ? "" + firstTime.toISOString() : "") + "&";
+            url_ += "firstTime=" + encodeURIComponent("" + firstTime) + "&";
           if (lastTime === undefined || lastTime === null)
             throw new Error("The parameter 'lastTime' must be defined and cannot be null.");
           else
-            url_ += "lastTime=" + encodeURIComponent(lastTime ? "" + lastTime.toISOString() : "") + "&";
+            url_ += "lastTime=" + encodeURIComponent("" + lastTime) + "&";
           url_ = url_.replace(/[?&]$/, "");
 
         let options_: AxiosRequestConfig = {
