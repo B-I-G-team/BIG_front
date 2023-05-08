@@ -1,43 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 
+export interface TimeItem {
+  key: string;
+  available: boolean;
+  label: string;
+  order: number;
+}
 interface Props {
-  item: {
-    key: string;
-    available: boolean;
-    label: string;
-  }[];
+  item: TimeItem[];
   pricePerHour: number;
   calcPrice: (length: number) => void;
+  startTime: TimeItem;
+  endTime: TimeItem;
+  onClickTime: (item: TimeItem) => void;
   className?: string;
 }
 
-const TimeSelect = ({ item, pricePerHour, calcPrice, className }: Props) => {
-  const [selected, setSelected] = useState<string[]>([]);
-
-  const onClickTime = (key: string) => {
-    setSelected((prev) => {
-      if (prev.includes(key)) return prev.filter((value) => value !== key);
-      return [...prev, key];
-    });
-  };
-
+const TimeSelect = ({
+  item,
+  pricePerHour,
+  calcPrice,
+  startTime,
+  endTime,
+  onClickTime,
+  className,
+}: Props) => {
   useEffect(() => {
-    calcPrice(selected.length);
-  }, [calcPrice, selected]);
+    if (startTime) {
+      if (endTime) calcPrice(endTime.order - startTime.order + 1);
+      else calcPrice(1);
+    } else calcPrice(0);
+  }, [calcPrice, endTime, startTime]);
 
   return (
     <TimeList className={className}>
       {item.map((item) => (
-        <TimeItem key={item.key}>
+        <TimeItemWrapper key={item.key}>
           <SelectBox>
             {item.available ? (
               <Available
-                select={selected.includes(item.key)}
-                onClick={() => onClickTime(item.key)}
+                select={
+                  startTime?.order === item.order ||
+                  endTime?.order === item.order ||
+                  (startTime?.order < item.order && endTime?.order > item.order)
+                }
+                onClick={() => onClickTime(item)}
               >
-                {selected.includes(item.key) && (
+                {(startTime?.order === item.order ||
+                  endTime?.order === item.order ||
+                  (startTime?.order < item.order &&
+                    endTime?.order > item.order)) && (
                   <AiOutlineCheckCircle color="green" />
                 )}
                 {pricePerHour.toLocaleString()}
@@ -47,7 +61,7 @@ const TimeSelect = ({ item, pricePerHour, calcPrice, className }: Props) => {
             )}
             <Time>{item.label}</Time>
           </SelectBox>
-        </TimeItem>
+        </TimeItemWrapper>
       ))}
     </TimeList>
   );
@@ -76,7 +90,7 @@ const TimeList = styled.div`
     background: #e6e6e6; /*스크롤바 뒷 배경 색상*/
   }
 `;
-const TimeItem = styled.div`
+const TimeItemWrapper = styled.div`
   margin-right: 6px;
 `;
 
