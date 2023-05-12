@@ -2,8 +2,10 @@ import { createGlobalStyle } from 'styled-components';
 const GlobalStyle = createGlobalStyle`
 
   * { 
-    font-family: 'Noto Sans KR', sans-serif;    
+     font-family: 'Roboto';
      box-sizing : border-box;
+     padding: 0;
+     margin: 0;
   }
 
   html{
@@ -43,7 +45,12 @@ const GlobalStyle = createGlobalStyle`
     border:none;
   }
 
-
+ 
+  .ant-upload-list-item-actions{
+    a{
+      display: none;
+    }
+  }
 `;
 
 export default GlobalStyle;

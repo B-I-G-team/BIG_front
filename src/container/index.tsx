@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import temp1 from 'assets/temp1.png';
 import temp2 from 'assets/temp2.png';
 import TeamCreateModal from 'components/mypage/TeamCreateModal';
+import GymCreateModal from 'components/common/GymCreateModal';
 
 const tempDataArr = [
   {
@@ -24,7 +25,8 @@ const Index = () => {
       {/* 슬라이드 */}
       <Slide data={tempDataArr} />
       <GymList />
-      <TeamCreateModal open={open} setOpen={setOpen} />
+      {/* <TeamCreateModal open={open} setOpen={setOpen} /> */}
+      <GymCreateModal open={open} setOpen={setOpen} />
     </>
   );
 };
