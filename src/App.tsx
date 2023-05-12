@@ -18,7 +18,11 @@ function App() {
   return (
     <Container>
       <ContentWrrapper>
-        <BrowserRouter>
+        <BrowserRouter
+          basename={
+            process.env.REACT_APP_PRODUCTION ? process.env.PUBLIC_URL : ''
+          }
+        >
           <Header />
           <Routes>
             <Route index element={<Home />} />
