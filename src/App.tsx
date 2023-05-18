@@ -18,7 +18,7 @@ function App() {
   return (
     <Container>
       <ContentWrrapper>
-        <BrowserRouter>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
           <Header />
           <Routes>
             <Route index element={<Home />} />
