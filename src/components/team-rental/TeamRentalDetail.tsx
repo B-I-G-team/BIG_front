@@ -72,7 +72,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
   const [price, setPrice] = useState(0);
   const [selectPhoto, setSelectPhoto] = useState(tempData.images[0]);
-
+  const [usingTimeArr, setUsingTimeArr] = useState<string[]>([]);
   const { data } = useBookingsAllQuery(
     {
       gymID: 'clh1kt9qg0000ovellhmb1b46',
@@ -84,7 +84,45 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
     },
   );
 
-  // useEffect(() => {}, [data]);
+  /**
+   * 시작시간부터 끝시작까지 사용중인 시간대 배열로 변환해주는 함수
+   *
+   * @param startTime '2023-05-17T12:00:00.000Z' 형태의 string
+   * @param endTime  '2023-05-17T15:00:00.000Z' 형태의 string
+   * @return ['12:00', '13:00', '14:00'] 형태의 Array
+   */
+  const func = (startTime: Date, endTime: Date) => {
+    console.log(startTime.toDateString());
+    console.log(endTime.toDateString());
+    const startHour = startTime.getHours();
+    const endHour = endTime.getHours();
+    // console.log('startHour', startHour);
+    // console.log('endHour', endHour);
+    const resultArr: any = [];
+    // for (let i = startHour; i < endHour; i++) {
+    //   resultArr.push(`${String(i).padStart(2, '0')}:00`);
+    // }
+
+    return resultArr;
+  };
+
+  useEffect(() => {
+    console.log(data);
+    if (data) {
+      data.forEach((item) => {
+        setUsingTimeArr((prev) => {
+          const set = new Set([...prev, ...func(item.startTime, item.endTime)]);
+
+          return Array.from(set);
+        });
+      });
+    }
+  }, [data]);
+
+  useEffect(() => {
+    // console.log('data', data);
+    // console.log(usingTimeArr);
+  }, [usingTimeArr]);
 
   const { mutate } = useBookingsMutation({
     onSuccess: () => {
@@ -135,8 +173,12 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
         new Body({
           gymID: 'clh1kt9qg0000ovellhmb1b46',
           teamID: user.team.id,
-          startTime: `${bookingDate}T${startTime.label}:00.000z`,
-          endTime: `${bookingDate}T${plusOneHourString(endTime.label)}:00.000z`,
+          startTime: new Date(
+            `${bookingDate}T${startTime.label}:00.000`,
+          ).toISOString(),
+          endTime: new Date(
+            `${bookingDate}T${startTime.label}:00.000`,
+          ).toISOString(),
         }),
       );
     } else {
@@ -182,7 +224,6 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
             style={{ width: '100%' }}
             size={isMobile ? 'middle' : 'large'}
             onChange={(date, dateString) => {
-              console.log(dateString);
               setBookingDate(dateString);
             }}
           />
