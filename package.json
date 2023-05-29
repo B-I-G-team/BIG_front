@@ -14,10 +14,10 @@
     "antd": "^5.3.3",
     "axios": "^1.3.4",
     "date-fns": "^2.29.3",
+    "dayjs": "^1.11.7",
     "gh-pages": "^5.0.0",
     "jotai": "^2.0.3",
     "react": "^18.2.0",
-    "react-datepicker": "^4.10.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-responsive-carousel": "^3.2.23",
@@ -67,5 +67,5 @@
     "prettier": "^2.8.7",
     "react-query-swagger": "^15.5.3"
   },
-  "homepage": "https://B-I-G-team.github.io/big_front/"
+  "homepage": "https://b-i-g-team.github.io/big_front/"
 }

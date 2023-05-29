@@ -3,7 +3,7 @@ import Slide from 'components/Slide';
 import React, { useState } from 'react';
 import temp1 from 'assets/temp1.png';
 import temp2 from 'assets/temp2.png';
-import TeamCreateModal from 'components/mypage/TeamCreateModal';
+// import TeamCreateModal from 'components/mypage/TeamCreateModal';
 import GymCreateModal from 'components/common/GymCreateModal';
 
 const tempDataArr = [

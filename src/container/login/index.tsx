@@ -28,7 +28,7 @@ const Index = () => {
         <br /> 다양한 서비스를 이용해보세요.
       </Text>
 
-      <KaKaoButton href="http://rasp.jaejun.me:8000/auth/kakao">
+      <KaKaoButton href="https://rasp.jaejun.me/big/auth/kakao">
         <KakaoIcon src={KaKaoIconImg} />
         <KakaoLabel>카카오 로그인</KakaoLabel>
       </KaKaoButton>

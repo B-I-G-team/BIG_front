@@ -2,14 +2,13 @@ import {
   Button,
   Checkbox,
   Input,
-  Modal,
   Select,
   Upload,
   UploadFile,
   UploadProps,
 } from 'antd';
 import { Body2 } from 'api/axios-client';
-import { useGymMutation, usePresignedQuery } from 'api/axios-client/Query';
+import { useGymPOSTMutation, usePresignedQuery } from 'api/axios-client/Query';
 import {
   Content,
   FooterContainer,
@@ -70,7 +69,7 @@ const GymCreateModal = ({ open, setOpen }: Props) => {
   const { data: presigendData, refetch: presignedQueryRefetch } =
     usePresignedQuery('png');
 
-  const { mutate: createGymMutate } = useGymMutation({
+  const { mutate: createGymMutate } = useGymPOSTMutation({
     onSuccess: () => {
       Swal.fire({
         icon: 'success',

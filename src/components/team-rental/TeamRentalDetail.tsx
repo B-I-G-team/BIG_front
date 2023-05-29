@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import gymImage1 from 'assets/gym1.jpeg';
 import gymImage2 from 'assets/gym2.jpeg';
 import gymImage3 from 'assets/gym3.jpeg';
 import gymImage4 from 'assets/gym4.jpeg';
 import Slide from 'components/Slide';
 import styled from 'styled-components';
-import DatePicker from 'react-datepicker';
-import { ko } from 'date-fns/esm/locale';
-import 'react-datepicker/dist/react-datepicker.css';
-import { AiFillCaretDown } from 'react-icons/ai';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+
+dayjs.locale('ko');
+
+import locale from 'antd/locale/ko_KR';
+
 import FilledButton from 'components/common/FilledButton';
-import TimeSelect from 'components/common/TimeSelect';
+import TimeSelect, { TimeItem } from 'components/common/TimeSelect';
 import Input from 'components/common/Input';
+import {
+  useBookingsAllQuery,
+  useBookingsMutation,
+  useMeGETQuery,
+} from 'api/axios-client/Query';
+import { Body } from 'api/axios-client';
+import { ConfigProvider, DatePicker } from 'antd';
+import useWindowSize from 'hooks/common/useWindowSize';
+import { useMeGETQueryKey } from 'api/queryKeyHooks';
+import Swal from 'sweetalert2';
 
 const tempData = {
   id: 1,
@@ -21,86 +34,112 @@ const tempData = {
     '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
   phone: '010-1234-5678',
   pricePerHour: 68000,
+  openTime: '08:00',
+  closedTime: '20:00',
 };
 
-const timeItems = [
-  {
-    key: 'time01',
-    available: false,
-    label: '09:00',
-  },
-  {
-    key: 'time02',
-    available: true,
-    label: '10:00',
-  },
-  {
-    key: 'time03',
-    available: true,
-    label: '11:00',
-  },
-  {
-    key: 'time04',
-    available: false,
-    label: '12:00',
-  },
-  {
-    key: 'time05',
-    available: false,
-    label: '13:00',
-  },
-  {
-    key: 'time06',
-    available: false,
-    label: '14:00',
-  },
-  {
-    key: 'time07',
-    available: true,
-    label: '15:00',
-  },
-  {
-    key: 'time08',
-    available: true,
-    label: '16:00',
-  },
-  {
-    key: 'time09',
-    available: false,
-    label: '17:00',
-  },
-  {
-    key: 'time10',
-    available: true,
-    label: '18:00',
-  },
-];
-
-const transferDay = (index: number) => {
-  switch (index) {
-    case 0:
-      return '일';
-    case 1:
-      return '월';
-    case 2:
-      return '화';
-    case 3:
-      return '수';
-    case 4:
-      return '목';
-    case 5:
-      return '금';
-    case 6:
-      return '토';
+const createTimeArray = (openTime: string, closedTime: string) => {
+  const [openHour, openMinute] = openTime.split(':');
+  const [closeHour, closeMinute] = closedTime.split(':');
+  const timeArray = [];
+  let count = 0;
+  for (let i = +openHour; i <= +closeHour; i++) {
+    count++;
+    const timeItem = {
+      order: count,
+      key: `${String(i).padStart(2, '0')}:${openMinute}`,
+      label: `${String(i).padStart(2, '0')}:${closeMinute}`,
+      available: true,
+    };
+    timeArray.push(timeItem);
   }
+  return timeArray;
 };
 
-// eslint-disable-next-line
+/**
+ * 시작시간부터 끝시작까지 사용중인 시간대 배열로 변환해주는 함수
+ *
+ * @param startTime '2023-05-17T12:00:00.000Z' 형태의 string
+ * @param endTime  '2023-05-17T15:00:00.000Z' 형태의 string
+ * @return ['12:00', '13:00', '14:00'] 형태의 Array
+ */
+const convertTimeArray = (startTime: Date, endTime: Date) => {
+  const startHour = startTime.getHours();
+  const endHour = endTime.getHours();
+
+  const resultArr: any = [];
+  for (let i = startHour; i < endHour; i++) {
+    resultArr.push(`${String(i).padStart(2, '0')}:00`);
+  }
+
+  return resultArr;
+};
+
 const TeamRentalDetail = ({ id }: { id: string }) => {
-  const { name, address, phone, pricePerHour } = tempData;
-  const [startDate, setStartDate] = useState<Date>();
+  const { name, address, phone, pricePerHour, openTime, closedTime } = tempData;
+  const { meQueryKey } = useMeGETQueryKey();
+  const { data: user } = useMeGETQuery({
+    queryKey: meQueryKey,
+  });
+
+  const [bookingDate, setBookingDate] = useState<string>();
+
   const [price, setPrice] = useState(0);
   const [selectPhoto, setSelectPhoto] = useState(tempData.images[0]);
+  const [usingTimeArr, setUsingTimeArr] = useState<string[]>([]);
+  const { data: bookingDatas, refetch: bookingDatesRefetch } =
+    useBookingsAllQuery(
+      {
+        gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+        firstTime: `${bookingDate}T00:00:00.000z`,
+        lastTime: `${bookingDate}T23:59:00.000z`,
+      },
+      {
+        enabled: !!bookingDate,
+      },
+    );
+
+  const { mutate } = useBookingsMutation({
+    onSuccess: () => {
+      Swal.fire({
+        icon: 'success',
+        title: '체육관 대관 신청 완료',
+      });
+
+      setFirstSelectTime(undefined);
+      setsecondSelectTime(undefined);
+      bookingDatesRefetch();
+    },
+  });
+
+  const { width: windowWidth } = useWindowSize();
+  const isMobile = useMemo(() => windowWidth <= 400, [windowWidth]);
+
+  const [firstSelectTime, setFirstSelectTime] = useState<TimeItem>();
+  const [secondSelectTime, setsecondSelectTime] = useState<TimeItem>();
+  const [timeArray, setTimeArray] = useState<any[]>([]);
+
+  const onClickTime = (timeItem: TimeItem) => {
+    if (!bookingDate) {
+      Swal.fire({
+        icon: 'error',
+        title: '날짜를 선택해주세요',
+      });
+      return;
+    }
+    if (!firstSelectTime || firstSelectTime?.order > timeItem.order) {
+      setFirstSelectTime(timeItem);
+    } else if (firstSelectTime.order === timeItem.order) {
+      setFirstSelectTime(undefined);
+      setsecondSelectTime(undefined);
+    } else {
+      setsecondSelectTime(timeItem);
+    }
+
+    if (secondSelectTime?.order === timeItem.order) {
+      setsecondSelectTime(undefined);
+    }
+  };
 
   const calcPrice = (length: number) => {
     setPrice(length * pricePerHour);
@@ -109,6 +148,76 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   const onSelectPhoto = (image: string) => {
     setSelectPhoto(image);
   };
+
+  const onClickBooking = () => {
+    if (bookingDate && firstSelectTime && !secondSelectTime) {
+      const startTime = firstSelectTime.label;
+      const endTime = `${String(
+        Number(firstSelectTime.label.split(':')[0]) + 1,
+      ).padStart(2, '0')}:00`;
+
+      mutate(
+        new Body({
+          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
+          startTime: new Date(
+            `${bookingDate}T${startTime}:00.000`,
+          ).toISOString(),
+          endTime: new Date(`${bookingDate}T${endTime}:00.000`).toISOString(),
+        }),
+      );
+    } else if (bookingDate && firstSelectTime && secondSelectTime) {
+      const startTime = firstSelectTime.label;
+      const endTime = `${String(
+        Number(secondSelectTime.label.split(':')[0]) + 1,
+      ).padStart(2, '0')}:00`;
+
+      mutate(
+        new Body({
+          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
+          startTime: new Date(
+            `${bookingDate}T${startTime}:00.000`,
+          ).toISOString(),
+          endTime: new Date(`${bookingDate}T${endTime}:00.000`).toISOString(),
+        }),
+      );
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: '정보를 모두 선택해주세요.',
+      });
+    }
+  };
+
+  useEffect(() => {
+    setTimeArray(createTimeArray(openTime, closedTime));
+  }, []);
+
+  useEffect(() => {
+    setTimeArray((prev) => {
+      return prev.map((item) => {
+        if (usingTimeArr.includes(item.label))
+          return { ...item, available: false };
+        return item;
+      });
+    });
+  }, [usingTimeArr]);
+
+  useEffect(() => {
+    if (bookingDatas) {
+      bookingDatas.forEach((booking) => {
+        setUsingTimeArr((prev) => {
+          const set = new Set([
+            ...prev,
+            ...convertTimeArray(booking.startTime, booking.endTime),
+          ]);
+
+          return Array.from(set);
+        });
+      });
+    }
+  }, [bookingDatas]);
 
   return (
     <Container>
@@ -136,40 +245,30 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
         <Title>{name}</Title>
         <Address>{address}</Address>
         <Phone>{phone}</Phone>
-        <DatePicker
-          locale={ko} // 언어설정 기본값은 영어
-          dateFormat="yyyy-MM-dd" // 날짜 형식 설정
-          className="input-datepicker" // 클래스 명 지정 css주기 위해
-          minDate={new Date()} // 선택할 수 있는 최소 날짜값 지정
-          closeOnScroll={true} // 스크롤을 움직였을 때 자동으로 닫히도록 설정 기본값 false
-          placeholderText="날짜 선택" // placeholder
-          customInput={
-            <DateWrapper>
-              {startDate
-                ? `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
-                    .toString()
-                    .padStart(2, '0')}-${startDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')} (${transferDay(startDate.getDay())})`
-                : '날짜 선택'}
-
-              <AiFillCaretDown color="#B2B3B9" />
-            </DateWrapper>
-          }
-          selected={startDate} // value
-          onChange={(date) => setStartDate(date as Date)} // 날짜를 선택하였을 때 실행될 함수
-        />
+        <ConfigProvider locale={locale}>
+          <DatePicker
+            style={{ width: '100%' }}
+            size={isMobile ? 'middle' : 'large'}
+            disabledDate={(date) => (date as any) < new Date()}
+            onChange={(date, dateString) => {
+              setBookingDate(dateString);
+              setTimeArray(createTimeArray(openTime, closedTime));
+            }}
+          />
+        </ConfigProvider>
 
         <StyledTimeSelect
-          item={timeItems}
+          item={timeArray}
           pricePerHour={pricePerHour}
           calcPrice={calcPrice}
+          firstSelectTime={firstSelectTime as TimeItem}
+          secondSelectTime={secondSelectTime as TimeItem}
+          onClickTime={onClickTime}
         />
 
         <Price>{`₩ ${price.toLocaleString()}`}</Price>
         <StyledInput placeholder="체육관 사장님께 요청드릴 메시지" />
-        <FilledButton color="blue" size="fit-content">
+        <FilledButton color="blue" size="fit-content" onClick={onClickBooking}>
           예약하기
         </FilledButton>
       </ContentWrapper>
@@ -247,18 +346,6 @@ const Price = styled.div`
   @media ${({ theme }) => theme.grid.laptop} {
     text-align: start;
   }
-`;
-
-const DateWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  border-radius: 4px;
-
-  border: 1px solid ${({ theme }) => theme.color.border};
-  color: black;
-  padding: 10px 16px;
 `;
 
 const PhotoWrapper = styled.div`
