@@ -56,9 +56,23 @@ const createTimeArray = (openTime: string, closedTime: string) => {
   return timeArray;
 };
 
-const plusOneHourString = (timeStr: string) => {
-  const [hour, minute] = timeStr.split(':');
-  return `${String(Number(hour) + 1).padStart(2, '0')}:${minute}`;
+/**
+ * 시작시간부터 끝시작까지 사용중인 시간대 배열로 변환해주는 함수
+ *
+ * @param startTime '2023-05-17T12:00:00.000Z' 형태의 string
+ * @param endTime  '2023-05-17T15:00:00.000Z' 형태의 string
+ * @return ['12:00', '13:00', '14:00'] 형태의 Array
+ */
+const convertTimeArray = (startTime: Date, endTime: Date) => {
+  const startHour = startTime.getHours();
+  const endHour = endTime.getHours();
+
+  const resultArr: any = [];
+  for (let i = startHour; i < endHour; i++) {
+    resultArr.push(`${String(i).padStart(2, '0')}:00`);
+  }
+
+  return resultArr;
 };
 
 const TeamRentalDetail = ({ id }: { id: string }) => {
@@ -73,56 +87,17 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   const [price, setPrice] = useState(0);
   const [selectPhoto, setSelectPhoto] = useState(tempData.images[0]);
   const [usingTimeArr, setUsingTimeArr] = useState<string[]>([]);
-  const { data } = useBookingsAllQuery(
-    {
-      gymID: 'clh1kt9qg0000ovellhmb1b46',
-      firstTime: `${bookingDate}T00:00:00.000z`,
-      lastTime: `${bookingDate}T23:59:00.000z`,
-    },
-    {
-      enabled: !!bookingDate,
-    },
-  );
-
-  /**
-   * 시작시간부터 끝시작까지 사용중인 시간대 배열로 변환해주는 함수
-   *
-   * @param startTime '2023-05-17T12:00:00.000Z' 형태의 string
-   * @param endTime  '2023-05-17T15:00:00.000Z' 형태의 string
-   * @return ['12:00', '13:00', '14:00'] 형태의 Array
-   */
-  const func = (startTime: Date, endTime: Date) => {
-    console.log(startTime.toDateString());
-    console.log(endTime.toDateString());
-    const startHour = startTime.getHours();
-    const endHour = endTime.getHours();
-    // console.log('startHour', startHour);
-    // console.log('endHour', endHour);
-    const resultArr: any = [];
-    // for (let i = startHour; i < endHour; i++) {
-    //   resultArr.push(`${String(i).padStart(2, '0')}:00`);
-    // }
-
-    return resultArr;
-  };
-
-  useEffect(() => {
-    console.log(data);
-    if (data) {
-      data.forEach((item) => {
-        setUsingTimeArr((prev) => {
-          const set = new Set([...prev, ...func(item.startTime, item.endTime)]);
-
-          return Array.from(set);
-        });
-      });
-    }
-  }, [data]);
-
-  useEffect(() => {
-    // console.log('data', data);
-    // console.log(usingTimeArr);
-  }, [usingTimeArr]);
+  const { data: bookingDatas, refetch: bookingDatesRefetch } =
+    useBookingsAllQuery(
+      {
+        gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+        firstTime: `${bookingDate}T00:00:00.000z`,
+        lastTime: `${bookingDate}T23:59:00.000z`,
+      },
+      {
+        enabled: !!bookingDate,
+      },
+    );
 
   const { mutate } = useBookingsMutation({
     onSuccess: () => {
@@ -131,31 +106,38 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
         title: '체육관 대관 신청 완료',
       });
 
-      setBookingDate(undefined);
-      setStartTime(undefined);
-      setEndTime(undefined);
+      setFirstSelectTime(undefined);
+      setsecondSelectTime(undefined);
+      bookingDatesRefetch();
     },
   });
 
   const { width: windowWidth } = useWindowSize();
   const isMobile = useMemo(() => windowWidth <= 400, [windowWidth]);
 
-  const [startTime, setStartTime] = useState<TimeItem>();
-  const [endTime, setEndTime] = useState<TimeItem>();
+  const [firstSelectTime, setFirstSelectTime] = useState<TimeItem>();
+  const [secondSelectTime, setsecondSelectTime] = useState<TimeItem>();
   const [timeArray, setTimeArray] = useState<any[]>([]);
 
   const onClickTime = (timeItem: TimeItem) => {
-    if (!startTime || startTime?.order > timeItem.order) {
-      setStartTime(timeItem);
-    } else if (startTime.order === timeItem.order) {
-      setStartTime(undefined);
-      setEndTime(undefined);
+    if (!bookingDate) {
+      Swal.fire({
+        icon: 'error',
+        title: '날짜를 선택해주세요',
+      });
+      return;
+    }
+    if (!firstSelectTime || firstSelectTime?.order > timeItem.order) {
+      setFirstSelectTime(timeItem);
+    } else if (firstSelectTime.order === timeItem.order) {
+      setFirstSelectTime(undefined);
+      setsecondSelectTime(undefined);
     } else {
-      setEndTime(timeItem);
+      setsecondSelectTime(timeItem);
     }
 
-    if (endTime?.order === timeItem.order) {
-      setEndTime(undefined);
+    if (secondSelectTime?.order === timeItem.order) {
+      setsecondSelectTime(undefined);
     }
   };
 
@@ -168,17 +150,36 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   };
 
   const onClickBooking = () => {
-    if (bookingDate && startTime && endTime && user) {
+    if (bookingDate && firstSelectTime && !secondSelectTime) {
+      const startTime = firstSelectTime.label;
+      const endTime = `${String(
+        Number(firstSelectTime.label.split(':')[0]) + 1,
+      ).padStart(2, '0')}:00`;
+
       mutate(
         new Body({
-          gymID: 'clh1kt9qg0000ovellhmb1b46',
-          teamID: user.team.id,
+          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
           startTime: new Date(
-            `${bookingDate}T${startTime.label}:00.000`,
+            `${bookingDate}T${startTime}:00.000`,
           ).toISOString(),
-          endTime: new Date(
-            `${bookingDate}T${startTime.label}:00.000`,
+          endTime: new Date(`${bookingDate}T${endTime}:00.000`).toISOString(),
+        }),
+      );
+    } else if (bookingDate && firstSelectTime && secondSelectTime) {
+      const startTime = firstSelectTime.label;
+      const endTime = `${String(
+        Number(secondSelectTime.label.split(':')[0]) + 1,
+      ).padStart(2, '0')}:00`;
+
+      mutate(
+        new Body({
+          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
+          startTime: new Date(
+            `${bookingDate}T${startTime}:00.000`,
           ).toISOString(),
+          endTime: new Date(`${bookingDate}T${endTime}:00.000`).toISOString(),
         }),
       );
     } else {
@@ -192,6 +193,31 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   useEffect(() => {
     setTimeArray(createTimeArray(openTime, closedTime));
   }, []);
+
+  useEffect(() => {
+    setTimeArray((prev) => {
+      return prev.map((item) => {
+        if (usingTimeArr.includes(item.label))
+          return { ...item, available: false };
+        return item;
+      });
+    });
+  }, [usingTimeArr]);
+
+  useEffect(() => {
+    if (bookingDatas) {
+      bookingDatas.forEach((booking) => {
+        setUsingTimeArr((prev) => {
+          const set = new Set([
+            ...prev,
+            ...convertTimeArray(booking.startTime, booking.endTime),
+          ]);
+
+          return Array.from(set);
+        });
+      });
+    }
+  }, [bookingDatas]);
 
   return (
     <Container>
@@ -223,8 +249,10 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
           <DatePicker
             style={{ width: '100%' }}
             size={isMobile ? 'middle' : 'large'}
+            disabledDate={(date) => (date as any) < new Date()}
             onChange={(date, dateString) => {
               setBookingDate(dateString);
+              setTimeArray(createTimeArray(openTime, closedTime));
             }}
           />
         </ConfigProvider>
@@ -233,8 +261,8 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
           item={timeArray}
           pricePerHour={pricePerHour}
           calcPrice={calcPrice}
-          startTime={startTime as TimeItem}
-          endTime={endTime as TimeItem}
+          firstSelectTime={firstSelectTime as TimeItem}
+          secondSelectTime={secondSelectTime as TimeItem}
           onClickTime={onClickTime}
         />
 
@@ -318,18 +346,6 @@ const Price = styled.div`
   @media ${({ theme }) => theme.grid.laptop} {
     text-align: start;
   }
-`;
-
-const DateWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  border-radius: 4px;
-
-  border: 1px solid ${({ theme }) => theme.color.border};
-  color: black;
-  padding: 10px 16px;
 `;
 
 const PhotoWrapper = styled.div`

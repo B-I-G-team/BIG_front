@@ -12,8 +12,9 @@ interface Props {
   item: TimeItem[];
   pricePerHour: number;
   calcPrice: (length: number) => void;
-  startTime: TimeItem;
-  endTime: TimeItem;
+  firstSelectTime: TimeItem;
+  secondSelectTime: TimeItem;
+
   onClickTime: (item: TimeItem) => void;
   className?: string;
 }
@@ -22,17 +23,19 @@ const TimeSelect = ({
   item,
   pricePerHour,
   calcPrice,
-  startTime,
-  endTime,
+  firstSelectTime,
+  secondSelectTime,
+
   onClickTime,
   className,
 }: Props) => {
   useEffect(() => {
-    if (startTime) {
-      if (endTime) calcPrice(endTime.order - startTime.order + 1);
+    if (firstSelectTime) {
+      if (secondSelectTime)
+        calcPrice(secondSelectTime.order - firstSelectTime.order + 1);
       else calcPrice(1);
     } else calcPrice(0);
-  }, [calcPrice, endTime, startTime]);
+  }, [calcPrice, secondSelectTime, firstSelectTime]);
 
   return (
     <TimeList className={className}>
@@ -42,16 +45,17 @@ const TimeSelect = ({
             {item.available ? (
               <Available
                 select={
-                  startTime?.order === item.order ||
-                  endTime?.order === item.order ||
-                  (startTime?.order < item.order && endTime?.order > item.order)
+                  firstSelectTime?.order === item.order ||
+                  secondSelectTime?.order === item.order ||
+                  (firstSelectTime?.order < item.order &&
+                    secondSelectTime?.order > item.order)
                 }
                 onClick={() => onClickTime(item)}
               >
-                {(startTime?.order === item.order ||
-                  endTime?.order === item.order ||
-                  (startTime?.order < item.order &&
-                    endTime?.order > item.order)) && (
+                {(firstSelectTime?.order === item.order ||
+                  secondSelectTime?.order === item.order ||
+                  (firstSelectTime?.order < item.order &&
+                    secondSelectTime?.order > item.order)) && (
                   <AiOutlineCheckCircle color="green" />
                 )}
                 {pricePerHour.toLocaleString()}
