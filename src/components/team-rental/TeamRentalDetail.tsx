@@ -253,6 +253,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
             onChange={(date, dateString) => {
               setBookingDate(dateString);
               setTimeArray(createTimeArray(openTime, closedTime));
+              setUsingTimeArr([]);
             }}
           />
         </ConfigProvider>
