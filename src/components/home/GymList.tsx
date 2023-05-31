@@ -2,16 +2,7 @@ import React from 'react';
 import placeImg from 'assets/place1.jpeg';
 import styled from 'styled-components';
 import GymItem from './GymItem';
-import {
-  Body1Medium,
-  Body1Regular,
-  Body2Regular,
-  Description,
-  H2,
-  H3,
-  H4,
-  H5,
-} from 'styles/mixin';
+import { Body2Regular, Description, H4, H5 } from 'styles/mixin';
 import { FlexCenter } from 'components/common/Wrapper';
 
 const tempDataArr = [
@@ -55,6 +46,8 @@ const tempDataArr = [
 ];
 
 const GymList = () => {
+  const navigate = useNavigate();
+
   return (
     <Section>
       <Container>
@@ -87,6 +80,12 @@ const Container = styled.div`
 
   max-width: 1180px;
   margin: auto;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Title = styled.div`
