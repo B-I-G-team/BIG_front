@@ -40,7 +40,7 @@ export const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  padding: 0 3px;
+  /* padding: 0 3px; */
   height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -49,5 +49,5 @@ export const Container = styled.div`
 const ContentWrrapper = styled.div`
   width: 100%;
 
-  max-width: 1180px;
+  /* max-width: 1180px; */
 `;
