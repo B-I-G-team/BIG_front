@@ -15,7 +15,7 @@ interface Props {
 }
 
 const PickupItem = ({ data }: Props) => {
-  const { id, homeTeam, homeTeamLogo, awayTeam, awayTeamLogo, gym, startDate } =
+  const { homeTeam, homeTeamLogo, awayTeam, awayTeamLogo, gym, startDate } =
     data;
   return (
     <Container>

@@ -80,12 +80,6 @@ const Container = styled.div`
   margin: auto;
 `;
 
-const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 const Title = styled.div`
   ${H5}
 

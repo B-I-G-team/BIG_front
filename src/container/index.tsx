@@ -1,8 +1,8 @@
 import GymList from 'components/home/GymList';
 import Slide from 'components/Slide';
 import React from 'react';
-import temp1 from 'assets/temp1.png';
-import temp2 from 'assets/temp2.png';
+// import temp1 from 'assets/temp1.png';
+// import temp2 from 'assets/temp2.png';
 import temp3 from 'assets/temp3.png';
 import temp4 from 'assets/temp4.png';
 import temp5 from 'assets/temp5.png';

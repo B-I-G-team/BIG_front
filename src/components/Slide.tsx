@@ -5,7 +5,7 @@ import { Carousel } from 'react-responsive-carousel';
 import SlideImgs from './SlideImgs';
 import styled from 'styled-components';
 
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
+// import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from 'react-icons/md';
 
 interface Props {
   data: {
@@ -55,29 +55,29 @@ const Wrapper = styled.div`
   }
 `;
 
-const Icon = styled.div`
-  display: none;
-  @media ${({ theme }) => theme.grid.laptop} {
-    position: absolute;
+// const Icon = styled.div`
+//   display: none;
+//   @media ${({ theme }) => theme.grid.laptop} {
+//     position: absolute;
 
-    z-index: 10;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 50%;
+//     z-index: 10;
+//     top: 50%;
+//     transform: translateY(-50%);
+//     width: 50px;
+//     height: 50px;
+//     background-color: rgba(0, 0, 0, 0.3);
+//     border-radius: 50%;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//   }
+// `;
 
-const NextIcon = styled(Icon)`
-  right: 14px;
-`;
+// const NextIcon = styled(Icon)`
+//   right: 14px;
+// `;
 
-const PrevIcon = styled(Icon)`
-  left: 14px;
-`;
+// const PrevIcon = styled(Icon)`
+//   left: 14px;
+// `;
