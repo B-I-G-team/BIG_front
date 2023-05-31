@@ -26,16 +26,16 @@ const Slide = ({ data, height, autoPlay = true }: Props) => {
         showStatus={false}
         transitionTime={200}
         stopOnHover={false}
-        renderArrowNext={(nextFunc) => (
-          <NextIcon onClick={() => nextFunc()}>
-            <MdKeyboardArrowRight size={24} color="white" />
-          </NextIcon>
-        )}
-        renderArrowPrev={(prevFunc) => (
-          <PrevIcon onClick={() => prevFunc()}>
-            <MdKeyboardArrowLeft size={24} color="white" />
-          </PrevIcon>
-        )}
+        // renderArrowNext={(nextFunc) => (
+        //   <NextIcon onClick={() => nextFunc()}>
+        //     <MdKeyboardArrowRight size={24} color="white" />
+        //   </NextIcon>
+        // )}
+        // renderArrowPrev={(prevFunc) => (
+        //   <PrevIcon onClick={() => prevFunc()}>
+        //     <MdKeyboardArrowLeft size={24} color="white" />
+        //   </PrevIcon>
+        // )}
       >
         {data.map((item) => (
           <SlideImgs key={item.id} data={item} height={height} />

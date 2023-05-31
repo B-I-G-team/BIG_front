@@ -46,8 +46,6 @@ const tempDataArr = [
 ];
 
 const GymList = () => {
-  const navigate = useNavigate();
-
   return (
     <Section>
       <Container>

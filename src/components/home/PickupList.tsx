@@ -2,6 +2,7 @@ import { Button } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { H4, H5 } from 'styles/mixin';
 import PickupItem from './PickupItem';
 
 const tempDataArr = [
@@ -106,8 +107,8 @@ const Header = styled.div`
 `;
 
 const Title = styled.div`
-  font-size: ${({ theme }) => theme.font.size.subtitle_1};
-  font-weight: 600;
+  ${H5}
+
   padding: 10px 0;
   @media ${({ theme }) => theme.grid.tablet} {
     font-size: ${({ theme }) => theme.font.size.heading_6};
@@ -115,7 +116,7 @@ const Title = styled.div`
   }
 
   @media ${({ theme }) => theme.grid.laptop} {
-    font-size: ${({ theme }) => theme.font.size.heading_5};
+    ${H4}
   }
 `;
 

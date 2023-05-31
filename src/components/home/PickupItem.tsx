@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { gray } from '@ant-design/colors';
 
 interface Props {
   data: {
