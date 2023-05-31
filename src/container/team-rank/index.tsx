@@ -123,18 +123,25 @@ const Index = () => {
   }, [data?.totalCount]);
 
   return (
-    <Table
-      rowKey={(data) => data.id}
-      columns={columns}
-      dataSource={data?.data}
-      pagination={{ ...pagination, position: ['bottomCenter'] }}
-      onChange={handleTableChange}
-      scroll={{ x: isMobile ? 1200 : 1500 }}
-    />
+    <Section>
+      <Table
+        rowKey={(data) => data.id}
+        columns={columns}
+        dataSource={data?.data}
+        pagination={{ ...pagination, position: ['bottomCenter'] }}
+        onChange={handleTableChange}
+        scroll={{ x: isMobile ? 1200 : 1500 }}
+      />
+    </Section>
   );
 };
 
 export default Index;
+
+const Section = styled.div`
+  max-width: 1180px;
+  margin: auto;
+`;
 
 const TeamLogo = styled.img`
   width: 24px;

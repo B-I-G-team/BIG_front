@@ -10,7 +10,7 @@ const color = {
   primary_35: '#A33D0F',
   primary_25: '#752B0B',
   blue: '#3DA5F5',
-  border: '#E0E2E7',
+  border: 'rgba(191, 191, 191, 1)',
   kakao_container: '#FEE500',
   kakao_symbol: '#000000',
   kakao_label: 'rgba(0,0,0,0.8)',

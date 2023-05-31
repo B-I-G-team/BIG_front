@@ -23,10 +23,10 @@ const ImageBox = styled.div<{ height: string }>`
   cursor: pointer;
   height: ${({ height }) => height};
 
-  max-height: ${({ height }) => !height && '450px'};
+  /* max-height: ${({ height }) => !height && '450px'}; */
 
   @media ${({ theme }) => theme.grid.laptop} {
-    border-radius: 20px;
+    /* border-radius: 20px; */
   }
   overflow: hidden;
 `;

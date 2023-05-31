@@ -43,6 +43,8 @@ const GymItem = ({ data }: Props) => {
 export default GymItem;
 
 const Container = styled.div`
+  transform: rotateX('30deg');
+
   cursor: pointer;
   border: 1px solid ${({ theme }) => theme.color.border};
   border-radius: 8px;

@@ -130,6 +130,11 @@ const Header = () => {
 export default Header;
 
 const Container = styled.div`
+  max-width: 1180px;
+  margin: auto;
+  position: relative;
+  padding: 0 6px;
+  z-index: 1;
   width: 100%;
   display: flex;
   justify-content: space-between;
