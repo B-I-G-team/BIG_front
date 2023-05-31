@@ -5,6 +5,8 @@ import temp1 from 'assets/temp1.png';
 import temp2 from 'assets/temp2.png';
 // import TeamCreateModal from 'components/mypage/TeamCreateModal';
 import GymCreateModal from 'components/common/GymCreateModal';
+import Landing from 'components/home/Landing';
+import Footer from 'components/home/Footer';
 
 const tempDataArr = [
   {
@@ -23,10 +25,12 @@ const Index = () => {
   return (
     <>
       {/* 슬라이드 */}
-      <Slide data={tempDataArr} />
+      {/* <Slide data={tempDataArr} /> */}
+      <Landing />
       <GymList />
       {/* <TeamCreateModal open={open} setOpen={setOpen} /> */}
       <GymCreateModal open={open} setOpen={setOpen} />
+      <Footer />
     </>
   );
 };

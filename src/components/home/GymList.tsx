@@ -2,6 +2,17 @@ import React from 'react';
 import placeImg from 'assets/place1.jpeg';
 import styled from 'styled-components';
 import GymItem from './GymItem';
+import {
+  Body1Medium,
+  Body1Regular,
+  Body2Regular,
+  Description,
+  H2,
+  H3,
+  H4,
+  H5,
+} from 'styles/mixin';
+import { FlexCenter } from 'components/common/Wrapper';
 
 const tempDataArr = [
   {
@@ -45,36 +56,61 @@ const tempDataArr = [
 
 const GymList = () => {
   return (
-    <Container>
-      <Title>인기 팀대관 체육관</Title>
-      <Wrapper>
-        <ListContainer>
-          {tempDataArr.map((item) => (
-            <GymItem key={item.id} data={item} />
-          ))}
-        </ListContainer>
-      </Wrapper>
-    </Container>
+    <Section>
+      <Container>
+        <Title>인기 체육관</Title>
+        <SubTitle>팀대관 및 픽업게임을 해보세요.</SubTitle>
+        <Wrapper>
+          <ListContainer>
+            {tempDataArr.map((item) => (
+              <GymItem key={item.id} data={item} />
+            ))}
+          </ListContainer>
+        </Wrapper>
+
+        <FlexCenter>
+          <MoveButton>팀대관 전체 보기 →</MoveButton>
+        </FlexCenter>
+      </Container>
+    </Section>
   );
 };
 
 export default GymList;
 
+const Section = styled.div`
+  width: 100%;
+`;
+
 const Container = styled.div`
   padding: 5px;
+
+  max-width: 1180px;
+  margin: auto;
 `;
 
 const Title = styled.div`
-  font-size: ${({ theme }) => theme.font.size.subtitle_1};
-  font-weight: 600;
-  padding: 10px 0;
+  ${H5}
+
+  text-align: center;
   @media ${({ theme }) => theme.grid.tablet} {
     font-size: ${({ theme }) => theme.font.size.heading_6};
     font-weight: 700;
   }
 
   @media ${({ theme }) => theme.grid.laptop} {
-    font-size: ${({ theme }) => theme.font.size.heading_5};
+    ${H4}
+  }
+`;
+
+const SubTitle = styled.div`
+  ${Description}
+  text-align: center;
+
+  margin-bottom: 10px;
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    ${Body2Regular}
   }
 `;
 
@@ -107,5 +143,13 @@ const Wrapper = styled.div`
 
   @media ${({ theme }) => theme.grid.tablet} {
     height: auto;
+
+    margin-bottom: 30px;
   }
+`;
+
+const MoveButton = styled.button`
+  ${Body2Regular}
+
+  padding: 4px 10px;
 `;
