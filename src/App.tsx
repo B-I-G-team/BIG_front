@@ -7,6 +7,7 @@ import Login from 'container/login';
 import TeamRental from 'container/team-rental';
 import Owner from 'container/owner';
 import TeamRank from 'container/team-rank';
+import Pickup from 'container/pickup';
 
 import Header from 'components/common/Header';
 
@@ -27,6 +28,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="team-rental" element={<TeamRental />} />
             <Route path="team-rank" element={<TeamRank />} />
+            <Route path="pickup" element={<Pickup />} />
           </Routes>
         </BrowserRouter>
       </ContentWrrapper>

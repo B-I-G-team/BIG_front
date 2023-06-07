@@ -12,11 +12,11 @@ interface Props {
     id: number;
     image: string;
   }[];
-  height?: string;
+  type?: string;
   autoPlay?: boolean;
 }
 
-const Slide = ({ data, height, autoPlay = true }: Props) => {
+const Slide = ({ data, type, autoPlay = true }: Props) => {
   return (
     <Wrapper>
       <Carousel
@@ -38,7 +38,7 @@ const Slide = ({ data, height, autoPlay = true }: Props) => {
         // )}
       >
         {data.map((item) => (
-          <SlideImgs key={item.id} data={item} height={height} />
+          <SlideImgs key={item.id} data={item} type={type} />
         ))}
       </Carousel>
     </Wrapper>

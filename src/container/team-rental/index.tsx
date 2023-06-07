@@ -1,5 +1,5 @@
 import TeamRentalDetail from 'components/team-rental/TeamRentalDetail';
-import TeamRentalList from 'components/team-rental/TeamRentalList';
+import GymRentalList from 'components/common/GymRentalList';
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
@@ -18,7 +18,7 @@ const Index = () => {
 
   return (
     <Section>
-      <TeamRentalList />
+      <GymRentalList type="team-rental" />
     </Section>
   );
 };
