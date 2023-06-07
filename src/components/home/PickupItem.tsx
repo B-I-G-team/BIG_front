@@ -12,13 +12,14 @@ interface Props {
     startDate: string;
     endDate: string;
   };
+  pickupPage?: boolean;
 }
 
-const PickupItem = ({ data }: Props) => {
+const PickupItem = ({ data, pickupPage }: Props) => {
   const { homeTeam, homeTeamLogo, awayTeam, awayTeamLogo, gym, startDate } =
     data;
   return (
-    <Container>
+    <Container pickupPage={pickupPage}>
       <Header>
         <Date>{startDate}</Date>
         <Location>{gym}</Location>
@@ -48,8 +49,8 @@ const PickupItem = ({ data }: Props) => {
 
 export default PickupItem;
 
-const Container = styled.div`
-  width: 250px;
+const Container = styled.div<{ pickupPage?: boolean }>`
+  width: ${({ pickupPage }) => (pickupPage ? `100%` : `250px`)};
   border: ${({ theme }) => `1px solid ${theme.color.border}`};
   border-radius: 4px;
   padding: 8px;

@@ -44,7 +44,7 @@ const Index = () => {
   return (
     <>
       {/* 슬라이드 */}
-      <Slide data={tempDataArr} />
+      <Slide data={tempDataArr} type="home" />
       {/* <Landing /> */}
       <Section>
         <PickupList />

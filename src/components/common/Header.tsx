@@ -45,7 +45,10 @@ const Header = () => {
             <LogoLink to="/">
               <Logo src={logoImage} />
             </LogoLink>
-            <LeftItem to="/" active={String(location.pathname === '/pickup')}>
+            <LeftItem
+              to="/pickup"
+              active={String(location.pathname === '/pickup')}
+            >
               픽업게임
             </LeftItem>
             <LeftItem

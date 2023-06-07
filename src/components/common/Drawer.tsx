@@ -39,7 +39,10 @@ const Drawer = ({ open, closeDrawer }: Props) => {
           <LogoLink to="/">
             <Logo src={logoImage} />
           </LogoLink>
-          <LinkItem to="/" active={String(location.pathname === '/pickup')}>
+          <LinkItem
+            to="/pickup"
+            active={String(location.pathname === '/pickup')}
+          >
             픽업 게임
           </LinkItem>
           <LinkItem

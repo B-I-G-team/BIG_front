@@ -223,13 +223,19 @@ const tempGymList = [
   },
 ];
 
-const TeamRentalList = () => {
+const GymRentalList = ({ type }: { type: 'team-rental' | 'pickup' }) => {
   return (
     <Container>
-      <Title>팀대관</Title>
       <GymList>
         {tempGymList.map(({ id, thumbnail, name, address, pricePerHour }) => (
-          <GymItem key={id} to={`/team-rental?id=${id}`}>
+          <GymItem
+            key={id}
+            to={
+              type === 'pickup'
+                ? `/pickup?tab=register&id=${id}`
+                : `/team-rental?id=${id}`
+            }
+          >
             <Image src={thumbnail} />
             <Content>
               <GymName>{name}</GymName>
@@ -246,13 +252,10 @@ const TeamRentalList = () => {
   );
 };
 
-export default TeamRentalList;
+export default GymRentalList;
 
 const Container = styled.div``;
-const Title = styled.div`
-  font-size: ${({ theme }) => theme.font.size.subtitle_2};
-  font-weight: 600;
-`;
+
 const GymList = styled.div`
   margin: 0 -3px;
 

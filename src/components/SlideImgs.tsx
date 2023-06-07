@@ -6,32 +6,38 @@ interface Props {
     id: number;
     image: string;
   };
-  height?: string;
+  type?: string;
 }
 
-const SlideImgs = ({ data, height }: Props) => {
+const SlideImgs = ({ data, type }: Props) => {
   return (
-    <ImageBox height={height as string}>
-      <Image src={data.image} alt="image" />
+    <ImageBox type={type as string}>
+      <Image src={data.image} alt="image" type={type as string} />
     </ImageBox>
   );
 };
 
 export default SlideImgs;
 
-const ImageBox = styled.div<{ height: string }>`
+const ImageBox = styled.div<{ type: string }>`
   cursor: pointer;
-  height: ${({ height }) => height};
-
-  /* max-height: ${({ height }) => !height && '450px'}; */
+  height: ${({ type }) => (type === 'home' ? `500px` : 'auto')};
 
   @media ${({ theme }) => theme.grid.laptop} {
     /* border-radius: 20px; */
   }
   overflow: hidden;
 `;
-const Image = styled.img`
-  object-fit: contain;
-  width: 100%;
-  height: auto;
+const Image = styled.img<{ type: string }>`
+  object-fit: ${({ type }) => (type === 'home' ? `cover` : 'contain')};
+
+  height: ${({ type }) => (type === 'home' ? `100%` : 'auto')};
+  width: ${({ type }) => (type === 'home' ? `auto` : '100%')};
+
+  @media ${({ theme }) => theme.grid.laptop} {
+    object-fit: contain;
+
+    width: 100%;
+    height: auto;
+  }
 `;
