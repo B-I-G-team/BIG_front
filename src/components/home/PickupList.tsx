@@ -104,6 +104,10 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    margin-bottom: 20px;
+  }
 `;
 
 const Title = styled.div`
@@ -147,6 +151,6 @@ const List = styled.div`
     position: static;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, auto));
-    grid-gap: 15px;
+    grid-gap: 30px;
   }
 `;

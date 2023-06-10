@@ -14,6 +14,7 @@ import temp7 from 'assets/temp7.png';
 // import Footer from 'components/home/Footer';
 import PickupList from 'components/home/PickupList';
 import styled from 'styled-components';
+import TeamRank from 'components/home/TeamRank';
 
 const tempDataArr = [
   {
@@ -48,6 +49,7 @@ const Index = () => {
       {/* <Landing /> */}
       <Section>
         <PickupList />
+        <TeamRank />
       </Section>
       <GymList />
       {/* <TeamCreateModal open={open} setOpen={setOpen} /> */}
@@ -65,7 +67,11 @@ const Section = styled.div`
 
   margin-bottom: 10px;
 
-  @media ${({ theme }) => theme.grid.laptop} {
+  @media ${({ theme }) => theme.grid.tablet} {
     margin-bottom: 24px;
+
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: nowrap;
   }
 `;
