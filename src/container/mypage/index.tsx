@@ -3,6 +3,7 @@ import { useMePUTMutation } from 'api/axios-client/Query';
 import styled from 'styled-components';
 import Reserve from 'components/mypage/Reserve';
 import type { RadioChangeEvent } from 'antd';
+import type { TabsProps } from 'antd';
 
 import { useMeGETQuery } from 'api/axios-client/Query';
 import { Tabs, Radio, Select, Input, Button } from 'antd';

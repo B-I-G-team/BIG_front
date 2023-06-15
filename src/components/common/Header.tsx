@@ -63,6 +63,12 @@ const Header = () => {
             >
               팀 순위
             </LeftItem>
+            <LeftItem
+              to="/owner"
+              active={String(location.pathname === '/owner')}
+            >
+              체육관 관리
+            </LeftItem>
           </LeftSection>
           <RightSecton>
             {/* 태블릿까지 */}
