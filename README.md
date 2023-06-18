@@ -19,5 +19,5 @@ Basketball Indoor Gym Front Repository
 | react-query-swagger | 15.5.3 | api 및 query 자동 생성 라이브러리 |
 
 
-## api query 업데이트 명령어
+## react-query-wagger 업데이트 명령어
 `npx react-query-swagger /tanstack /input:http://rasp.jaejun.me/big/docs/json /output:src/api/axios-client.ts`
