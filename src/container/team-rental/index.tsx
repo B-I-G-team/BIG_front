@@ -10,9 +10,9 @@ const Index = () => {
 
   if (id) {
     return (
-      <Section>
+      <DetailSection>
         <TeamRentalDetail id={id} />
-      </Section>
+      </DetailSection>
     );
   }
 
@@ -26,6 +26,11 @@ const Index = () => {
 export default Index;
 
 const Section = styled.div`
+  max-width: 1350px;
+  margin: auto;
+`;
+
+const DetailSection = styled.div`
   max-width: 1180px;
   margin: auto;
 `;

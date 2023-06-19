@@ -10,10 +10,8 @@ import { BiBell } from 'react-icons/bi';
 
 import Drawer from './Drawer';
 import { useMeGETQuery } from 'api/axios-client/Query';
-import { Button, Input, Popover } from 'antd';
+import { Button, Popover } from 'antd';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
-
-const { Search } = Input;
 
 const Header = () => {
   const location = useLocation();
@@ -75,7 +73,6 @@ const Header = () => {
 
             {/* 랩탑부터 */}
             <RightContents>
-              <Search placeholder="체육관 업체 검색" style={{ width: 350 }} />
               {user ? (
                 <UserIcons>
                   <button type="button" style={{ marginRight: '10px' }}>

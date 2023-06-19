@@ -3,10 +3,12 @@ import gymImage1 from 'assets/gym1.jpeg';
 import gymImage2 from 'assets/gym2.jpeg';
 import gymImage3 from 'assets/gym3.jpeg';
 import gymImage4 from 'assets/gym4.jpeg';
-import { Pagination } from 'antd';
-
+import { Input, Pagination, Select } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { Body2Bold, Body2Regular, H5 } from 'styles/mixin';
+import { FlexBetween } from './Wrapper';
 
 const tempGymList = [
   {
@@ -226,6 +228,28 @@ const tempGymList = [
 const GymRentalList = ({ type }: { type: 'team-rental' | 'pickup' }) => {
   return (
     <Container>
+      <Header>
+        <Title>{`"연제구" 검색결과`}</Title>
+        <FlexBetween>
+          <Input
+            placeholder="체육관, 업체 검색"
+            style={{
+              marginRight: '4px',
+            }}
+            prefix={
+              <SearchOutlined style={{ color: '#8C8D96', fontSize: '18px' }} />
+            }
+          />
+          <Select
+            defaultValue={'인기순'}
+            options={[
+              { value: '인기순', label: '인기순' },
+              { value: '가격순', label: '가격순' },
+            ]}
+          />
+        </FlexBetween>
+      </Header>
+
       <GymList>
         {tempGymList.map(({ id, thumbnail, name, address, pricePerHour }) => (
           <GymItem
@@ -254,26 +278,27 @@ const GymRentalList = ({ type }: { type: 'team-rental' | 'pickup' }) => {
 
 export default GymRentalList;
 
-const Container = styled.div``;
+const Container = styled.div`
+  padding: 0 10px;
+`;
 
 const GymList = styled.div`
-  margin: 0 -3px;
-
   display: flex;
   flex-wrap: wrap;
 
   @media ${({ theme }) => theme.grid.tablet} {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, auto));
-    grid-gap: 32px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, auto));
+    grid-gap: 18px;
   }
 `;
 const GymItem = styled(Link)`
   display: flex;
   flex-direction: column;
 
-  width: 50%;
-  min-height: 230px;
+  width: 100%;
+  margin-bottom: 16px;
+  /* min-height: 230px; */
 
   /* max-width: 200px; */
 
@@ -293,19 +318,16 @@ const Content = styled.div`
 const Image = styled.img`
   width: 100%;
   height: auto;
+  border-radius: 8px;
 `;
 const GymName = styled.div`
-  font-size: ${({ theme }) => theme.font.size.subtitle_2};
-  font-weight: 600;
+  ${H5}
 `;
 const Address = styled.div`
-  font-size: 10px;
-  line-height: 11px;
-  font-weight: 200;
+  ${Body2Regular}
 `;
 const Price = styled.div`
-  font-size: ${({ theme }) => theme.font.size.subtitle_2};
-  font-weight: 600;
+  ${Body2Bold}
 `;
 
 const PaginationWrapper = styled.div`
@@ -314,4 +336,18 @@ const PaginationWrapper = styled.div`
   align-items: center;
 
   margin: 20px 0;
+`;
+
+const Title = styled.div`
+  ${H5}
+`;
+
+const Header = styled.div`
+  padding: 10px 0;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
