@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
 import { blue } from '@ant-design/colors';
 
-import { CiSearch } from 'react-icons/ci';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
 
@@ -64,9 +63,6 @@ const Header = () => {
           </LeftSection>
           <RightSecton>
             {/* 태블릿까지 */}
-            <button type="button">
-              <SearchIcon size={24} />
-            </button>
             <button type="button" onClick={openDrawer}>
               <HamburgerIcon size={24} />
             </button>
@@ -171,12 +167,6 @@ const LeftSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const SearchIcon = styled(CiSearch)`
-  @media ${({ theme }) => theme.grid.tablet} {
-    display: none;
-  }
 `;
 
 const HamburgerIcon = styled(RxHamburgerMenu)`
