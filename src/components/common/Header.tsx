@@ -1,21 +1,22 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
 import { blue } from '@ant-design/colors';
 
-import { CiSearch } from 'react-icons/ci';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { BiBell } from 'react-icons/bi';
 
 import Drawer from './Drawer';
 import { useMeGETQuery } from 'api/axios-client/Query';
-import { Button, Input, Popover } from 'antd';
+import { Button, Popover } from 'antd';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
-
-const { Search } = Input;
+import useWindowSize from 'hooks/common/useWindowSize';
 
 const Header = () => {
+  const { width: windowWidth } = useWindowSize();
+  const isTablet = useMemo(() => windowWidth <= 744, [windowWidth]);
+
   const location = useLocation();
   const { meQueryKey } = useMeGETQueryKey();
   const { data: user } = useMeGETQuery({
@@ -37,97 +38,99 @@ const Header = () => {
     localStorage.removeItem('access_token');
   };
 
-  if (location.pathname !== '/login' && location.pathname !== '/signup')
-    return (
-      <>
-        <Container>
-          <LeftSection>
-            <LogoLink to="/">
-              <Logo src={logoImage} />
-            </LogoLink>
-            <LeftItem
-              to="/pickup"
-              active={String(location.pathname === '/pickup')}
-            >
-              픽업게임
-            </LeftItem>
-            <LeftItem
-              to="/team-rental"
-              active={String(location.pathname === '/team-rental')}
-            >
-              팀대관
-            </LeftItem>
-            <LeftItem
-              to="/team-rank"
-              active={String(location.pathname === '/team-rank')}
-            >
-              팀 순위
-            </LeftItem>
-          </LeftSection>
-          <RightSecton>
-            {/* 태블릿까지 */}
-            <button type="button">
-              <SearchIcon size={24} />
-            </button>
-            <button type="button" onClick={openDrawer}>
-              <HamburgerIcon size={24} />
-            </button>
+  if (
+    location.pathname === '/login' ||
+    location.pathname === '/signup' ||
+    (isTablet &&
+      location.pathname === '/team-rental' &&
+      location.search.length > 0)
+  )
+    return <></>;
 
-            {/* 랩탑부터 */}
-            <RightContents>
-              <Search placeholder="체육관 업체 검색" style={{ width: 350 }} />
-              {user ? (
-                <UserIcons>
-                  <button type="button" style={{ marginRight: '10px' }}>
-                    <BiBell size={24} />
+  return (
+    <>
+      <Container>
+        <LeftSection>
+          <LogoLink to="/">
+            <Logo src={logoImage} />
+          </LogoLink>
+          <LeftItem
+            to="/pickup"
+            active={String(location.pathname === '/pickup')}
+          >
+            픽업게임
+          </LeftItem>
+          <LeftItem
+            to="/team-rental"
+            active={String(location.pathname === '/team-rental')}
+          >
+            팀대관
+          </LeftItem>
+          <LeftItem
+            to="/team-rank"
+            active={String(location.pathname === '/team-rank')}
+          >
+            팀 순위
+          </LeftItem>
+        </LeftSection>
+        <RightSecton>
+          {/* 태블릿까지 */}
+          <button type="button" onClick={openDrawer}>
+            <HamburgerIcon size={24} />
+          </button>
+
+          {/* 랩탑부터 */}
+          <RightContents>
+            {user ? (
+              <UserIcons>
+                <button type="button" style={{ marginRight: '10px' }}>
+                  <BiBell size={24} />
+                </button>
+                <Popover
+                  content={
+                    <PopOverContent>
+                      <StyledLink
+                        to="/mypage"
+                        onClick={() => {
+                          setPopOverOpen(false);
+                        }}
+                      >
+                        내 정보
+                      </StyledLink>
+                      <button
+                        type="button"
+                        style={{ padding: 0 }}
+                        onClick={() => {
+                          logout();
+                          setPopOverOpen(false);
+                        }}
+                      >
+                        로그아웃
+                      </button>
+                    </PopOverContent>
+                  }
+                  trigger="click"
+                  open={popOverOpen}
+                  onOpenChange={(visible) => {
+                    setPopOverOpen(visible);
+                  }}
+                >
+                  <button type="button">
+                    <Profile src={user.image} popOverOpen={popOverOpen} />
                   </button>
-                  <Popover
-                    content={
-                      <PopOverContent>
-                        <StyledLink
-                          to="/mypage"
-                          onClick={() => {
-                            setPopOverOpen(false);
-                          }}
-                        >
-                          내 정보
-                        </StyledLink>
-                        <button
-                          type="button"
-                          style={{ padding: 0 }}
-                          onClick={() => {
-                            logout();
-                            setPopOverOpen(false);
-                          }}
-                        >
-                          로그아웃
-                        </button>
-                      </PopOverContent>
-                    }
-                    trigger="click"
-                    open={popOverOpen}
-                    onOpenChange={(visible) => {
-                      setPopOverOpen(visible);
-                    }}
-                  >
-                    <button type="button">
-                      <Profile src={user.image} popOverOpen={popOverOpen} />
-                    </button>
-                  </Popover>
-                </UserIcons>
-              ) : (
-                <LoginLink to="/login">로그인</LoginLink>
-              )}
-              <Button type="primary">체육관 등록하기</Button>
-            </RightContents>
-          </RightSecton>
-        </Container>
+                </Popover>
+              </UserIcons>
+            ) : (
+              <LoginLink to="/login">로그인</LoginLink>
+            )}
+            <Button type="primary">체육관 등록하기</Button>
+          </RightContents>
+        </RightSecton>
+      </Container>
 
-        <Drawer open={open} closeDrawer={closeDrawer} />
-      </>
-    );
-
-  return <></>;
+      <Drawer open={open} closeDrawer={closeDrawer} />
+    </>
+  );
 };
 
 export default Header;
@@ -174,12 +177,6 @@ const LeftSection = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const SearchIcon = styled(CiSearch)`
-  @media ${({ theme }) => theme.grid.tablet} {
-    display: none;
-  }
 `;
 
 const HamburgerIcon = styled(RxHamburgerMenu)`

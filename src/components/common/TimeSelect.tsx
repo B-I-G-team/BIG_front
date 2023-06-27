@@ -14,7 +14,6 @@ interface Props {
   calcPrice: (length: number) => void;
   firstSelectTime: TimeItem;
   secondSelectTime: TimeItem;
-
   onClickTime: (item: TimeItem) => void;
   className?: string;
 }
