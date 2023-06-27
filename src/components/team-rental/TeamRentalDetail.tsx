@@ -7,6 +7,7 @@ import Slide from 'components/Slide';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
+import { LeftCircleFilled, ShareAltOutlined } from '@ant-design/icons';
 
 dayjs.locale('ko');
 
@@ -25,6 +26,7 @@ import { ConfigProvider, DatePicker } from 'antd';
 import useWindowSize from 'hooks/common/useWindowSize';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const tempData = {
   id: 1,
@@ -118,6 +120,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   const [firstSelectTime, setFirstSelectTime] = useState<TimeItem>();
   const [secondSelectTime, setsecondSelectTime] = useState<TimeItem>();
   const [timeArray, setTimeArray] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   const onClickTime = (timeItem: TimeItem) => {
     if (!bookingDate) {
@@ -222,6 +225,18 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   return (
     <Container>
       <SlideWrapper>
+        <IconWrapper>
+          <LeftCircleFilled
+            style={{ fontSize: '30px', color: 'white' }}
+            onClick={() => navigate('/team-rental')}
+          />
+          <ShareAltOutlined
+            style={{ fontSize: '30px', color: 'white' }}
+            onClick={() =>
+              navigator.share({ title: 'BIG 서비스 체육관', url: '' })
+            }
+          />
+        </IconWrapper>
         <Slide
           data={tempData.images.map((image, idx) => ({ id: idx, image }))}
           autoPlay={false}
@@ -392,4 +407,14 @@ const StyledTimeSelect = styled(TimeSelect)`
   @media ${({ theme }) => theme.grid.laptop} {
     margin-top: 30px;
   }
+`;
+
+const IconWrapper = styled.div`
+  z-index: 999;
+  position: absolute;
+
+  width: 100%;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
 `;

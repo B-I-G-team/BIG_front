@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
@@ -11,8 +11,12 @@ import Drawer from './Drawer';
 import { useMeGETQuery } from 'api/axios-client/Query';
 import { Button, Popover } from 'antd';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
+import useWindowSize from 'hooks/common/useWindowSize';
 
 const Header = () => {
+  const { width: windowWidth } = useWindowSize();
+  const isTablet = useMemo(() => windowWidth <= 744, [windowWidth]);
+
   const location = useLocation();
   const { meQueryKey } = useMeGETQueryKey();
   const { data: user } = useMeGETQuery({
@@ -37,7 +41,9 @@ const Header = () => {
   if (
     location.pathname === '/login' ||
     location.pathname === '/signup' ||
-    (location.pathname === '/team-rental' && location.search.length > 0)
+    (isTablet &&
+      location.pathname === '/team-rental' &&
+      location.search.length > 0)
   )
     return <></>;
 
