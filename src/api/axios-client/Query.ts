@@ -18,6 +18,7 @@ import { Client as ClientClass } from '../axios-client';
 import { createClient, getClientFactory } from './helpers';
 
 export const Client = () => getClientFactory()(ClientClass);
+import type { AxiosRequestConfig } from 'axios';
 
 export type CallbackQueryParameters = {
   code: string;
@@ -86,15 +87,21 @@ function __anonymous() {
 /**
  * @return Default Response
  */
-export function useAnonymousQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useAnonymousQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useAnonymousQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   
 
   options = params[0] as any;
+  axiosConfig = params[1] as any;
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<void, TError, TSelectData>({
     queryFn: __anonymous,
@@ -151,15 +158,21 @@ function __kakao() {
 /**
  * @return Default Response
  */
-export function useKakaoQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useKakaoQuery<TSelectData = void, TError = unknown>(options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useKakaoQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   
 
   options = params[0] as any;
+  axiosConfig = params[1] as any;
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<void, TError, TSelectData>({
     queryFn: __kakao,
@@ -228,27 +241,33 @@ function __callback(context: QueryFunctionContext) {
       context.queryKey[2] as string    );
 }
 
-export function useCallbackQuery<TSelectData = void, TError = unknown>(dto: CallbackQueryParameters, options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useCallbackQuery<TSelectData = void, TError = unknown>(dto: CallbackQueryParameters, options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @return Default Response
  * @deprecated
  */
-export function useCallbackQuery<TSelectData = void, TError = unknown>(code: string, options?: UseQueryOptions<void, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useCallbackQuery<TSelectData = void, TError = unknown>(code: string, options?: UseQueryOptions<void, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useCallbackQuery<TSelectData = void, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<void, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   let code: any = undefined;
   
   if (params.length > 0) {
     if (isParameterObject(params[0])) {
       ({ code,  } = params[0] as CallbackQueryParameters);
       options = params[1];
+      axiosConfig = params[2];
     } else {
-      [code, options] = params;
+      [code, options, axiosConfig] = params;
     }
   }
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<void, TError, TSelectData>({
     queryFn: __callback,
@@ -357,13 +376,14 @@ function __bookingsAll(context: QueryFunctionContext) {
       context.queryKey[2] as string,       context.queryKey[3] as string,       context.queryKey[4] as string    );
 }
 
-export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(dto: BookingsAllQueryParameters, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(dto: BookingsAllQueryParameters, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @return Default Response
  */
-export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(gymID: string, firstTime: string, lastTime: string, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(gymID: string, firstTime: string, lastTime: string, options?: UseQueryOptions<Types.Anonymous2[], TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous2[], TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   let gymID: any = undefined;
   let firstTime: any = undefined;
   let lastTime: any = undefined;
@@ -372,13 +392,18 @@ export function useBookingsAllQuery<TSelectData = Types.Anonymous2[], TError = u
     if (isParameterObject(params[0])) {
       ({ gymID, firstTime, lastTime,  } = params[0] as BookingsAllQueryParameters);
       options = params[1];
+      axiosConfig = params[2];
     } else {
-      [gymID, firstTime, lastTime, options] = params;
+      [gymID, firstTime, lastTime, options, axiosConfig] = params;
     }
   }
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<Types.Anonymous2[], TError, TSelectData>({
     queryFn: __bookingsAll,
@@ -449,15 +474,16 @@ function __current(context: QueryFunctionContext) {
       context.queryKey[2] as string | null | undefined,       context.queryKey[3] as string | null | undefined    );
 }
 
-export function useCurrentQuery<TSelectData = Types.Anonymous3, TError = unknown>(dto: CurrentQueryParameters, options?: UseQueryOptions<Types.Anonymous3, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useCurrentQuery<TSelectData = Types.Anonymous3, TError = unknown>(dto: CurrentQueryParameters, options?: UseQueryOptions<Types.Anonymous3, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @param offset (optional) number
  * @param limit (optional) number
  * @return Default Response
  */
-export function useCurrentQuery<TSelectData = Types.Anonymous3, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, options?: UseQueryOptions<Types.Anonymous3, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useCurrentQuery<TSelectData = Types.Anonymous3, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, options?: UseQueryOptions<Types.Anonymous3, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useCurrentQuery<TSelectData = Types.Anonymous3, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous3, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   let offset: any = undefined;
   let limit: any = undefined;
   
@@ -465,13 +491,18 @@ export function useCurrentQuery<TSelectData = Types.Anonymous3, TError = unknown
     if (isParameterObject(params[0])) {
       ({ offset, limit,  } = params[0] as CurrentQueryParameters);
       options = params[1];
+      axiosConfig = params[2];
     } else {
-      [offset, limit, options] = params;
+      [offset, limit, options, axiosConfig] = params;
     }
   }
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<Types.Anonymous3, TError, TSelectData>({
     queryFn: __current,
@@ -576,16 +607,17 @@ function __gymGET(context: QueryFunctionContext) {
       context.queryKey[2] as string | null | undefined,       context.queryKey[3] as string | null | undefined,       context.queryKey[4] as string | null | undefined    );
 }
 
-export function useGymGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(dto: GymGETQueryParameters, options?: UseQueryOptions<Types.Anonymous5, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useGymGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(dto: GymGETQueryParameters, options?: UseQueryOptions<Types.Anonymous5, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @param offset (optional) number
  * @param limit (optional) number
  * @param search (optional) 검색어
  * @return Default Response
  */
-export function useGymGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined, options?: UseQueryOptions<Types.Anonymous5, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useGymGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined, options?: UseQueryOptions<Types.Anonymous5, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useGymGETQuery<TSelectData = Types.Anonymous5, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous5, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   let offset: any = undefined;
   let limit: any = undefined;
   let search: any = undefined;
@@ -594,13 +626,18 @@ export function useGymGETQuery<TSelectData = Types.Anonymous5, TError = unknown>
     if (isParameterObject(params[0])) {
       ({ offset, limit, search,  } = params[0] as GymGETQueryParameters);
       options = params[1];
+      axiosConfig = params[2];
     } else {
-      [offset, limit, search, options] = params;
+      [offset, limit, search, options, axiosConfig] = params;
     }
   }
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<Types.Anonymous5, TError, TSelectData>({
     queryFn: __gymGET,
@@ -675,26 +712,32 @@ function __gymGET2(context: QueryFunctionContext) {
       context.queryKey[2] as string    );
 }
 
-export function useGymGET2Query<TSelectData = Types.Anonymous6, TError = unknown>(dto: GymGET2QueryParameters, options?: UseQueryOptions<Types.Anonymous6, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useGymGET2Query<TSelectData = Types.Anonymous6, TError = unknown>(dto: GymGET2QueryParameters, options?: UseQueryOptions<Types.Anonymous6, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @return Default Response
  */
-export function useGymGET2Query<TSelectData = Types.Anonymous6, TError = unknown>(gymID: string, options?: UseQueryOptions<Types.Anonymous6, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useGymGET2Query<TSelectData = Types.Anonymous6, TError = unknown>(gymID: string, options?: UseQueryOptions<Types.Anonymous6, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useGymGET2Query<TSelectData = Types.Anonymous6, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous6, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   let gymID: any = undefined;
   
   if (params.length > 0) {
     if (isParameterObject(params[0])) {
       ({ gymID,  } = params[0] as GymGET2QueryParameters);
       options = params[1];
+      axiosConfig = params[2];
     } else {
-      [gymID, options] = params;
+      [gymID, options, axiosConfig] = params;
     }
   }
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<Types.Anonymous6, TError, TSelectData>({
     queryFn: __gymGET2,
@@ -795,16 +838,17 @@ function __teamsGET(context: QueryFunctionContext) {
       context.queryKey[2] as string | null | undefined,       context.queryKey[3] as string | null | undefined,       context.queryKey[4] as string | null | undefined    );
 }
 
-export function useTeamsGETQuery<TSelectData = Types.Anonymous9, TError = unknown>(dto: TeamsGETQueryParameters, options?: UseQueryOptions<Types.Anonymous9, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useTeamsGETQuery<TSelectData = Types.Anonymous9, TError = unknown>(dto: TeamsGETQueryParameters, options?: UseQueryOptions<Types.Anonymous9, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @param offset (optional) number
  * @param limit (optional) number
  * @param search (optional) 검색어
  * @return Default Response
  */
-export function useTeamsGETQuery<TSelectData = Types.Anonymous9, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined, options?: UseQueryOptions<Types.Anonymous9, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useTeamsGETQuery<TSelectData = Types.Anonymous9, TError = unknown>(offset: string | null | undefined, limit: string | null | undefined, search: string | null | undefined, options?: UseQueryOptions<Types.Anonymous9, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useTeamsGETQuery<TSelectData = Types.Anonymous9, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous9, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   let offset: any = undefined;
   let limit: any = undefined;
   let search: any = undefined;
@@ -813,13 +857,18 @@ export function useTeamsGETQuery<TSelectData = Types.Anonymous9, TError = unknow
     if (isParameterObject(params[0])) {
       ({ offset, limit, search,  } = params[0] as TeamsGETQueryParameters);
       options = params[1];
+      axiosConfig = params[2];
     } else {
-      [offset, limit, search, options] = params;
+      [offset, limit, search, options, axiosConfig] = params;
     }
   }
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<Types.Anonymous9, TError, TSelectData>({
     queryFn: __teamsGET,
@@ -892,27 +941,33 @@ function __presigned(context: QueryFunctionContext) {
       context.queryKey[2] as string | null | undefined    );
 }
 
-export function usePresignedQuery<TSelectData = Types.Anonymous10, TError = unknown>(dto: PresignedQueryParameters, options?: UseQueryOptions<Types.Anonymous10, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function usePresignedQuery<TSelectData = Types.Anonymous10, TError = unknown>(dto: PresignedQueryParameters, options?: UseQueryOptions<Types.Anonymous10, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 /**
  * @param extension (optional) 파일의 확장자 (ex. png, jpeg, ...)
  * @return Default Response
  */
-export function usePresignedQuery<TSelectData = Types.Anonymous10, TError = unknown>(extension: string | null | undefined, options?: UseQueryOptions<Types.Anonymous10, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function usePresignedQuery<TSelectData = Types.Anonymous10, TError = unknown>(extension: string | null | undefined, options?: UseQueryOptions<Types.Anonymous10, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function usePresignedQuery<TSelectData = Types.Anonymous10, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous10, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   let extension: any = undefined;
   
   if (params.length > 0) {
     if (isParameterObject(params[0])) {
       ({ extension,  } = params[0] as PresignedQueryParameters);
       options = params[1];
+      axiosConfig = params[2];
     } else {
-      [extension, options] = params;
+      [extension, options, axiosConfig] = params;
     }
   }
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<Types.Anonymous10, TError, TSelectData>({
     queryFn: __presigned,
@@ -971,15 +1026,21 @@ function __meGET() {
 /**
  * @return Default Response
  */
-export function useMeGETQuery<TSelectData = Types.Anonymous11, TError = unknown>(options?: UseQueryOptions<Types.Anonymous11, TError, TSelectData>): UseQueryResult<TSelectData, TError>;
+export function useMeGETQuery<TSelectData = Types.Anonymous11, TError = unknown>(options?: UseQueryOptions<Types.Anonymous11, TError, TSelectData>, axiosConfig?: Partial<AxiosRequestConfig>): UseQueryResult<TSelectData, TError>;
 export function useMeGETQuery<TSelectData = Types.Anonymous11, TError = unknown>(...params: any []): UseQueryResult<TSelectData, TError> {
   let options: UseQueryOptions<Types.Anonymous11, TError, TSelectData> | undefined = undefined;
+  let axiosConfig: AxiosRequestConfig |undefined;
   
 
   options = params[0] as any;
+  axiosConfig = params[1] as any;
 
   const metaContext = useContext(QueryMetaContext);
   options = addMetaToOptions(options, metaContext);
+  if (axiosConfig) {
+    options = options ?? { } as any;
+    options!.meta = { ...options!.meta, axiosConfig };
+  }
 
   return useQuery<Types.Anonymous11, TError, TSelectData>({
     queryFn: __meGET,

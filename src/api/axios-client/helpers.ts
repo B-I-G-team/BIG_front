@@ -4,10 +4,12 @@ import type { UseQueryResult, QueryFunctionContext, UseQueryOptions, QueryClient
 import type { QueryMetaContextValue } from 'react-query-swagger';
 import { QueryMetaContext } from 'react-query-swagger';
 import { useContext } from 'react';
+import axios from 'axios';
+import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
 type ClientFactoryFunction = <T>(type: (new (...params: any[]) => T)) => T;
 let _clientFactoryFunction: ClientFactoryFunction = <T>(type: (new (...params: any[]) => T)) => {
-  const params = [_baseUrl, _fetchFactory()];
+  const params = [_baseUrl, _axiosFactory()];
   return new type(...params);
 };
 /*
@@ -29,12 +31,6 @@ export function getClientFactory() {
 */
 export function createClient<T>(type: (new () => T)) {
   return _clientFactoryFunction(type);
-}let _jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
-export function getJsonParseReviver() {
-  return _jsonParseReviver;
-}
-export function setJsonParseReviver(value: ((key: string, value: any) => any) | undefined) {
-  _jsonParseReviver = value;
 }
 const _resultTypesByQueryKey: Record<string, (data: any) => any> = {};
 export function addResultTypeFactory(typeName: string, factory: (data: any) => any) {
@@ -95,18 +91,18 @@ export function setBaseUrl(baseUrl: string) {
   _baseUrl = baseUrl;
 }
 
-let _fetchFactory = () => <any>window;
+let _axiosFactory: () => AxiosInstance | undefined = () => undefined;
 /*
-  Returns an instance of fetch either created by a configured factory or a default one
+  Returns an instance of Axios either created by a configured factory or a default one
 */
-export function getFetch(): { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }  {
-  return _fetchFactory?.() ?? { fetch };
+export function getAxios() {
+  return _axiosFactory?.() ?? axios;
 }
 /*
-  Sets currently used factory for fetch
+  Sets the factory for Axios instances
 */
-export function setFetchFactory(factory: () => { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-  _fetchFactory = factory;
+export function setAxiosFactory(factory: () => AxiosInstance) {
+  _axiosFactory = factory;
 }
 
 //-----/ReactQueryFile----
