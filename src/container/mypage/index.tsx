@@ -20,6 +20,7 @@ import {
   H5,
 } from 'styles/mixin';
 import useWindowSize from 'hooks/common/useWindowSize';
+
 const WAIT_CONFIRM = 'wait_confirm';
 const WAIT_PAY = 'wait_pay';
 const RESERVE = 'reserve';
@@ -304,6 +305,8 @@ export default Index;
 
 const Container = styled.div`
   padding: 8px;
+  max-width: 1200px;
+  margin: auto;
 `;
 
 const Title = styled.div`

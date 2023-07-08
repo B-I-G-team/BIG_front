@@ -1,7 +1,7 @@
-import { Button, Input, Modal, Select, Upload } from 'antd';
+import { Button, Input, Select, Upload } from 'antd';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { PlusOutlined, LoadingOutlined } from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import {
   RcFile,
   UploadChangeParam,

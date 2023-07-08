@@ -12,10 +12,14 @@ import { useMeGETQuery } from 'api/axios-client/Query';
 import { Button, Popover } from 'antd';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
 import useWindowSize from 'hooks/common/useWindowSize';
+import GymCreateModal from './GymCreateModal';
+import TeamCreateModal from 'components/mypage/TeamCreateModal';
 
 const Header = () => {
   const { width: windowWidth } = useWindowSize();
   const isTablet = useMemo(() => windowWidth <= 744, [windowWidth]);
+  const [openGymCreateModal, setOpenGymCreateModal] = useState(false);
+  const [openTeamCreateModal, setOpenTeamCreateModal] = useState(false);
 
   const location = useLocation();
   const { meQueryKey } = useMeGETQueryKey();
@@ -72,6 +76,15 @@ const Header = () => {
           >
             팀 순위
           </LeftItem>
+          <LeftButton
+            type="button"
+            active={String(openTeamCreateModal)}
+            onClick={() => {
+              setOpenTeamCreateModal(true);
+            }}
+          >
+            팀 생성
+          </LeftButton>
         </LeftSection>
         <RightSecton>
           {/* 태블릿까지 */}
@@ -97,6 +110,7 @@ const Header = () => {
                       >
                         내 정보
                       </StyledLink>
+
                       <button
                         type="button"
                         style={{ padding: 0 }}
@@ -123,12 +137,22 @@ const Header = () => {
             ) : (
               <LoginLink to="/login">로그인</LoginLink>
             )}
-            <Button type="primary">체육관 등록하기</Button>
+            <Button type="primary" onClick={() => setOpenGymCreateModal(true)}>
+              체육관 등록하기
+            </Button>
           </RightContents>
         </RightSecton>
       </Container>
 
       <Drawer open={open} closeDrawer={closeDrawer} />
+      <GymCreateModal
+        open={openGymCreateModal}
+        setOpen={setOpenGymCreateModal}
+      />
+      <TeamCreateModal
+        open={openTeamCreateModal}
+        setOpen={setOpenTeamCreateModal}
+      />
     </>
   );
 };
@@ -241,4 +265,19 @@ const LoginLink = styled(Link)`
   color: ${({ theme }) => theme.color.black};
 
   padding: 0 20px;
+`;
+
+const LeftButton = styled.button<{ active: string }>`
+  display: none;
+  color: ${({ active }) =>
+    active === 'true' ? blue.primary : 'black'} !important;
+
+  @media ${({ theme }) => theme.grid.tablet} {
+    display: block;
+    font-size: ${({ theme }) => theme.font.size.body_1};
+    font-weight: ${({ theme }) => theme.font.weight.medium};
+    color: ${({ theme }) => theme.color.black};
+
+    padding: 0 20px;
+  }
 `;
