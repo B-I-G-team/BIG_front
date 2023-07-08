@@ -1,39 +1,37 @@
+import { Data2 } from 'api/axios-client';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import failedImage from 'assets/img-failed.png';
 
 interface Props {
-  data: {
-    id: number;
-    image: string;
-    name: string;
-    location: string;
-    price: number;
-    perHour: number;
-    applicant: number;
-  };
+  data: Data2;
 }
 
 const GymItem = ({ data }: Props) => {
   const navigate = useNavigate();
 
+  const { id, images, name, address1, defaultPrice } = data;
+
   return (
-    <Container onClick={() => navigate(`/team-rental?id=${data.id}`)}>
-      <Image src={data.image} />
+    <Container onClick={() => navigate(`/team-rental?id=${id}`)}>
+      <Image
+        src={(images.length > 0 && images[0].url) || ''}
+        onError={(e) => ((e.target as HTMLImageElement).src = failedImage)}
+      />
+
       <ContentWrapper>
         <TopWrapper>
-          <Title>{data.name}</Title>
+          <Title>{name}</Title>
         </TopWrapper>
 
         <CenterWrapper>
-          <Location>{data.location}</Location>
-          <Applicant>신청 인원 수: {data.applicant}명</Applicant>
+          <Location>{address1}</Location>
+          {/* <Applicant>신청 인원 수: {data.applicant}명</Applicant> */}
         </CenterWrapper>
 
         <BottomWrapper>
-          <Price>
-            ₩ {data.price.toLocaleString()} / {data.perHour}시간
-          </Price>
+          <Price>₩ {defaultPrice.toLocaleString()} / 1시간</Price>
         </BottomWrapper>
       </ContentWrapper>
     </Container>
@@ -123,4 +121,4 @@ const CenterWrapper = styled.div`
   width: 100%;
 `;
 
-const Applicant = styled.div``;
+// const Applicant = styled.div``;

@@ -1,51 +1,23 @@
-import React from 'react';
-import placeImg from 'assets/place1.jpeg';
+import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import GymItem from './GymItem';
 import { Body2Regular, Description, H4, H5 } from 'styles/mixin';
 import { FlexCenter } from 'components/common/Wrapper';
-
-const tempDataArr = [
-  {
-    id: 1,
-    image: placeImg,
-    name: '사하 인피니트 스포츠',
-    location: '부산광역시 사하구 마하로48번길 26 4층',
-    price: 10000,
-    perHour: 1,
-    applicant: 25,
-  },
-  {
-    id: 2,
-    image: placeImg,
-    name: '당리 인피니트 스포츠',
-    location: '부산광역시 사하구 마하로48번길 26 4층',
-    price: 10000,
-    perHour: 1,
-
-    applicant: 17,
-  },
-  {
-    id: 3,
-    image: placeImg,
-    name: '괴정 인피니트 스포츠',
-    location: '부산광역시 사하구 마하로48번길 26 4층',
-    price: 10000,
-    perHour: 1,
-    applicant: 7,
-  },
-  {
-    id: 4,
-    image: placeImg,
-    name: '괴정 인피니트 스포츠',
-    location: '부산광역시 사하구 마하로48번길 26 4층',
-    price: 10000,
-    perHour: 1,
-    applicant: 7,
-  },
-];
+import { useGymGETQuery } from 'api/axios-client/Query';
 
 const GymList = () => {
+  const page = 1;
+  const pageSize = 4;
+  const query = '';
+
+  const { data: gymsData } = useGymGETQuery({
+    offset: String((page - 1) * pageSize),
+    limit: String(pageSize),
+    search: query,
+  });
+
+  const gymList = useMemo(() => gymsData?.data || [], [gymsData]);
+
   return (
     <Section>
       <Container>
@@ -53,7 +25,7 @@ const GymList = () => {
         <SubTitle>팀대관 및 픽업게임을 해보세요.</SubTitle>
         <Wrapper>
           <ListContainer>
-            {tempDataArr.map((item) => (
+            {gymList.map((item) => (
               <GymItem key={item.id} data={item} />
             ))}
           </ListContainer>
