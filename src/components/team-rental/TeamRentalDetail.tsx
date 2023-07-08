@@ -19,6 +19,7 @@ import Input from 'components/common/Input';
 import {
   useBookingsAllQuery,
   useBookingsMutation,
+  useGymGET2Query,
   useMeGETQuery,
 } from 'api/axios-client/Query';
 import { Body } from 'api/axios-client';
@@ -78,7 +79,8 @@ const convertTimeArray = (startTime: Date, endTime: Date) => {
 };
 
 const TeamRentalDetail = ({ id }: { id: string }) => {
-  const { name, address, phone, pricePerHour, openTime, closedTime } = tempData;
+  const { data: gymDetailData } = useGymGET2Query(id);
+
   const { meQueryKey } = useMeGETQueryKey();
   const { data: user } = useMeGETQuery({
     queryKey: meQueryKey,
@@ -87,12 +89,14 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   const [bookingDate, setBookingDate] = useState<string>();
 
   const [price, setPrice] = useState(0);
-  const [selectPhoto, setSelectPhoto] = useState(tempData.images[0]);
+  const [selectPhoto, setSelectPhoto] = useState(
+    gymDetailData?.images[0] || '',
+  );
   const [usingTimeArr, setUsingTimeArr] = useState<string[]>([]);
   const { data: bookingDatas, refetch: bookingDatesRefetch } =
     useBookingsAllQuery(
       {
-        gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+        gymID: id,
         firstTime: `${bookingDate}T00:00:00.000z`,
         lastTime: `${bookingDate}T23:59:00.000z`,
       },
@@ -145,7 +149,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   };
 
   const calcPrice = (length: number) => {
-    setPrice(length * pricePerHour);
+    setPrice(length * defaultPrice);
   };
 
   const onSelectPhoto = (image: string) => {
@@ -161,8 +165,8 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
       mutate(
         new Body({
-          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
-          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
+          gymID: id,
+          teamID: user?.team.id as string,
           startTime: new Date(
             `${bookingDate}T${startTime}:00.000`,
           ).toISOString(),
@@ -177,8 +181,8 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
       mutate(
         new Body({
-          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
-          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
+          gymID: id,
+          teamID: user?.team.id as string,
           startTime: new Date(
             `${bookingDate}T${startTime}:00.000`,
           ).toISOString(),
@@ -194,8 +198,11 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   };
 
   useEffect(() => {
-    setTimeArray(createTimeArray(openTime, closedTime));
-  }, []);
+    if (gymDetailData)
+      setTimeArray(
+        createTimeArray(gymDetailData.openTime, gymDetailData.closeTime),
+      );
+  }, [gymDetailData]);
 
   useEffect(() => {
     setTimeArray((prev) => {
@@ -222,6 +229,11 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
     }
   }, [bookingDatas]);
 
+  if (!gymDetailData) return <></>;
+
+  const { address1, closeTime, defaultPrice, name, openTime, phone } =
+    gymDetailData;
+
   return (
     <Container>
       <SlideWrapper>
@@ -244,7 +256,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
       </SlideWrapper>
 
       <PhotoWrapper>
-        <SelectPhoto src={selectPhoto} />
+        <SelectPhoto src={selectPhoto as string} />
         <PhotoList>
           {tempData.images.map((image, idx) => (
             <PhotoItem
@@ -258,7 +270,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
       <ContentWrapper>
         <Title>{name}</Title>
-        <Address>{address}</Address>
+        <Address>{address1}</Address>
         <Phone>{phone}</Phone>
         <ConfigProvider locale={locale}>
           <DatePicker
@@ -267,7 +279,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
             disabledDate={(date) => (date as any) < new Date()}
             onChange={(date, dateString) => {
               setBookingDate(dateString);
-              setTimeArray(createTimeArray(openTime, closedTime));
+              setTimeArray(createTimeArray(openTime, closeTime));
               setUsingTimeArr([]);
             }}
           />
@@ -275,7 +287,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
         <StyledTimeSelect
           item={timeArray}
-          pricePerHour={pricePerHour}
+          pricePerHour={defaultPrice}
           calcPrice={calcPrice}
           firstSelectTime={firstSelectTime as TimeItem}
           secondSelectTime={secondSelectTime as TimeItem}
