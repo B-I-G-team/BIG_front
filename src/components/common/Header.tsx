@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import styled from 'styled-components';
 import logoImage from 'assets/logo.png';
 import { blue } from '@ant-design/colors';
@@ -20,6 +20,7 @@ const Header = () => {
   const isTablet = useMemo(() => windowWidth <= 744, [windowWidth]);
   const [openGymCreateModal, setOpenGymCreateModal] = useState(false);
   const [openTeamCreateModal, setOpenTeamCreateModal] = useState(false);
+  const [searchParams] = useSearchParams();
 
   const location = useLocation();
   const { meQueryKey } = useMeGETQueryKey();
@@ -45,9 +46,7 @@ const Header = () => {
   if (
     location.pathname === '/login' ||
     location.pathname === '/signup' ||
-    (isTablet &&
-      location.pathname === '/team-rental' &&
-      location.search.length > 0)
+    (isTablet && location.pathname === '/team-rental' && searchParams.get('id'))
   )
     return <></>;
 
