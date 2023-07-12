@@ -33,8 +33,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "deploy": "serve -s build"
   },
   "eslintConfig": {
     "extends": [
@@ -66,6 +65,5 @@
     "eslint-plugin-react": "^7.32.2",
     "prettier": "^2.8.7",
     "react-query-swagger": "^15.5.3"
-  },
-  "homepage": "https://b-i-g-team.github.io/big_front/"
+  }
 }
