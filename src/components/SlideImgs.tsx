@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import failedImage from 'assets/img-failed.png';
 
 interface Props {
   data: {
@@ -12,7 +13,12 @@ interface Props {
 const SlideImgs = ({ data, type }: Props) => {
   return (
     <ImageBox type={type as string}>
-      <Image src={data.image} alt="image" type={type as string} />
+      <Image
+        src={data.image}
+        alt="image"
+        type={type as string}
+        onError={(e) => ((e.target as HTMLImageElement).src = failedImage)}
+      />
     </ImageBox>
   );
 };

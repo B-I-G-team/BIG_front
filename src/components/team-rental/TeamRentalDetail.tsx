@@ -1,8 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import gymImage1 from 'assets/gym1.jpeg';
-import gymImage2 from 'assets/gym2.jpeg';
-import gymImage3 from 'assets/gym3.jpeg';
-import gymImage4 from 'assets/gym4.jpeg';
 import Slide from 'components/Slide';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
@@ -28,25 +24,15 @@ import useWindowSize from 'hooks/common/useWindowSize';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-
-const tempData = {
-  id: 1,
-  images: [gymImage1, gymImage2, gymImage3, gymImage4],
-  name: '사하 인피니티 스포츠',
-  address:
-    '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-  phone: '010-1234-5678',
-  pricePerHour: 68000,
-  openTime: '08:00',
-  closedTime: '20:00',
-};
+import failedImage from 'assets/img-failed.png';
 
 const createTimeArray = (openTime: string, closedTime: string) => {
   const [openHour, openMinute] = openTime.split(':');
   const [closeHour, closeMinute] = closedTime.split(':');
   const timeArray = [];
   let count = 0;
-  for (let i = +openHour; i <= +closeHour; i++) {
+
+  for (let i = +openHour; i < +closeHour; i++) {
     count++;
     const timeItem = {
       order: count,
@@ -90,7 +76,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
   const [price, setPrice] = useState(0);
   const [selectPhoto, setSelectPhoto] = useState(
-    gymDetailData?.images[0] || '',
+    gymDetailData?.images[0]?.url || '',
   );
   const [usingTimeArr, setUsingTimeArr] = useState<string[]>([]);
   const { data: bookingDatas, refetch: bookingDatesRefetch } =
@@ -231,7 +217,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
   if (!gymDetailData) return <></>;
 
-  const { address1, closeTime, defaultPrice, name, openTime, phone } =
+  const { address1, closeTime, defaultPrice, name, openTime, phone, images } =
     gymDetailData;
 
   return (
@@ -239,30 +225,34 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
       <SlideWrapper>
         <IconWrapper>
           <LeftCircleFilled
-            style={{ fontSize: '30px', color: 'white' }}
+            style={{ fontSize: '30px', color: 'lightgray' }}
             onClick={() => navigate('/team-rental')}
           />
           <ShareAltOutlined
-            style={{ fontSize: '30px', color: 'white' }}
-            onClick={() =>
-              navigator.share({ title: 'BIG 서비스 체육관', url: '' })
-            }
+            style={{ fontSize: '30px', color: 'lightgray' }}
+            onClick={() => {}}
           />
         </IconWrapper>
         <Slide
-          data={tempData.images.map((image, idx) => ({ id: idx, image }))}
+          data={images.map((image, idx) => ({ id: idx, image: image?.url }))}
           autoPlay={false}
         />
       </SlideWrapper>
 
       <PhotoWrapper>
-        <SelectPhoto src={selectPhoto as string} />
+        <SelectPhoto
+          src={selectPhoto as string}
+          onError={(e) => ((e.target as HTMLImageElement).src = failedImage)}
+        />
         <PhotoList>
-          {tempData.images.map((image, idx) => (
+          {images.map((image, idx) => (
             <PhotoItem
               key={idx}
-              src={image}
-              onClick={() => onSelectPhoto(image)}
+              src={image.url}
+              onClick={() => onSelectPhoto(image.url)}
+              onError={(e) =>
+                ((e.target as HTMLImageElement).src = failedImage)
+              }
             />
           ))}
         </PhotoList>
@@ -396,13 +386,14 @@ const PhotoItem = styled.img`
   }
 `;
 const PhotoList = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, auto));
+  grid-gap: 4px;
 `;
 const SelectPhoto = styled.img`
   width: 100%;
   height: 400px;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 const StyledInput = styled(Input)`
