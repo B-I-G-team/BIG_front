@@ -1,235 +1,51 @@
-import React from 'react';
-import gymImage1 from 'assets/gym1.jpeg';
-import gymImage2 from 'assets/gym2.jpeg';
-import gymImage3 from 'assets/gym3.jpeg';
-import gymImage4 from 'assets/gym4.jpeg';
+import React, { useEffect, useMemo, useState } from 'react';
+
 import { Input, Pagination, Select } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Body2Bold, Body2Regular, H5 } from 'styles/mixin';
 import { FlexBetween } from './Wrapper';
-
-const tempGymList = [
-  {
-    id: 1,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 2,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage2,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 3,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage3,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 4,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage4,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 5,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 6,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 7,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 8,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage2,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 9,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage3,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 10,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage4,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 11,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 12,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 13,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 14,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage2,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 15,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage3,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 16,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage4,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 17,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 18,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 19,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 20,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage2,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 21,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage3,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 22,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage4,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 23,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-  {
-    id: 24,
-    name: '사하 인피니티 스포츠',
-    thumbnail: gymImage1,
-
-    address:
-      '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-    pricePerHour: 68000,
-  },
-];
+import { useGymGETQuery } from 'api/axios-client/Query';
+import failedImage from 'assets/img-failed.png';
 
 const GymRentalList = ({ type }: { type: 'team-rental' | 'pickup' }) => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const page = Number(searchParams.get('page'));
+  const query = searchParams.get('query') || '';
+  const pageSize = 8;
+
+  useEffect(() => {
+    if (type === 'team-rental' && page === 0) {
+      navigate(`/team-rental?page=1&query=${query}`);
+    } else if (type === 'pickup' && page === 0) {
+      navigate(`/pickup?tab=register&page=1&query=${query}`);
+    }
+  }, [page, type]);
+
+  const [search, setSearch] = useState('');
+
+  const { data: gymsData } = useGymGETQuery({
+    offset: String((page - 1) * pageSize),
+    limit: String(pageSize),
+    search: query,
+  });
+
+  const gymList = useMemo(() => gymsData?.data || [], [gymsData]);
+  const gymListTotal = useMemo(() => gymsData?.totalCount || 0, [gymsData]);
+
+  const onChangePagination = (page: number) => {
+    if (type === 'team-rental')
+      navigate(`/team-rental?page=${page}&query=${query}`);
+    else if (type === 'pickup')
+      navigate(`/pickup?tab=register&page=${page}&query=${query}`);
+  };
+
   return (
     <Container>
       <Header>
-        <Title>{`"연제구" 검색결과`}</Title>
+        <Title>{`"${query}" 검색결과`}</Title>
         <FlexBetween>
           <Input
             placeholder="체육관, 업체 검색"
@@ -239,6 +55,12 @@ const GymRentalList = ({ type }: { type: 'team-rental' | 'pickup' }) => {
             prefix={
               <SearchOutlined style={{ color: '#8C8D96', fontSize: '18px' }} />
             }
+            onChange={(e) => {
+              setSearch(e.target.value);
+            }}
+            onPressEnter={() => {
+              navigate(`/team-rental?page=${page}&query=${search}`);
+            }}
           />
           <Select
             defaultValue={'인기순'}
@@ -251,7 +73,7 @@ const GymRentalList = ({ type }: { type: 'team-rental' | 'pickup' }) => {
       </Header>
 
       <GymList>
-        {tempGymList.map(({ id, thumbnail, name, address, pricePerHour }) => (
+        {gymList.map(({ id, images, name, address1, defaultPrice }) => (
           <GymItem
             key={id}
             to={
@@ -260,17 +82,27 @@ const GymRentalList = ({ type }: { type: 'team-rental' | 'pickup' }) => {
                 : `/team-rental?id=${id}`
             }
           >
-            <Image src={thumbnail} />
+            <Image
+              src={(images.length > 0 && images[0].url) || ''}
+              onError={(e) =>
+                ((e.target as HTMLImageElement).src = failedImage)
+              }
+            />
             <Content>
               <GymName>{name}</GymName>
-              <Address>{address}</Address>
-              <Price>{`₩ ${pricePerHour.toLocaleString()} / 1시간`}</Price>
+              <Address>{address1}</Address>
+              <Price>{`₩ ${defaultPrice.toLocaleString()} / 1시간`}</Price>
             </Content>
           </GymItem>
         ))}
       </GymList>
       <PaginationWrapper>
-        <Pagination defaultCurrent={1} total={500} />
+        <Pagination
+          current={page}
+          pageSize={pageSize}
+          total={gymListTotal}
+          onChange={onChangePagination}
+        />
       </PaginationWrapper>
     </Container>
   );

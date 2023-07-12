@@ -8,10 +8,7 @@ import temp4 from 'assets/temp4.png';
 import temp5 from 'assets/temp5.png';
 import temp6 from 'assets/temp6.png';
 import temp7 from 'assets/temp7.png';
-// import TeamCreateModal from 'components/mypage/TeamCreateModal';
-// import GymCreateModal from 'components/common/GymCreateModal';
-// import Landing from 'components/home/Landing';
-// import Footer from 'components/home/Footer';
+
 import PickupList from 'components/home/PickupList';
 import styled from 'styled-components';
 import TeamRank from 'components/home/TeamRank';
@@ -40,8 +37,6 @@ const tempDataArr = [
 ];
 
 const Index = () => {
-  // const [open, setOpen] = useState(true);
-
   return (
     <>
       {/* 슬라이드 */}
@@ -52,8 +47,6 @@ const Index = () => {
         <TeamRank />
       </Section>
       <GymList />
-      {/* <TeamCreateModal open={open} setOpen={setOpen} /> */}
-      {/* <GymCreateModal open={open} setOpen={setOpen} /> */}
       {/* <Footer /> */}
     </>
   );

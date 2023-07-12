@@ -1,8 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import gymImage1 from 'assets/gym1.jpeg';
-import gymImage2 from 'assets/gym2.jpeg';
-import gymImage3 from 'assets/gym3.jpeg';
-import gymImage4 from 'assets/gym4.jpeg';
 import Slide from 'components/Slide';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
@@ -19,6 +15,7 @@ import Input from 'components/common/Input';
 import {
   useBookingsAllQuery,
   useBookingsMutation,
+  useGymGET2Query,
   useMeGETQuery,
 } from 'api/axios-client/Query';
 import { Body } from 'api/axios-client';
@@ -27,25 +24,15 @@ import useWindowSize from 'hooks/common/useWindowSize';
 import { useMeGETQueryKey } from 'api/queryKeyHooks';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
-
-const tempData = {
-  id: 1,
-  images: [gymImage1, gymImage2, gymImage3, gymImage4],
-  name: '사하 인피니티 스포츠',
-  address:
-    '부산광역시 사하구 괴정동 1068-6번지 에이비동 에이 성진스포츠타운 401 501호',
-  phone: '010-1234-5678',
-  pricePerHour: 68000,
-  openTime: '08:00',
-  closedTime: '20:00',
-};
+import failedImage from 'assets/img-failed.png';
 
 const createTimeArray = (openTime: string, closedTime: string) => {
   const [openHour, openMinute] = openTime.split(':');
   const [closeHour, closeMinute] = closedTime.split(':');
   const timeArray = [];
   let count = 0;
-  for (let i = +openHour; i <= +closeHour; i++) {
+
+  for (let i = +openHour; i < +closeHour; i++) {
     count++;
     const timeItem = {
       order: count,
@@ -78,7 +65,8 @@ const convertTimeArray = (startTime: Date, endTime: Date) => {
 };
 
 const TeamRentalDetail = ({ id }: { id: string }) => {
-  const { name, address, phone, pricePerHour, openTime, closedTime } = tempData;
+  const { data: gymDetailData } = useGymGET2Query(id);
+
   const { meQueryKey } = useMeGETQueryKey();
   const { data: user } = useMeGETQuery({
     queryKey: meQueryKey,
@@ -87,12 +75,14 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   const [bookingDate, setBookingDate] = useState<string>();
 
   const [price, setPrice] = useState(0);
-  const [selectPhoto, setSelectPhoto] = useState(tempData.images[0]);
+  const [selectPhoto, setSelectPhoto] = useState(
+    gymDetailData?.images[0]?.url || '',
+  );
   const [usingTimeArr, setUsingTimeArr] = useState<string[]>([]);
   const { data: bookingDatas, refetch: bookingDatesRefetch } =
     useBookingsAllQuery(
       {
-        gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
+        gymID: id,
         firstTime: `${bookingDate}T00:00:00.000z`,
         lastTime: `${bookingDate}T23:59:00.000z`,
       },
@@ -145,7 +135,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   };
 
   const calcPrice = (length: number) => {
-    setPrice(length * pricePerHour);
+    setPrice(length * defaultPrice);
   };
 
   const onSelectPhoto = (image: string) => {
@@ -161,8 +151,8 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
       mutate(
         new Body({
-          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
-          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
+          gymID: id,
+          teamID: user?.team.id as string,
           startTime: new Date(
             `${bookingDate}T${startTime}:00.000`,
           ).toISOString(),
@@ -177,8 +167,8 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
       mutate(
         new Body({
-          gymID: 'clh1kt9qg0000ovellhmb1b46', // FIXME: gym id 사용
-          teamID: 'clghx0ljy000yivez32qsus6q', // FIXME: user.id 사용
+          gymID: id,
+          teamID: user?.team.id as string,
           startTime: new Date(
             `${bookingDate}T${startTime}:00.000`,
           ).toISOString(),
@@ -194,8 +184,11 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
   };
 
   useEffect(() => {
-    setTimeArray(createTimeArray(openTime, closedTime));
-  }, []);
+    if (gymDetailData)
+      setTimeArray(
+        createTimeArray(gymDetailData.openTime, gymDetailData.closeTime),
+      );
+  }, [gymDetailData]);
 
   useEffect(() => {
     setTimeArray((prev) => {
@@ -222,35 +215,44 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
     }
   }, [bookingDatas]);
 
+  if (!gymDetailData) return <></>;
+
+  const { address1, closeTime, defaultPrice, name, openTime, phone, images } =
+    gymDetailData;
+
   return (
     <Container>
       <SlideWrapper>
         <IconWrapper>
           <LeftCircleFilled
-            style={{ fontSize: '30px', color: 'white' }}
+            style={{ fontSize: '30px', color: 'lightgray' }}
             onClick={() => navigate('/team-rental')}
           />
           <ShareAltOutlined
-            style={{ fontSize: '30px', color: 'white' }}
-            onClick={() =>
-              navigator.share({ title: 'BIG 서비스 체육관', url: '' })
-            }
+            style={{ fontSize: '30px', color: 'lightgray' }}
+            onClick={() => {}}
           />
         </IconWrapper>
         <Slide
-          data={tempData.images.map((image, idx) => ({ id: idx, image }))}
+          data={images.map((image, idx) => ({ id: idx, image: image?.url }))}
           autoPlay={false}
         />
       </SlideWrapper>
 
       <PhotoWrapper>
-        <SelectPhoto src={selectPhoto} />
+        <SelectPhoto
+          src={selectPhoto as string}
+          onError={(e) => ((e.target as HTMLImageElement).src = failedImage)}
+        />
         <PhotoList>
-          {tempData.images.map((image, idx) => (
+          {images.map((image, idx) => (
             <PhotoItem
               key={idx}
-              src={image}
-              onClick={() => onSelectPhoto(image)}
+              src={image.url}
+              onClick={() => onSelectPhoto(image.url)}
+              onError={(e) =>
+                ((e.target as HTMLImageElement).src = failedImage)
+              }
             />
           ))}
         </PhotoList>
@@ -258,7 +260,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
       <ContentWrapper>
         <Title>{name}</Title>
-        <Address>{address}</Address>
+        <Address>{address1}</Address>
         <Phone>{phone}</Phone>
         <ConfigProvider locale={locale}>
           <DatePicker
@@ -267,7 +269,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
             disabledDate={(date) => (date as any) < new Date()}
             onChange={(date, dateString) => {
               setBookingDate(dateString);
-              setTimeArray(createTimeArray(openTime, closedTime));
+              setTimeArray(createTimeArray(openTime, closeTime));
               setUsingTimeArr([]);
             }}
           />
@@ -275,7 +277,7 @@ const TeamRentalDetail = ({ id }: { id: string }) => {
 
         <StyledTimeSelect
           item={timeArray}
-          pricePerHour={pricePerHour}
+          pricePerHour={defaultPrice}
           calcPrice={calcPrice}
           firstSelectTime={firstSelectTime as TimeItem}
           secondSelectTime={secondSelectTime as TimeItem}
@@ -384,13 +386,14 @@ const PhotoItem = styled.img`
   }
 `;
 const PhotoList = styled.div`
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, auto));
+  grid-gap: 4px;
 `;
 const SelectPhoto = styled.img`
   width: 100%;
   height: 400px;
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 const StyledInput = styled(Input)`

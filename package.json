@@ -33,8 +33,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "deploy": "npx serve -s build"
   },
   "eslintConfig": {
     "extends": [
@@ -67,5 +66,5 @@
     "prettier": "^2.8.7",
     "react-query-swagger": "^15.5.3"
   },
-  "homepage": "https://b-i-g-team.github.io/big_front/"
+  "homepage": "https://bigfront-production.up.railway.app/"
 }
