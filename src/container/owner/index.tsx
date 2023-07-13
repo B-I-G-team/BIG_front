@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { Popover } from 'antd';
+import { Popover, Button } from 'antd';
+import OutlinedButton from 'components/common/OutlinedButton';
 import { Tabs } from 'antd';
 import type { TabsProps } from 'antd';
 import { H3, H4, H5 } from 'styles/mixin';
@@ -8,6 +9,7 @@ import gymImage1 from 'assets/gym1.jpeg';
 import gymImage2 from 'assets/gym2.jpeg';
 import gymImage3 from 'assets/gym3.jpeg';
 import gymImage4 from 'assets/gym4.jpeg';
+import TimeSelect2 from 'components/common/TimeSelect2';
 
 const items: TabsProps['items'] = [
   {
@@ -139,6 +141,37 @@ const tempDataGym = [
   },
 ];
 
+const tempDataGymschedule = [
+  {
+    name: '월',
+    content: '1',
+  },
+  {
+    name: '화',
+    content: '2',
+  },
+  {
+    name: '수',
+    content: '3',
+  },
+  {
+    name: '목',
+    content: '4',
+  },
+  {
+    name: '금',
+    content: '5',
+  },
+  {
+    name: '토',
+    content: '6',
+  },
+  {
+    name: '일',
+    content: '7',
+  },
+];
+
 const index = () => {
   const [tab, setTab] = useState(0);
   const handleChangeGym = (value: number) => {
@@ -165,14 +198,13 @@ const index = () => {
   const onSelectPhoto = (image: string) => {
     setSelectPhoto(image);
   };
-
   return (
     <Container>
       <LeftSection>
         <GymTitleWrapper>
           <GymTitle>{tempDataGym[manageGym].label}</GymTitle>
           <Popover placement="bottomRight" content={content} trigger="click">
-            <Button>▼</Button>
+            <ButtonPOP>▼</ButtonPOP>
           </Popover>
         </GymTitleWrapper>
         <PhotoWrapper>
@@ -210,7 +242,22 @@ const index = () => {
             </TabContent>
           ) : // tab 대관신청현황 작성
           tab == 1 ? (
-            <>tab1</> // tab 일정관리 작성
+            <TabContent>
+              <TopSection>
+                <ContentTitle>정기 일정 관리</ContentTitle>
+                <Tabs
+                  items={tempDataGymschedule.map((tab) => ({
+                    label: tab.name,
+                    key: tab.content,
+                    children: <TimeSelect2 />,
+                  }))}
+                />
+                <OutlinedButton>저장</OutlinedButton>
+              </TopSection>
+              <BottomSection>
+                <ContentTitle>단기 일정 관리</ContentTitle>
+              </BottomSection>
+            </TabContent> // tab 일정관리 작성
           ) : (
             <>tab2</>
           ) // tab 체육관 정보 관리 작성
@@ -233,13 +280,16 @@ const Container = styled.div`
     flex-direction: row;
   }
 `;
-const Button = styled.button`
+const ButtonPOP = styled.button`
+  font-size: 26px;
+  color: gray;
   &:hover {
     opacity: 0.5;
   }
 `;
 const GymTitle = styled.span`
-  ${H4}
+  font-size: 26px;
+  font-weight: 800;
 `;
 const GymTitleWrapper = styled.div`
   display: flex;
@@ -360,3 +410,13 @@ const ButtonCancel = styled.button`
     background-color: #ecf6fe;
   }
 `;
+
+const ContentTitle = styled.span`
+  font-size: 16px;
+`;
+
+const TopSection = styled.div`
+  width: 100%;
+`;
+
+const BottomSection = styled.div``;
